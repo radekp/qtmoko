@@ -2,13 +2,13 @@ Source: qtmoko
 Section: comm
 Priority: optional
 Maintainer: Radek Polak <psonek2@seznam.cz>
-Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.4
+Build-Depends: debhelper (>= 7.0.50~), libxext-dev, libasound2-dev, libdbus-1-dev, libssl-dev, libts-dev, libbluetooth-dev, libxtst-dev, libpng12-dev, libjpeg8-dev, libtiff4-dev, libmng-dev
+Standards-Version: 3.9.2
 Homepage: http://www.qtmoko.org
 Vcs-Git: git://github.com/radekp/qtmoko.git
 Vcs-Browser: https://github.com/radekp/qtmoko
 
 Package: qtmoko
 Architecture: any
-Depends: 
+Depends: ${misc:Depends}, ${shlibs:Depends}, bluez-alsa, ttf-dejavu, sqlite3, psmisc, alsa-utils
 Description: QtMoko is phone environment

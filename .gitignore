@@ -39,8 +39,7 @@ Module.symvers
 patches-*
 
 # quilt's files
-patches
-series
+.pc
 
 # cscope files
 cscope.*

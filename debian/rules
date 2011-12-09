@@ -1,22 +1,77 @@
 #!/usr/bin/make -f
 
-CONFIGURE = $(PWD)/configure
+ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
+CC=$(DEB_HOST_GNU_TYPE)-gcc
+CXX=$(DEB_HOST_GNU_TYPE)-g++
+CROSS_CPPFLAGS=-I/usr/$(DEB_HOST_GNU_TYPE)/include/$(DEB_HOST_GNU_TYPE)
+CROSS_INCDIR=/usr/$(DEB_HOST_GNU_TYPE)/include /usr/$(DEB_HOST_GNU_TYPE)/include/$(DEB_HOST_GNU_TYPE) /usr/$(DEB_HOST_GNU_TYPE)/include/dbus-1.0 /usr/$(DEB_HOST_GNU_TYPE)/lib/dbus-1.0/include
+CROSS_LDFLAGS=
+CROSS_LIBDIR=/usr/$(DEB_HOST_GNU_TYPE)/lib
+else
+CC=gcc
+CXX=g++
+CROSS_CPPFLAGS=
+CROSS_INCDIR=/usr/include/dbus-1.0 /usr/lib/dbus-1.0/include
+CROSS_LDFLAGS=
+CROSS_LIBDIR=
+endif
 
-build:
+ifeq (arm-linux-gnueabi,$(DEB_HOST_GNU_TYPE))
+CROSS_CPPFLAGS+=-march=armv4t
+ifeq (,$(filter noopt,$(DEB_BUILD_OPTIONS)))
+CROSS_CPPFLAGS+=-fomit-frame-pointer -finline-functions -falign-functions=2 -falign-loops=2 -falign-jumps=2 -mtune=arm920t -msoft-float
+endif
+endif
+
+CFLAGS=-pipe $(shell dpkg-buildflags --get CFLAGS) $(CROSS_CPPFLAGS)
+LDFLAGS=$(shell dpkg-buildflags --get LDFLAGS) $(CROSS_LDFLAGS)
+
+CONFIGURE := $(CURDIR)/configure
+LANGUAGES := $(shell ls i18n/ | xargs echo | sed 's/ /,/g')
+
+# Device defaults to neo, but can be set from the calling environment as well:
+# QTMOKO_DEVICE=<device> dpkg-buildpackage
+QT_MOKO_DEVICE ?= neo
+
+TOOLCHAIN := linux-native-g++
+QMAKE_CONF := devices/$(QT_MOKO_DEVICE)/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+
+toto:
+	echo $(LANGUAGES)
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	# Patch the qmake.conf file with proper toolchain configuration
+	cp -a $(QMAKE_CONF) $(QMAKE_CONF).orig
+	sed -i 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_CXX[ \t]*=\).*$$:\1 '"$(CXX):" $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_LINK[ \t]*=\).*$$:\1 '"$(CXX):" $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_LINK_SHLIB[ \t]*=\).*$$:\1 '"$(CXX):" $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_CFLAGS[ \t]*=\).*$$:\1 '"$(CFLAGS):" $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_CFLAGS_RELEASE[ \t]*=\).*$$:\1 :' $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_CFLAGS_DEBUG[ \t]*=\).*$$:\1 :' $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(LDFLAGS):" $(QMAKE_CONF)
+
+	# Qt Extended configuration step
 	mkdir -p ../build
-	cd ../build && "$(CONFIGURE)" -device neo -xplatform linux-native-g++ -remove-module pkgmanagement -languages cs_CZ,en_US,it_IT,ru_RU,de_DE,es_ES,pl_PL,da_DK,fr_FR -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include
+	cd ../build && "$(CONFIGURE)" -extra-qt-embedded-config "-opensource" -device $(QT_MOKO_DEVICE) -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include
+
+override_dh_auto_build:
 	cd ../build && make
 
-clean:
-	rm -rf debian/tmp
-	rm -f debian/files
+override_dh_auto_clean:
+	[ ! -f $(QMAKE_CONF).orig ] || mv $(QMAKE_CONF).orig $(QMAKE_CONF)
+	rm -fr ../build
+	rm -f sdk/LICENSE.QtopiaGPL
 
-binary: build
+override_dh_auto_install:
 	cd ../build && make install
 	mkdir -p debian/tmp/opt/qtmoko
 	cp -r ../build/image/* debian/tmp/opt/qtmoko
-	rm -rf /tmp/qtmoko
-	mv ../build /tmp/qtmoko
 
 	# remove patented stuff - can be installed via package later
 	rm -f debian/tmp/opt/qtmoko/plugins/codecs/libmadplugin.so
@@ -24,12 +79,12 @@ binary: build
 
 	# symlink to ttfont installed together with X
 	rm -rf debian/tmp/opt/qtmoko/lib/fonts
-	ln -s /usr/share/fonts/truetype/ttf-dejavu/ debian/tmp/opt/qtmoko/lib/fonts
 
-	install -d debian/tmp/DEBIAN
-	dpkg-gencontrol
-	dh_installdeb -P debian/tmp
-	dh_installinit -P debian/tmp
-	chown -R root:root debian/tmp/opt
-	chmod -R u+w,go=rX debian/tmp/opt
-	dpkg --build debian/tmp ..
+	# Install missing dependency for qt_plugins/script/libqtscriptdbus.so
+	install -m"a+r,u+w" ../build/qtopiacore/target/lib/libQtScript.so.4.5.3 debian/tmp/opt/qtmoko/lib
+
+override_dh_makeshlibs:
+	dh_makeshlibs -n
+
+override_dh_shlibdeps:
+	dh_shlibdeps -l$(CURDIR)/debian/qtmoko/opt/qtmoko/lib

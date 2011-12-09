@@ -1,0 +1,250 @@
+Index: qtmoko/src/libraries/qtopiabase/qmemoryfile_unix.cpp
+===================================================================
+--- qtmoko.orig/src/libraries/qtopiabase/qmemoryfile_unix.cpp	2011-10-25 22:33:31.000000000 +0200
++++ qtmoko/src/libraries/qtopiabase/qmemoryfile_unix.cpp	2011-10-25 22:34:23.000000000 +0200
+@@ -135,7 +135,7 @@
+             shmKey = st.st_ino;
+             ::close(f);
+         }else{
+-            qWarning(QString("QMemoryFile result: %1").arg(strerror(errno)).toLatin1().constData());
++            qWarning("%s", QString("QMemoryFile result: %1").arg(strerror(errno)).toLatin1().constData());
+             qWarning("QMemoryfile: Unable to create shared key via id file");
+             return data;
+         }
+@@ -173,7 +173,7 @@
+                 // attach to previously created shared memory
+                 block = (char*)shmat(shmId, NULL, shmAtFlag );
+                 if (block == (void*)-1)
+-                  qWarning(QString("QMemoryFile : %1").arg(strerror(errno)).toLatin1().constData());
++                  qWarning("%s", QString("QMemoryFile : %1").arg(strerror(errno)).toLatin1().constData());
+             }
+ 
+             if (block != NULL){
+@@ -219,7 +219,7 @@
+                 //f = ::open(fileName.toLocal8Bit(), fileMode | O_CREAT);
+ 
+                 if ((::lseek(f, size, SEEK_SET) == -1) || (::write(f, "", 1) == -1)){
+-                  qWarning(QString("QMemoryFile result: %1").arg(strerror(errno)).toLatin1().constData());
++                  qWarning("%s", QString("QMemoryFile result: %1").arg(strerror(errno)).toLatin1().constData());
+                   qWarning("QMemoryFile: Unable to initialize new file");
+                 }else
+                   lseek(f, 0L, SEEK_SET);
+Index: qtmoko/src/libraries/qtopiabase/qexpressionevaluator.cpp
+===================================================================
+--- qtmoko.orig/src/libraries/qtopiabase/qexpressionevaluator.cpp	2011-10-25 22:35:17.000000000 +0200
++++ qtmoko/src/libraries/qtopiabase/qexpressionevaluator.cpp	2011-10-25 22:35:28.000000000 +0200
+@@ -1228,7 +1228,7 @@
+                     n->returnType = ExpressionToken::Integer;
+                     // else runtime coercion
+                 } else {
+-                    qFatal(QString("Unhandled combination of operands '%1' and '%2' for equality operator '%3'").arg(ExpressionToken::typeToName(leftChild->returnType)).arg(ExpressionToken::typeToName(rightChild->returnType)).arg(ExpressionToken::typeToName(node->token.type)).toAscii().data());
++                    qFatal("%s", QString("Unhandled combination of operands '%1' and '%2' for equality operator '%3'").arg(ExpressionToken::typeToName(leftChild->returnType)).arg(ExpressionToken::typeToName(rightChild->returnType)).arg(ExpressionToken::typeToName(node->token.type)).toAscii().data());
+                 }
+                 break;
+             }
+Index: qtmoko/src/libraries/qtopia/qtopiaapplication.cpp
+===================================================================
+--- qtmoko.orig/src/libraries/qtopia/qtopiaapplication.cpp	2011-10-25 23:51:54.000000000 +0200
++++ qtmoko/src/libraries/qtopia/qtopiaapplication.cpp	2011-10-25 23:52:36.000000000 +0200
+@@ -1853,25 +1853,25 @@
+     QString dataDir(Qtopia::tempDir());
+     if ( mkdir( dataDir.toLatin1(), 0700 ) ) {
+         if ( errno != EEXIST ) {
+-            qFatal( QString("Cannot create Qt Extended data directory with permissions 0700: %1")
++            qFatal( "%s", QString("Cannot create Qt Extended data directory with permissions 0700: %1")
+                     .arg( dataDir ).toLatin1().constData() );
+         }
+     }
+ 
+     struct stat buf;
+     if ( lstat( dataDir.toLatin1(), &buf ) )
+-        qFatal( QString( "stat failed for Qtopia data directory: %1" )
++        qFatal( "%s", QString( "stat failed for Qtopia data directory: %1" )
+                 .arg( dataDir ).toLatin1().constData() );
+ 
+     if ( !S_ISDIR( buf.st_mode ) )
+-        qFatal( QString( "%1 is not a directory" ).arg( dataDir ).toLatin1().constData() );
++        qFatal( "%s", QString( "%1 is not a directory" ).arg( dataDir ).toLatin1().constData() );
+ 
+     if ( buf.st_uid != getuid() )
+-        qFatal( QString( "Qt Extended data directory is not owned by user %1: %2" )
++        qFatal( "%s", QString( "Qt Extended data directory is not owned by user %1: %2" )
+                 .arg( getuid() ).arg( dataDir ).toLatin1().constData() );
+ 
+     if ( (buf.st_mode & 0677) != 0600 )
+-        qFatal( QString( "Qt Extended data directory has incorrect permissions (expecting 0700): %1" )
++        qFatal( "%s", QString( "Qt Extended data directory has incorrect permissions (expecting 0700): %1" )
+                 .arg( dataDir ).toLatin1().constData() );
+ 
+     QPixmapCache::setCacheLimit(256);  // sensible default for smaller devices.
+Index: qtmoko/src/libraries/qtopia/qaudiosourceselector.cpp
+===================================================================
+--- qtmoko.orig/src/libraries/qtopia/qaudiosourceselector.cpp	2011-10-26 00:48:51.000000000 +0200
++++ qtmoko/src/libraries/qtopia/qaudiosourceselector.cpp	2011-10-26 00:49:19.000000000 +0200
+@@ -226,7 +226,7 @@
+         stream >> filename;
+         setContent( QContent( filename ) );
+     } else {
+-        qWarning( action.errorMessage().toLatin1() );
++        qWarning( "%s", action.errorMessage().toLatin1() );
+     }
+ }
+ 
+Index: qtmoko/src/libraries/qtopia/qimagesourceselector.cpp
+===================================================================
+--- qtmoko.orig/src/libraries/qtopia/qimagesourceselector.cpp	2011-10-26 00:50:17.000000000 +0200
++++ qtmoko/src/libraries/qtopia/qimagesourceselector.cpp	2011-10-26 00:50:31.000000000 +0200
+@@ -396,7 +396,7 @@
+             d->setLabel( stream );
+         }
+     } else {
+-        qWarning( action.errorMessage().toLatin1() );
++        qWarning( "%s", action.errorMessage().toLatin1() );
+     }
+ }
+ 
+Index: qtmoko/src/server/core_server/qcopfile.cpp
+===================================================================
+--- qtmoko.orig/src/server/core_server/qcopfile.cpp	2011-10-26 07:50:28.000000000 +0200
++++ qtmoko/src/server/core_server/qcopfile.cpp	2011-10-26 07:50:48.000000000 +0200
+@@ -52,13 +52,13 @@
+         fl.l_pid = getpid();
+         if (fcntl(qcopfile.handle(), F_SETLKW, &fl) == -1) {
+             /* some error occurred */
+-            qWarning(QString("Failed to obtain file lock on %1 (%2)")
++            qWarning("%s", QString("Failed to obtain file lock on %1 (%2)")
+                     .arg(qcopfn).arg( errno ).toAscii().constData());
+         }
+ #else
+         if(flock(qcopfile.handle(), LOCK_EX)) {
+             /* some error occurred */
+-            qWarning(QString("Failed to obtain file lock on %1 (%2)")
++            qWarning("%s", QString("Failed to obtain file lock on %1 (%2)")
+                     .arg(qcopfn).arg( errno ).toAscii().constData());
+         }
+ #endif
+@@ -77,7 +77,7 @@
+ 
+         return true;
+     } else {
+-        qWarning(QString("Failed to open file %1")
++        qWarning("%s", QString("Failed to open file %1")
+                 .arg(qcopfn).toAscii().constData());
+         return false;
+     }
+Index: qtmoko/src/server/ui/components/firstuse/firstuse.cpp
+===================================================================
+--- qtmoko.orig/src/server/ui/components/firstuse/firstuse.cpp	2011-10-26 13:49:18.000000000 +0200
++++ qtmoko/src/server/ui/components/firstuse/firstuse.cpp	2011-10-26 13:49:46.000000000 +0200
+@@ -418,7 +418,7 @@
+     config.beginGroup("Language");
+     QString l = config.value("Language", "en_US").toString();
+     QString cl = getenv("LANG");
+-    qWarning(QString("language message - %1").arg(l).toLatin1().constData());
++    qWarning("%s", QString("language message - %1").arg(l).toLatin1().constData());
+     // setting anyway...
+     if (l.isNull())
+         unsetenv("LANG");
+@@ -445,7 +445,7 @@
+         trans = new QTranslator(qApp);
+         QString atf = qmFiles[i];
+         QString tfn = Qtopia::qtopiaDir() + "i18n/"+l+"/"+atf;
+-        qWarning(QString("loading %1").arg(tfn).toLatin1().constData());
++        qWarning("%s", QString("loading %1").arg(tfn).toLatin1().constData());
+         if ( trans->load(tfn) ) {
+             qWarning(" installing translator");
+             qApp->installTranslator( trans );
+@@ -463,7 +463,7 @@
+             trans = new QTranslator(qApp);
+             QString atf = settingsTable[i].trans;
+             QString tfn = Qtopia::qtopiaDir() + "i18n/"+l+"/"+atf;
+-            qWarning(QString("loading %1").arg(tfn).toLatin1().constData());
++            qWarning("%s", QString("loading %1").arg(tfn).toLatin1().constData());
+             if ( trans->load(tfn) ) {
+                 qWarning(" installing translator");
+                 qApp->installTranslator( trans );
+Index: qtmoko/src/tools/dbmigrate/migrateengine.cpp
+===================================================================
+--- qtmoko.orig/src/tools/dbmigrate/migrateengine.cpp	2011-10-27 00:58:02.000000000 +0200
++++ qtmoko/src/tools/dbmigrate/migrateengine.cpp	2011-10-27 00:59:25.000000000 +0200
+@@ -54,7 +54,7 @@
+         QString errString=QString("CHECK: %1:%2 check failed: %3\n").arg(file).arg(line).arg(message);
+         db.rollback();
+         db.close();
+-        qCritical(qPrintable(errString));
++        qCritical("%s", qPrintable(errString));
+     }
+     return result;
+ }
+@@ -68,7 +68,7 @@
+         errString+=QString("SqlError: (%1, %2)\n").arg(query.lastError().number()).arg(query.lastError().text());
+         db.rollback();
+         db.close();
+-        qCritical(qPrintable(errString));
++        qCritical("%s", qPrintable(errString));
+         return false;
+     }
+     else
+@@ -85,7 +85,7 @@
+         errString+=QString("SqlError: (%1, %2, %3)\n").arg(qry.lastError().number()).arg(qry.lastError().databaseText()).arg(qry.lastError().driverText());
+         db.rollback();
+         db.close();
+-        qCritical(qPrintable(errString));
++        qCritical("%s", qPrintable(errString));
+         return false;
+     }
+     else
+@@ -280,7 +280,7 @@
+     if (!database->isOpen()) {
+         if (!database->open()) {
+             QString errString=QString("OPEN DATABASE: failed (%1, %2, %3)\n").arg(db.lastError().number()).arg(db.lastError().databaseText()).arg(db.lastError().driverText());
+-            qCritical(qPrintable(errString));
++            qCritical("%s", qPrintable(errString));
+             return false;
+         }
+     }
+@@ -320,7 +320,7 @@
+ 
+             if (!database->open()) {
+                 QString errString=QString("OPEN DATABASE: failed (%1, %2, %3)\n").arg(db.lastError().number()).arg(db.lastError().databaseText()).arg(db.lastError().driverText());
+-                qCritical(qPrintable(errString));
++                qCritical("%s", qPrintable(errString));
+                 return false;
+             }
+         }
+@@ -334,7 +334,7 @@
+     if (!database->transaction()) {
+         QString errString=QString("BEGIN TRANSACTION: failed (%1, %2, %3)\n").arg(database->lastError().number()).arg(database->lastError().databaseText()).arg(db.lastError().driverText());
+         db.close();
+-        qCritical(qPrintable(errString));
++        qCritical("%s", qPrintable(errString));
+         return false;
+     }
+ 
+@@ -519,7 +519,7 @@
+             QString errString=QString("COMMIT: failed (%1, %2, %3)\n").arg(db.lastError().number()).arg(db.lastError().databaseText()).arg(db.lastError().driverText());
+             db.rollback();
+             db.close();
+-            qCritical(qPrintable(errString));
++            qCritical("%s", qPrintable(errString));
+             return false;
+         }
+     }
+@@ -538,7 +538,7 @@
+         {
+             QString errString=QString("BEGIN TRANSACTION: failed (%1, %2, %3)\n").arg(db.lastError().number()).arg(db.lastError().databaseText()).arg(db.lastError().driverText());
+             db.close();
+-            qCritical(qPrintable(errString));
++            qCritical("%s", qPrintable(errString));
+             return false;
+         }
+ 
+@@ -553,7 +553,7 @@
+             QString errString=QString("COMMIT: failed (%1, %2, %3)\n").arg(db.lastError().number()).arg(db.lastError().databaseText()).arg(db.lastError().driverText());
+             db.rollback();
+             db.close();
+-            qCritical(qPrintable(errString));
++            qCritical("%s", qPrintable(errString));
+             return false;
+         }
+     }
