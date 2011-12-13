@@ -32,17 +32,27 @@ LANGUAGES := $(shell ls i18n/ | xargs echo | sed 's/ /,/g')
 # Device defaults to neo, but can be set from the calling environment as well:
 # QTMOKO_DEVICE=<device> dpkg-buildpackage
 QTMOKO_DEVICE ?= neo
+ifeq (neo,$(QTMOKO_DEVICE))
+  QTMOKO_DEVICE_SHORTDESC := Neo FreeRunner
+else ifeq (gta04,$(QTMOKO_DEVICE))
+  QTMOKO_DEVICE_SHORTDESC := GTA04
+else
+  QTMOKO_DEVICE_SHORTDESC := $(QTMOKO_DEVICE)
+endif
 
 TOOLCHAIN := linux-native-g++
 QMAKE_CONF := devices/$(QTMOKO_DEVICE)/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
-
-toto:
-	echo $(LANGUAGES)
 
 %:
 	dh $@
 
 override_dh_auto_configure:
+	# debhelper files
+	cp debian/qtmoko.install.in debian/qtmoko-$(QTMOKO_DEVICE).install
+	[ ! -f debian/qtmoko-$(QTMOKO_DEVICE).install.in ] || \
+		cat debian/qtmoko-$(QTMOKO_DEVICE).install.in >>debian/qtmoko-$(QTMOKO_DEVICE).install
+	cp debian/qtmoko.links.in debian/qtmoko-$(QTMOKO_DEVICE).links
+
 	# Patch the qmake.conf file with proper toolchain configuration
 	cp -a $(QMAKE_CONF) $(QMAKE_CONF).orig
 	sed -i 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" $(QMAKE_CONF)
@@ -67,6 +77,11 @@ override_dh_auto_clean:
 	[ ! -f $(QMAKE_CONF).orig ] || mv $(QMAKE_CONF).orig $(QMAKE_CONF)
 	rm -fr ../build
 	rm -f sdk/LICENSE.QtopiaGPL
+	# debian/control
+	sed 's/@QTMOKO_DEVICE@/$(QTMOKO_DEVICE)/g;s/@QTMOKO_DEVICE_SHORTDESC@/$(QTMOKO_DEVICE_SHORTDESC)/g' debian/control.in >debian/control
+	# debhelper files
+	rm -f debian/qtmoko-*.install
+	rm -f debian/qtmoko-*.links
 
 override_dh_auto_install:
 	cd ../build && make install
@@ -87,4 +102,4 @@ override_dh_makeshlibs:
 	dh_makeshlibs -n
 
 override_dh_shlibdeps:
-	dh_shlibdeps -l$(CURDIR)/debian/qtmoko/opt/qtmoko/lib
+	dh_shlibdeps -l$(CURDIR)/debian/qtmoko-$(QTMOKO_DEVICE)/opt/qtmoko/lib

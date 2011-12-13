@@ -80,7 +80,7 @@ static bool setAudioScenario(NeoAudioScenario audioScenario)
 
     QStringList args;
     args.append("-f");
-    args.append("/usr/share/openmoko/scenarios/" + mode + ".state");
+    args.append("/opt/qtmoko/etc/alsa-scenarios/" + mode + ".state");
     args.append("restore");
 
     QProcess p;
@@ -90,7 +90,7 @@ static bool setAudioScenario(NeoAudioScenario audioScenario)
     int result = p.exitCode();
 
     if (result == 0)
-        qLog(AudioState) << "setAudioScenario(); using"<< QString( "/usr/share/openmoko/scenarios/%1.state").arg(mode);
+        qLog(AudioState) << "setAudioScenario(); using"<< QString( "/opt/qtmoko/etc/alsa-scenarios/%1.state").arg(mode);
     else
         qLog(AudioState)<< QString("Setting audio mode to: %1 failed").arg(mode);
 

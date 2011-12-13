@@ -232,28 +232,6 @@ mkdir /media/card/etc/network/run
 mkdir /media/card/var/spool/at
 
 
-Step 7 - logread utility
-========================
-
-* Used for displaying log in settings. It's not presented in debian. Instead we
-  provide simple bash script:
-
-cat > /media/card/sbin/logread <<__END__
-#!/bin/sh
-tail -n 100 /var/log/messages
-__END__
-
-chmod +x /media/card/sbin/logread
-
-Step 7.4 - wpa_supplicant
-=========================
-
-* Qtopia by default expects wpa_supplicant in /usr/sbin while debian installs
-  it to /sbin. We fix this with symlink
-  
-cd /media/card/usr/sbin
-ln -s ../../sbin/wpa_supplicant wpa_supplicant
-
 Step 7.5 - dash
 ===============
 

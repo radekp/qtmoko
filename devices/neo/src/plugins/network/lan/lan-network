@@ -426,7 +426,7 @@ start()
                 /sbin/iwconfig $1 essid any
             fi
         else
-            /usr/sbin/wpa_supplicant -d -c$WPACONF -B -i$1 | logger -t WPA &
+            /sbin/wpa_supplicant -d -c$WPACONF -B -i$1 | logger -t WPA &
             #ifup $1 | logger -t WPA &
         fi
 

@@ -95,9 +95,6 @@ echo g_ether > /media/card/etc/modules
 echo ppp_generic >> /media/card/etc/modules
 echo joydev >> /media/card/etc/modules
 
-* Unpack alsa scenarios to /usr/share/openmoko - you can find these files
-  in any openmoko distro.
-
 * Edit /media/card/etc/ppp/options and replace "auth" with "noauth"
 
 * Create /media/card/etc/fb.modes
@@ -282,28 +279,6 @@ rm libomhacks0_0.15-1_armel.deb
 rm omhacks_0.15-1_armel.deb
 exit
 
-
-Step 7 - logread utility
-========================
-
-* Used for displaying log in settings. It's not presented in debian. Instead we
-  provide simple bash script:
-
-cat > /media/card/sbin/logread <<__END__
-#!/bin/sh
-tail -n 100 /var/log/messages
-__END__
-
-chmod +x /media/card/sbin/logread
-
-Step 7.4 - wpa_supplicant
-=========================
-
-* Qtopia by default expects wpa_supplicant in /usr/sbin while debian installs
-  it to /sbin. We fix this with symlink
-  
-cd /media/card/usr/sbin
-ln -s ../../sbin/wpa_supplicant wpa_supplicant
 
 Step 7.5 - dash
 ===============

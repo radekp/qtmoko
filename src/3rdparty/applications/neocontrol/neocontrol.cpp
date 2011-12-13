@@ -112,7 +112,7 @@ void NeoControl::saveClicked()
 {
     if(screen == ScreenMixer)
     {
-        system("alsactl -f /usr/share/openmoko/scenarios/gsmhandset.state store");
+        system("alsactl -f /opt/qtmoko/etc/alsa-scenarios/gsmhandset.state store");
     }
 }
 
@@ -183,7 +183,7 @@ void NeoControl::showScreen(NeoControl::Screen scr)
 
 int NeoControl::openAlsaMixer()
 {
-    system("alsactl -f /usr/share/openmoko/scenarios/gsmhandset.state restore");
+    system("alsactl -f /opt/qtmoko/etc/alsa-scenarios/gsmhandset.state restore");
 
     int ret = 0;
     QString text(tr("Call volume settings\n\n"));
@@ -225,7 +225,7 @@ void NeoControl::closeAlsaMixer()
         mixerFd = NULL;
     }
 
-    system("alsactl -f /usr/share/openmoko/scenarios/stereoout.state restore");
+    system("alsactl -f /opt/qtmoko/etc/alsa-scenarios/stereoout.state restore");
 }
 
 void NeoControl::updateMixer()

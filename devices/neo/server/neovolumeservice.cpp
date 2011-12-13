@@ -269,8 +269,8 @@ int NeoVolumeService::saveState()
         m_mode = "gsmbluetooth";
 
     QString confDir;
-    if (QDir("/usr/share/openmoko/scenarios").exists())
-        confDir="/usr/share/openmoko/scenarios/";
+    if (QDir("/opt/qtmoko/etc/alsa-scenarios").exists())
+        confDir="/opt/qtmoko/etc/alsa-scenarios/";
     else
         confDir="/etc/";
 

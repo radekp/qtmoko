@@ -8,12 +8,12 @@ Homepage: http://www.qtmoko.org
 Vcs-Git: git://github.com/radekp/qtmoko.git
 Vcs-Browser: https://github.com/radekp/qtmoko
 
-Package: qtmoko-neo
+Package: qtmoko-@QTMOKO_DEVICE@
 Provides: qtmoko
 Conflicts: qtmoko
 Architecture: armel
 Depends: ${misc:Depends}, ${shlibs:Depends}, bluez-alsa, ttf-dejavu, sqlite3, psmisc, alsa-utils
-Description: Smartphone environment based on QT Extended - Neo FreeRunner flavor
+Description: Smartphone environment based on QT Extended - @QTMOKO_DEVICE_SHORTDESC@ flavor
  QtMoko provides a fully integrated phone stack plus smartphone environment
  for Linux based smartphones.
  .
@@ -24,4 +24,4 @@ Description: Smartphone environment based on QT Extended - Neo FreeRunner flavor
  * Neo Freerunner
  * GTA04
  .
- This package ships the Neo FreeRunner flavor of QtMoko.
+ This package ships the @QTMOKO_DEVICE_SHORTDESC@ flavor of QtMoko.
