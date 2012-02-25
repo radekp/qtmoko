@@ -396,7 +396,7 @@ void QImageSourceSelector::serviceRequest( const QString& type, QDSAction& actio
             d->setLabel( stream );
         }
     } else {
-        qWarning( "%s", action.errorMessage().toLatin1() );
+	qWarning( "%s", action.errorMessage().toLatin1().constData() );
     }
 }
 

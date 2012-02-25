@@ -226,7 +226,7 @@ void QAudioSourceSelector::serviceRequest( const QString& type, QDSAction& actio
         stream >> filename;
         setContent( QContent( filename ) );
     } else {
-        qWarning( "%s", action.errorMessage().toLatin1() );
+	qWarning( "%s", action.errorMessage().toLatin1().constData() );
     }
 }
 

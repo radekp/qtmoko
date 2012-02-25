@@ -27,7 +27,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <linux/videodev.h>
+#include <libv4l1-videodev.h>
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>

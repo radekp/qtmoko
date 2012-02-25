@@ -330,7 +330,7 @@ void FirstUse::switchDialog()
             zoneID = cfg.value( "Zone" + QString::number( zoneIndex )).toString();
             curZone = QTimeZone( zoneID.toAscii().constData());
             if ( !curZone.isValid() ){
-                qWarning( "initEnvironment() Invalid QTimeZone %s", (const char *)zoneID.toLatin1() );
+	      qWarning( "initEnvironment() Invalid QTimeZone %s", zoneID.toLatin1().constData() );
                 break;
             }
             zoneIndex++;

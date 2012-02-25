@@ -23,7 +23,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <linux/videodev.h>
+#include <libv4l1-videodev.h>
 #include <sys/soundcard.h>
 #include <custom.h>
 #include <QSettings>

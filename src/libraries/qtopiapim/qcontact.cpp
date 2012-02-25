@@ -1240,7 +1240,7 @@ VObject *QContact::createVObject() const
             // load-and-save (allows non-JPEG images)
             QImage sp;
             if( !sp.load( pfn ) ) {
-                qWarning("QContact::createVObject - Unable to load contact photo %s", pfn.toLatin1().data());
+                qWarning("QContact::createVObject - Unable to load contact photo %s", pfn.toLatin1().constData());
             } else {
                 QBuffer buffer;
                 buffer.open(QIODevice::WriteOnly);
@@ -1570,7 +1570,7 @@ static QContact parseVObject( VObject *obj )
                 VObject *o = nextVObject( &nit );
                 QString name = vObjectName( o );
                 QString value = vObjectStringZValue( o );
-                printf(" subprop: %s = %s\n", name.data(), value.toLatin1() );
+                printf(" subprop: %s = %s\n", name.data(), value.toLatin1().constData() );
             }
         }
 #endif

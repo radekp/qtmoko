@@ -29,7 +29,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/mman.h>
-#include <linux/videodev.h>
+#include <libv4l1-videodev.h>
 #include <custom.h>
 
 #include <QtCore>
