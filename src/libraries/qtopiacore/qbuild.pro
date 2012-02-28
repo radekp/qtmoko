@@ -36,7 +36,7 @@ qt [
     help="Build Qtopia Core"
     prerequisiteActions="#(h)target_pre" configure
     inputFiles=makefiles
-    outputFiles=$$qt_get_libs($$QTDIR) force_qt
+    outputFiles=$$qt_get_libs($$QTDIR)
     commands=\
         "#(eh)echo Checking if we need to build Qtopia Core..."\
         # Force hide all output (make -q doesn't actually suppress output?)

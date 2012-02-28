@@ -3128,7 +3128,7 @@ if ( opt("qtopia_ui") && !opt("qte_config") ) {
         symlink_file("$depotpath/qtopiacore/qconfig-qpe.h", "$SDKROOT/qtopiacore/qconfig-qpe.h");
     }
     my $args = "-embedded ".opt("arch")." -platform $qt_platform -xplatform $qt_xplatform ".
-               "-prefix ".fixpath("$SDKROOT/qtopiacore/target")." -make src -make tools ".
+               "-prefix ".fixpath("$SDKROOT/qtopiacore/target")." -make src -nomake tools ".
                "-no-stl -no-exceptions -no-xmlpatterns -no-qt3support -no-glib -no-cups -no-dbus -no-accessibility ".
                "-nomake examples -nomake demos -nomake docs ".
                "-DQT_QWS_DISABLE_FLUSHCLIPPING ".
