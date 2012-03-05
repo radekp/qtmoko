@@ -18,6 +18,13 @@ if ( $isWindows ) {
 
 use constant DEBUG => 0;
 
+my $locations = "-locations none";
+my $silent = "";
+if ( $ARGV[0] eq "-silent" ) {
+    shift(@ARGV);
+    $silent = "-silent";
+}
+
 my @LANGS = split(/\s+/,shift(@ARGV));
 my $STRING_LANGUAGE = shift(@ARGV);
 
@@ -79,8 +86,8 @@ for my $lang ( @LANGS ) {
     print CPP "TRANSLATIONS += $filename\n";
 }
 close CPP;
-my $cmd = "$HOST_QT_BINS/lupdate -silent $tmp.pro";
-print "$cmd\n";
+my $cmd = "$HOST_QT_BINS/lupdate $silent $locations $tmp.pro";
+print "theme_lupdate: $cmd\n";
 system($cmd);
 
 if ( $STRING_LANGUAGE ) {
@@ -90,8 +97,8 @@ if ( $STRING_LANGUAGE ) {
     my $filename = $tsfile."-".$STRING_LANGUAGE.".ts";
     print CPP "TRANSLATIONS += $filename\n";
     close CPP;
-    $cmd = "$HOST_QT_BINS/lupdate -silent -pluralonly $tmp.pro";
-    print "$cmd\n";
+    $cmd = "$HOST_QT_BINS/lupdate $silent $locations -pluralonly $tmp.pro";
+    print "theme_lupdate: $cmd\n";
     system($cmd);
 }
 
@@ -107,7 +114,7 @@ sub parseFile
         $filename = "$themedir/$page";
     }
     $pageName = undef;
-    DEBUG and print "Parsing $filename\n";
+    DEBUG and print "theme_lupdate: Parsing $filename\n";
     my $parser = new XML::Parser(ErrorContext => 2);
     $parser->setHandlers( Start => \&start_handler,
                             Char => \&char_handler );
@@ -142,7 +149,7 @@ sub char_handler
 
 sub usage
 {
-    print "\nUsage: theme_lupdate \"lang1 lang2 ... langn\" theme.conf\n";
+    print "\nUsage: theme_lupdate [-silent] \"lang1 lang2 ... langn\" theme.conf\n";
     exit
 }
 
