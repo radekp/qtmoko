@@ -1,4 +1,4 @@
-<!DOCTYPE TS><TS>
+<!DOCTYPE TS><TS language="ru">
 <context>
     <name>MainWindow</name>
     <message>

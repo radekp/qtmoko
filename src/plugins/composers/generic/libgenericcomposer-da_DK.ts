@@ -1,5 +1,5 @@
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.0" language="da_DK">
 <context>
     <name>GenericComposerInterface</name>
     <message>

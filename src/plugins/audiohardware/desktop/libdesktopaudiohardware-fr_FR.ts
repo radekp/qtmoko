@@ -1,4 +1,4 @@
-<!DOCTYPE TS><TS>
+<!DOCTYPE TS><TS language="fr_FR">
 <context>
     <name>BluetoothAudioState</name>
     <message>
