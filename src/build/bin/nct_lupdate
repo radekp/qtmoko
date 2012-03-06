@@ -19,6 +19,8 @@ use constant DEBUG => 0;
 
 # Usage: nct_lupdate [ -nowarn ] [ -silent ] [ -depot path ] [ -content trtarget ] "lang1 lang2 ... langn" string_language files
 
+my $lupdate = "$HOST_QT_BINS/lupdate";
+
 my $global = 0;
 my $depot;
 my $warn_on = 1;
@@ -217,9 +219,9 @@ for my $tsfile ( keys %contextinfo ) {
         print CPP "TRANSLATIONS += $filename\n";
     }
     close CPP;
-    my $cmd = "$HOST_QT_BINS/lupdate $silent $locations $tmp.pro";
-    print "nct_lupdate: $cmd\n";
-    system($cmd);
+    my $args = "$silent $locations $tmp.pro";
+    print "nct_lupdate: lupdate $args\n";
+    system("$lupdate $args");
 
     if ( $STRING_LANGUAGE ) {
         # Now strip out the languages and re-run lupdate for the string language with -pluralonly
@@ -237,9 +239,9 @@ for my $tsfile ( keys %contextinfo ) {
 	}
         print CPP "TRANSLATIONS += $filename\n";
         close CPP;
-        $cmd = "$HOST_QT_BINS/lupdate $silent $locations -pluralonly $tmp.2.pro";
-        print "nct_lupdate: $cmd\n";
-        system($cmd);
+        $args = "$silent $locations -pluralonly $tmp.2.pro";
+        print "nct_lupdate: lupdate $args\n";
+        system("$lupdate $args");
     }
 
     unlink $tmp;
