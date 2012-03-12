@@ -15,6 +15,7 @@ stty -F /dev/tty1 -echo
 rm -rf /var/run/ppp
 mkdir /var/run/ppp
 mkdir -p /var/cache/apt/archives/partial
+
 atd /var/spool/at
 
 touch /tmp/restart-qtopia
@@ -29,3 +30,5 @@ if [ -e /tmp/restart-qtopia-qvga ]; then
     #qcop service send Launcher "execute(QString)" "calibrate"
 fi
 done
+
+killall -q atd

@@ -25,9 +25,12 @@ echo 0 > /sys/class/leds/gta04\:red\:power/brightness
 echo 0 > /sys/class/leds/gta04\:green\:power/brightness
 stty -F /dev/tty1 -echo
 mkdir -p /var/cache/apt/archives/partial
+
 atd /var/spool/at
 
 touch /tmp/restart-qtopia
 while [ -e /tmp/restart-qtopia ]; do
 qpe 2>&1 | logger -t 'Qtopia'
 done
+
+killall -q atd
