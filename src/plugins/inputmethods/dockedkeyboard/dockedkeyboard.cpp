@@ -30,7 +30,7 @@ DockedKeyboard::DockedKeyboard(QWidget* parent, Qt::WFlags f) : Keyboard(parent,
     // This should also help keep the keyboard on top of other widgets.
     Q_UNUSED(parent);
     Q_ASSERT(keyboardFrame);
-    qLog(Input) << "DockedKeyboard Instatiated.";
+    qLog(Input) << "DockedKeyboard Instantiated.";
 };
 
 void DockedKeyboard::queryResponse ( int , const QVariant & )
