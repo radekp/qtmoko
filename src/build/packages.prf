@@ -15,8 +15,7 @@ exists($$QPEDIR/src/build/trace_on):message(packages.prf)
 
 # FIXME document how to set the default license and maintainer
 isEmpty(DEFAULT_LICENSE) {
-    free_package:DEFAULT_LICENSE=GPL
-    else:DEFAULT_LICENSE=Unspecified
+    DEFAULT_LICENSE=GPL
 }
 isEmpty(DEFAULT_MAINTAINER) {
     depotProject:qtopia_depot:DEFAULT_MAINTAINER=Qt Extended <info@qtextended.org>

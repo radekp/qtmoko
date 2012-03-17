@@ -69,7 +69,7 @@ override_dh_auto_configure:
 
 	# Qt Extended configuration step
 	mkdir -p ../build
-	cd ../build && "$(CONFIGURE)" -extra-qt-embedded-config "-opensource" -device $(QTMOKO_DEVICE) -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include
+	cd ../build && "$(CONFIGURE)" -device $(QTMOKO_DEVICE) -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include
 
 override_dh_auto_build:
 	cd ../build && make

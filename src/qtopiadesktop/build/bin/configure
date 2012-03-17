@@ -129,37 +129,6 @@ if ( configopt("depot") ) {
     }
 }
 
-# Check the license
-my %licenseInfo = ();
-$licenseInfo{Product} = "Qt Extended Sync Agent";
-checkLicenseKey();
-
-if ( $qtVersionStr[1] == 4 || ($qtVersionStr[1] == 5 && $qtVersionStr[2] == 0) ) {
-    # Remove any license files left over
-    if ( !configopt("depot") ) {
-        for my $location ( $qt_depot_path ) {
-            for my $file ( glob("$location/LICENSE*"), glob("$location/.LICENSE*") ) {
-                unlink $file;
-            }
-            my $source = "$depotpath/".$licenseInfo{LicenseFile};
-            my $dest = "$location/".$licenseInfo{DestLicenseFile};
-            if ( -f $dest ) {
-                unlink $dest;
-            }
-            copy("$depotpath/".$licenseInfo{LicenseFile}, "$location/".$licenseInfo{DestLicenseFile});
-            if ( $isWindows ) {
-                # configure.exe doesn't know about LICENSE.Qtopia, just put in all of the .LICENSE* files
-                copy("$depotpath/".$licenseInfo{LicenseFile}, "$location/.LICENSE");
-                copy("$depotpath/".$licenseInfo{LicenseFile}, "$location/.LICENSE-US");
-                copy("$depotpath/".$licenseInfo{LicenseFile}, "$location/.LICENSE-EVALUATION");
-                copy("$depotpath/".$licenseInfo{LicenseFile}, "$location/.LICENSE-EVALUATION-US");
-                copy("$depotpath/".$licenseInfo{LicenseFile}, "$location/.LICENSE-DESKTOP");
-                copy("$depotpath/".$licenseInfo{LicenseFile}, "$location/.LICENSE-DESKTOP-US");
-            }
-        }
-    }
-}
-
 # Check for x86_64
 my $x86_64 = 0;
 {
@@ -470,12 +439,6 @@ set_optvar("qmake_debug", +{
     "type" => "bool",
     "set" => [ "%", "hidden" ],
 });
-set_optvar("confirm_license", +{
-    "type" => "bool",
-    "set" => [ "%", "hidden" ],
-    "unset" => [ "no-%", "hidden" ],
-    "no_keep" => 1,
-});
 set_optvar("quick", +{
     "type" => "bool",
     "set" => [ "%", "hidden" ],
@@ -552,9 +515,8 @@ set_optvar("version", +{
     "qt" => $qtVersionStr,
     "hostqt" => $hostQtVersionStr,
     "config_pri" => "QTOPIA_VERSION=%{qtopia}\n".
-                    "free_package:QTOPIA_LICENSE=\"GPL v2\"\n".
-                    "else:QTOPIA_LICENSE=Commercial\n".
-                    "QTOPIA_MAINTAINER=\"Nokia, Qt Software (www.trolltech.com)\"",
+                    "QTOPIA_LICENSE=\"GPL v2\"\n".
+                    "QTOPIA_MAINTAINER=\"QtMoko project (www.qtmoko.org)\"",
 });
 set_optvar("page_size", +{
     "type" => "placeholder",
@@ -683,9 +645,6 @@ if ( $engine eq "Getopt" ) {
     print_configure_line("Qt Extended (expanded commandline):", join(" ", @ARGV_SAVE));
 }
 =cut
-
-# Check license stuff
-validateLicense();
 
     $HOST_QT = $DQTDIR;
     $HOST_QT_LIBS = fixpath("$DQTDIR/lib");
@@ -1608,256 +1567,6 @@ sub symlink_all_files_only
     }
 }
 
-sub checkLicenseKey
-{
-    #print "product = $licenseInfo{Product}\n";
-    if ( -f "$depotpath/LICENSE.GPL" && configopt("free") ) {
-        $licenseInfo{Product} .= " Open Source";
-        $licenseInfo{LicenseFile} = "LICENSE.GPL";
-        if ( $qtVersionStr[1] == 4 ) {
-            $licenseInfo{DestLicenseFile} = "LICENSE.GPL2";
-        } else {
-            $licenseInfo{DestLicenseFile} = "LICENSE.QtopiaGPL";
-        }
-    } elsif ( -f "$depotpath/LICENSE.TROLL" && configopt("depot") ) {
-        $licenseInfo{Product} .= " Qt Software Internal";
-        $licenseInfo{LicenseFile} = "LICENSE.TROLL";
-        $licenseInfo{DestLicenseFile} = "LICENSE.TROLL";
-    } else {
-        $licenseInfo{DestLicenseFile} = "LICENSE.Qtopia";
-        # read in the license file
-        my $license = fixpath($ENV{HOME}."/.qt-license");
-        if ( -f $license and open IN, $license ) {
-            my @data = <IN>;
-            close IN;
-            for ( @data ) {
-                if ( /^([^=]+)="?(.+)"?$/ ) {
-                    $licenseInfo{$1} = $2;
-                }
-            }
-            if ( ! $licenseInfo{LicenseKeyExt} ) {
-                print <<END;
-
-You are using an old license file.
-
-Please install the license file supplied with Qt Extended,
-or install the Qt Extended Open Source Edition if you intend to
-develop free software.
-END
-                exit 1;
-            }
-            if ( ! $licenseInfo{Licensee} ) {
-                print <<END;
-
-Invalid license key. Please check the license key.
-END
-                exit 1;
-            }
-        } else {
-            print <<END;
-
-Missing file $license. Please install your license file to proceed
-END
-            exit 1;
-        }
-
-        # Key verification
-        if ( ! $licenseInfo{LicenseKeyExt} =~ /(.)....*-(.)...*-(....*)-(.)...*-.....*-.....*-..../ ) {
-            print <<END;
-
-Invalid license key. Please check the license key.
-END
-            exit 1;
-        }
-
-        my ( $ProductCode, $PlatformCode, $LicenseTypeCode, $LicenseFeatureCode ) = ( $licenseInfo{LicenseKeyExt} =~ /(.)....*-(.)...*-(....*)-(.)...*-.....*-.....*-..../ );
-
-        my $LicenseType;
-        if ( $LicenseTypeCode eq "F4M" ) {
-            $LicenseType = "Commercial";
-        } elsif ( $LicenseTypeCode eq "Z4M" ||
-                  $LicenseTypeCode eq "R4M" ||
-                  $LicenseTypeCode eq "Q4M" ) {
-            $LicenseType = "Evaluation";
-        }
-        if ( ! $LicenseType ) {
-            print <<END;
-
-Invalid license key. Please check the license key.
-END
-            exit 1;
-        }
-
-        if ( $LicenseFeatureCode eq "G" ) {
-            # US
-            if ( $LicenseType eq "Commercial" ) {
-                copy("$depotpath/.LICENSE", "$depotpath/LICENSE");
-            } else {
-                copy("$depotpath/.LICENSE-EVALUATION-US", "$depotpath/LICENSE");
-            }
-        } elsif ( $LicenseFeatureCode eq "2" ) {
-            # non-US
-            if ( $LicenseType eq "Commercial" ) {
-                copy("$depotpath/.LICENSE", "$depotpath/LICENSE");
-            } else {
-                copy("$depotpath/.LICENSE-EVALUATION", "$depotpath/LICENSE");
-            }
-        } else {
-            print <<END;
-
-Invalid license key. Please check the license key.
-END
-            exit 1;
-        }
-
-        if ( ! -f "$depotpath/LICENSE" ) {
-            print <<END;
-
-The LICENSE or LICENSE.GPL file shipped with
-this software has disappeared.
-
-Sorry, you are not licensed to use this software.
-Try re-installing.
-END
-            exit 1;
-        }
-
-        $licenseInfo{Product} .= " $LicenseType";
-        $licenseInfo{LicenseFile} = "LICENSE";
-    }
-
-}
-
-sub validateLicense
-{
-    print "\nThis is the ".$licenseInfo{Product}." Edition.\n\n";
-    if ( $licenseInfo{LicenseFile} eq "LICENSE" ) {
-        if ( $licenseInfo{ExpiryDate} ) {
-            my $ExpiryDate = $licenseInfo{ExpiryDate};
-            $ExpiryDate =~ s/-//g;
-            chomp $ExpiryDate;
-            chomp $ExpiryDate;
-            if ( ! $ExpiryDate ) {
-                $ExpiryDate = "0";
-            }
-            my $Today = strftime("%Y%m%d", localtime());
-            chop $Today;
-            if ( $Today > $ExpiryDate ) {
-                print <<END;
-
-WARNING  WARNING  WARNING  WARNING
-
-  Your support and upgrade period has expired.
-
-  You may continue to use your last licensed release
-  of Qt under the terms of your existing license
-  agreement. But you are not entitled to technical
-  support, nor are you entitled to use any more recent
-  Qt releases.
-
-  Please contact qt-sales\@nokia.com to renew your
-  support and upgrades for this license.
-
-WARNING  WARNING  WARNING  WARNING
-
-END
-                sleep 3;
-            }
-        }
-    }
-
-    if ( $licenseInfo{Product} =~ m/Evaluation/ ) {
-        if ( $licenseInfo{LicenseFile} ne "LICENSE.TROLL" ) {
-            open IN, "$depotpath/$licenseInfo{LicenseFile}" or die "Can't read $depotpath/$licenseInfo{LicenseFile}";
-            my $TheLicense = <IN>;
-            close IN;
-            chomp $TheLicense;
-            chomp $TheLicense;
-            while ( 1 ) {
-                my $acceptance = "no";
-                if ( opt("confirm_license") ) {
-                    print "You have already accepted the terms of the $TheLicense.\n";
-                    $acceptance = "yes";
-                } else {
-                    print <<END;
-You are licensed to use this software under the terms of
-the $TheLicense.
-
-Type '?' to view the $TheLicense.
-Type 'yes' to accept this license offer.
-Type 'no' to decline this license offer.
-
-END
-                    print "Do you accept the terms of the $TheLicense? ";
-                    $acceptance = <STDIN>;
-                    chomp $acceptance;
-                }
-                print "\n";
-                if ( $acceptance eq "yes" ) {
-                    last;
-                } elsif ( $acceptance eq "no" ) {
-                    print <<END;
-You are not licensed to use this software.
-
-END
-                    exit 1;
-                } elsif ( $acceptance eq "?" ) {
-                    system("more $depotpath/".$licenseInfo{LicenseFile});
-                }
-            }
-        }
-    } else {
-        if ( $licenseInfo{LicenseFile} ne "LICENSE.TROLL" ) {
-            while ( 1 ) {
-                my $acceptance = "no";
-                if ( opt("confirm_license") ) {
-                    print "Skipping confirmation of the Qt Extended license agreement.\n";
-                    $acceptance = "yes";
-                } else {
-                    if ( $licenseInfo{LicenseFile} eq "LICENSE.GPL" ) {
-                        print <<END;
-You are licensed to use this software under the terms of the GPL.
-Please see the file LICENSE.GPL for the licensing terms.
-
-Type 'yes' to accept this license offer.
-Type 'no' to decline this license offer.
-
-END
-                        print "Do you accept this license agreement? ";
-                    } else {
-                        print "------------------------------------------------------------------------\n\n";
-                        my $source = fixpath("$depotpath/".$licenseInfo{LicenseFile});
-                        open( F, "$source" );
-                        print <F>;
-                        close( F );
-                        print "\n------------------------------------------------------------------------\n";
-                        print <<END;
-
-Type 'yes' if you have a Qt Extended license agreement that is signed by you and Nokia.
-Type 'no' if you do NOT have a Qt Extended license agreement that is signed by you and Nokia.
-
-END
-                        print "Do you have a signed license agreement? ";
-                    }
-                    $acceptance = <STDIN>;
-                    chomp $acceptance;
-                }
-                print "\n";
-                if ( $acceptance eq "yes" ) {
-                    last;
-                } elsif ( $acceptance eq "no" ) {
-                    print <<END;
-You are not licensed to use this software.
-Please contact qt-sales\@nokia.com to arrange a license.
-
-END
-                    exit 1;
-                }
-            }
-        }
-    }
-}
-
 sub get_qtopiacore_paths
 {
     # Qt/Qt Embedded stuff
@@ -1985,7 +1694,7 @@ sub setup_dqt_config
 
     my $args = "-platform $qt_platform ".
                "-no-stl -no-exceptions -no-webkit -no-xmlpatterns -no-phonon -no-qt3support -fast ".
-               "-confirm-license";
+               "-confirm-license -opensource";
     if ( $qtVersionStr[1] >= 5 ) {
         $args .= " -no-gtkstyle";
     }

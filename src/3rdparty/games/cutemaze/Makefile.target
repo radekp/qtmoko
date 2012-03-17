@@ -116,7 +116,6 @@ DIST          = ../../PDA/src/qtopia/qtopia_snapshot/qtopiacore/qt/mkspecs/commo
 		../../PDA/src/qtopia/qtopia_snapshot/src/3rdparty/libraries/md5/md5.pro \
 		../../PDA/src/qtopia/qtopia_snapshot/src/3rdparty/libraries/sqlite/sqlite.pro \
 		../../PDA/src/qtopia/qtopia_snapshot/src/build/depends.prf \
-		../../PDA/src/qtopia/qtopia_snapshot/src/build/license.prf \
 		../../PDA/src/qtopia/qtopia_snapshot/src/build/runlast.prf \
 		../../PDA/src/qtopia/qtopia_snapshot/src/build/installs.prf \
 		../../PDA/src/qtopia/qtopia_snapshot/src/build/common.prf \
