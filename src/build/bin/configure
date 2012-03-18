@@ -2544,20 +2544,20 @@ if ( opt("font") ) {
             $size = $2;
             $style = $3;
             $rotation = $4;
-        } elsif ( $filename =~ /(.*)_(\d+)_(\d+)\.qpf2/ ) {
+        } elsif ( $filename =~ /(.*)_(\d+)_(\d+)\.qpf2$/ ) {
             $family = $1;
             $size = $2;
             $style = $3;
-        } elsif ( $filename =~ /(.*)_(\d+)_(\d+)_italic\.qpf2/ ) {
+        } elsif ( $filename =~ /(.*)_(\d+)_(\d+)_italic\.qpf2$/ ) {
             $family = $1;
             $size = $2;
             $style = $3."i";
-        } elsif ( $filename =~ /(.*)_(\d+)_(\d+)_(t\d+)\.qpf2/) {
+        } elsif ( $filename =~ /(.*)_(\d+)_(\d+)_(t\d+)\.qpf2$/) {
             $family = $1;
             $size = $2;
             $style = $3;
             $rotation = $4;
-        } elsif ( $filename =~ /(.*)_(\d+)_(\d+)_italic_(t\d+)\.qpf2/) {
+        } elsif ( $filename =~ /(.*)_(\d+)_(\d+)_italic_(t\d+)\.qpf2$/) {
             $family = $1;
             $size = $2;
             $style = $3."i";
@@ -2613,7 +2613,7 @@ if ( opt("font") ) {
         my $filename = basename($file);
 
         FONTSPEC: for my $fontspec ( @$fontref ) {
-            if ( $fontspec eq $filename ) {
+            if ( $filename =~ /$fontspec/ ) {
                 DEBUG and print "FILE $file matches $fontspec\n";
                 push(@fonts, $file);
                 $fontref_handled{$fontspec} = 1;

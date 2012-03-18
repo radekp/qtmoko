@@ -36,6 +36,7 @@
 -add-displaysize 480x640
 -add-font dejavu_sans_condensed:10,12,13,16,28:50
 -add-font dejavu_sans_condensed:13,14,15,16,20,21,23,32,36:75
+-add-font DejaVu.*.ttf
 
 -D _FORTIFY_SOURCE=0
 -rtti
