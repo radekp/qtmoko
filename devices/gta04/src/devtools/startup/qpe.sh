@@ -30,7 +30,7 @@ atd /var/spool/at
 
 touch /tmp/restart-qtopia
 while [ -e /tmp/restart-qtopia ]; do
-qpe 2>&1 | logger -t 'Qtopia'
+    qpe
 done
 
 killall -q atd

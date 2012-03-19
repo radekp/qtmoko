@@ -20,15 +20,15 @@ atd /var/spool/at
 
 touch /tmp/restart-qtopia
 while [ -e /tmp/restart-qtopia ]; do
-qpe 2>&1 | logger -t 'Qtopia'
-if [ -e /tmp/restart-qtopia-qvga ]; then
-    rm -rf /tmp/restart-qtopia-qvga
-    export QWS_SIZE="240x320+0+0"
-    export POINTERCAL_FILE=/etc/pointercal_qvga
-    fbset qvga
-    echo qvga > /sys/bus/spi/devices/spi2.0/resolution
-    #qcop service send Launcher "execute(QString)" "calibrate"
-fi
+    qpe
+    if [ -e /tmp/restart-qtopia-qvga ]; then
+        rm -rf /tmp/restart-qtopia-qvga
+        export QWS_SIZE="240x320+0+0"
+        export POINTERCAL_FILE=/etc/pointercal_qvga
+        fbset qvga
+        echo qvga > /sys/bus/spi/devices/spi2.0/resolution
+        #qcop service send Launcher "execute(QString)" "calibrate"
+    fi
 done
 
 killall -q atd
