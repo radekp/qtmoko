@@ -202,11 +202,14 @@ function i18n_handle_translatables()
     var all_languages = project.property("AVAILABLE_LANGUAGES");
     var trtarget = project.property("TRTARGET").strValue();
     var srcdir = project.property("TS_DIR").strValue();
+    var trnsubdir = project.property("TRANSLATION_SUBDIR").strValue();
+    var trndir = srcdir+"/"+trnsubdir;
 
     // The rule to create .ts files
     var rule = project.rule()
     var cmd = new Array();
     cmd.push("rm -f translatables.pro");
+    cmd.push("mkdir -p "+trndir);
 
     var list = new Array("HEADERS", "SOURCES", "FORMS");
     for (var ii in list) {
@@ -219,7 +222,7 @@ function i18n_handle_translatables()
     var list = all_languages.value();
     for (var ii in list) {
         if (list[ii] == string_language.strValue()) continue; // not the string language
-        var ts = srcdir+"/"+trtarget+"-"+list[ii]+".ts";
+        var ts = trndir+"/"+trtarget+"-"+list[ii]+".ts";
         cmd.push("echo \"TRANSLATIONS+="+ts+"\" >>translatables.pro");
     }
     for (var ii in cmd)
