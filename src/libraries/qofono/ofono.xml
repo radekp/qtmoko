@@ -1,0 +1,297 @@
+<node>
+	<interface name="org.freedesktop.DBus.Introspectable">
+		<method name="Introspect">
+			<arg type="s" direction="out"/>
+		</method>
+	</interface>
+	<interface name="org.ofono.Manager">
+		<method name="GetModems">
+			<arg type="a(oa{sv})" direction="out"/>
+		</method>
+		<signal name="ModemAdded">
+			<arg type="o"/>
+			<arg type="a{sv}"/>
+		</signal>
+		<signal name="ModemRemoved">
+			<arg type="o"/>
+		</signal>
+	</interface>
+	<interface name="org.freedesktop.DBus.Introspectable">
+		<method name="Introspect">
+			<arg type="s" direction="out"/>
+		</method>
+	</interface>
+	<interface name="org.ofono.Modem">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="SetProperty">
+			<arg type="s" direction="in"/>
+			<arg type="v" direction="in"/>
+		</method>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+	</interface>
+	<interface name="org.ofono.SimManager">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="SetProperty">
+			<arg type="s" direction="in"/>
+			<arg type="v" direction="in"/>
+		</method>
+		<method name="ChangePin">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+		</method>
+		<method name="EnterPin">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+		</method>
+		<method name="ResetPin">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+		</method>
+		<method name="LockPin">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+		</method>
+		<method name="UnlockPin">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+		</method>
+		<method name="GetIcon">
+			<arg type="y" direction="in"/>
+			<arg type="ay" direction="out"/>
+		</method>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+	</interface>
+	<interface name="org.ofono.VoiceCallManager">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="Dial">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+			<arg type="o" direction="out"/>
+		</method>
+		<method name="Transfer"/>
+		<method name="SwapCalls"/>
+		<method name="ReleaseAndAnswer"/>
+		<method name="HoldAndAnswer"/>
+		<method name="HangupAll"/>
+		<method name="PrivateChat">
+			<arg type="o" direction="in"/>
+			<arg type="ao" direction="out"/>
+		</method>
+		<method name="CreateMultiparty">
+			<arg type="ao" direction="out"/>
+		</method>
+		<method name="HangupMultiparty"/>
+		<method name="SendTones">
+			<arg type="s" direction="in"/>
+		</method>
+		<method name="GetCalls">
+			<arg type="a(oa{sv})" direction="out"/>
+		</method>
+		<signal name="Forwarded">
+			<arg type="s"/>
+		</signal>
+		<signal name="BarringActive">
+			<arg type="s"/>
+		</signal>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+		<signal name="CallAdded">
+			<arg type="o"/>
+			<arg type="a{sv}"/>
+		</signal>
+		<signal name="CallRemoved">
+			<arg type="o"/>
+		</signal>
+	</interface>
+	<interface name="org.ofono.RadioSettings">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="SetProperty">
+			<arg type="s" direction="in"/>
+			<arg type="v" direction="in"/>
+		</method>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+	</interface>
+	<interface name="org.ofono.Phonebook">
+		<method name="Import">
+			<arg type="s" direction="out"/>
+		</method>
+	</interface>
+	<interface name="org.ofono.MessageManager">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="SetProperty">
+			<arg type="s" direction="in"/>
+			<arg type="v" direction="in"/>
+		</method>
+		<method name="SendMessage">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="in"/>
+			<arg type="o" direction="out"/>
+		</method>
+		<method name="GetMessages">
+			<arg type="a(oa{sv})" direction="out"/>
+		</method>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+		<signal name="IncomingMessage">
+			<arg type="s"/>
+			<arg type="a{sv}"/>
+		</signal>
+		<signal name="ImmediateMessage">
+			<arg type="s"/>
+			<arg type="a{sv}"/>
+		</signal>
+		<signal name="MessageAdded">
+			<arg type="o"/>
+			<arg type="a{sv}"/>
+		</signal>
+		<signal name="MessageRemoved">
+			<arg type="o"/>
+		</signal>
+	</interface>
+	<interface name="org.ofono.PushNotification">
+		<method name="RegisterAgent">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="UnregisterAgent">
+			<arg type="o" direction="in"/>
+		</method>
+	</interface>
+	<interface name="org.ofono.SmartMessaging">
+		<method name="RegisterAgent">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="UnregisterAgent">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="SendBusinessCard">
+			<arg type="s" direction="in"/>
+			<arg type="ay" direction="in"/>
+			<arg type="o" direction="out"/>
+		</method>
+		<method name="SendAppointment">
+			<arg type="s" direction="in"/>
+			<arg type="ay" direction="in"/>
+			<arg type="o" direction="out"/>
+		</method>
+	</interface>
+	<interface name="org.ofono.SupplementaryServices">
+		<method name="Initiate">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="out"/>
+			<arg type="v" direction="out"/>
+		</method>
+		<method name="Respond">
+			<arg type="s" direction="in"/>
+			<arg type="s" direction="out"/>
+		</method>
+		<method name="Cancel"/>
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<signal name="NotificationReceived">
+			<arg type="s"/>
+		</signal>
+		<signal name="RequestReceived">
+			<arg type="s"/>
+		</signal>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+	</interface>
+	<interface name="org.ofono.NetworkRegistration">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="Register"/>
+		<method name="GetOperators">
+			<arg type="a(oa{sv})" direction="out"/>
+		</method>
+		<method name="Scan">
+			<arg type="a(oa{sv})" direction="out"/>
+		</method>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+	</interface>
+	<interface name="org.ofono.CellBroadcast">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="SetProperty">
+			<arg type="s" direction="in"/>
+			<arg type="v" direction="in"/>
+		</method>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+		<signal name="IncomingBroadcast">
+			<arg type="s"/>
+			<arg type="q"/>
+		</signal>
+		<signal name="EmergencyBroadcast">
+			<arg type="s"/>
+			<arg type="a{sv}"/>
+		</signal>
+	</interface>
+	<interface name="org.ofono.ConnectionManager">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="SetProperty">
+			<arg type="s" direction="in"/>
+			<arg type="v" direction="in"/>
+		</method>
+		<method name="AddContext">
+			<arg type="s" direction="in"/>
+			<arg type="o" direction="out"/>
+		</method>
+		<method name="RemoveContext">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="DeactivateAll"/>
+		<method name="GetContexts">
+			<arg type="a(oa{sv})" direction="out"/>
+		</method>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+		<signal name="ContextAdded">
+			<arg type="o"/>
+			<arg type="a{sv}"/>
+		</signal>
+		<signal name="ContextRemoved">
+			<arg type="o"/>
+		</signal>
+	</interface>
+	<node name="context1"/>
+	<node name="operator"/>
+</node>

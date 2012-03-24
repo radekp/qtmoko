@@ -29,7 +29,7 @@
 #include <QMessageBox>
 #include <qtopialog.h>
 
-#define NMEA_GPS_DEVICE "/dev/ttySAC1"
+#define NMEA_GPS_DEVICE "/dev/ttyO1"
 /*
  This plugin only works for Neo neo Freerunner
 */
@@ -38,7 +38,6 @@ NeoGpsPlugin::NeoGpsPlugin(QObject *parent)
 {
     qLog(Hardware) << __PRETTY_FUNCTION__;
     system("/opt/qtmoko/bin/gps-poweron.sh");
-    system("stty -F /dev/ttySAC1 -echo");
 }
 
 NeoGpsPlugin::~NeoGpsPlugin()

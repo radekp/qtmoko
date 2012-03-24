@@ -35,6 +35,7 @@
 #include <qmodempinmanager.h>
 #include <qmodemsupplementaryservices.h>
 #include <qmodemindicators.h>
+#include <qmodemllindicators.h>
 #include <qmodemsimfiles.h>
 #include <qmodemsimgenericaccess.h>
 #include <qmodemconfiguration.h>
@@ -146,6 +147,7 @@ public:
 QModemService::QModemService
         ( const QString& service, const QString& device, QObject *parent )
     : QTelephonyService( service, parent )
+    , phoneVs("/Communications/Calls")
 {
     QSerialIODevice *dev;
     QSerialIODeviceMultiplexer *mux;
@@ -179,6 +181,7 @@ QModemService::QModemService
         ( const QString& service, QSerialIODeviceMultiplexer *mux,
           QObject *parent )
     : QTelephonyService( service, parent )
+    , phoneVs("/Communications/Calls")
 {
     init( mux );
 }
@@ -212,6 +215,9 @@ void QModemService::init( QSerialIODeviceMultiplexer *mux )
                                this, SLOT(suspend()) );
     QtopiaIpcAdaptor::connect( suspend, MESSAGE(wake()),
                                this, SLOT(wake()) );
+    
+    // Connect to missed calls counter for low level LED missed calls indicator
+    connect(&phoneVs, SIGNAL(contentsChanged()), this, SLOT(phoneVsChanged()));
 }
 
 /*!
@@ -723,4 +729,10 @@ bool QModemService::supportsAtCced()
 QString QModemService::decodeOperatorName(QString name)
 {
     return name;
+}
+
+void QModemService::phoneVsChanged()
+{
+    int num = phoneVs.value("MissedCalls").toInt();
+    QModemLLIndicators::MissedCallsChanged(num);
 }

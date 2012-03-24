@@ -34,8 +34,6 @@ NeoPluginImpl::~NeoPluginImpl()
 bool NeoPluginImpl::supports( const QString& manufacturer )
 {
     return  manufacturer.contains( "Openmoko", Qt::CaseInsensitive );
-    // "Neo1973 GTA01 Embedded GSM Modem"
-    //
 }
 
 QModemService *NeoPluginImpl::create

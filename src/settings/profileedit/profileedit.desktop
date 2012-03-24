@@ -1,11 +1,10 @@
 [Translation]
 File=QtopiaSettings
 Context=Profiles
-Comment[Desktop Entry/Name]=Use soft hyphen (char U00AD) to indicate hyphenation
 [Desktop Entry]
 Type=Application
 Exec=profileedit
 Icon=profileedit/Note
-Name[]=Pro\xad\x66iles
+Name[]=Ringtones and profiles
 CanFastload=0
 Comment[]=Phone profile application

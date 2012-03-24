@@ -310,7 +310,7 @@ TimeZoneData::TimeZoneData( const QString & loc ) : mId( loc ), mDstRule( false 
     fname = QDir::convertSeparators( fname );
     QFile f( fname );
     if ( !f.open( QIODevice::ReadOnly ) ) {
-        qWarning("Unable to open '%s'", (const char *)fname.toLatin1() );
+	qWarning("Unable to open '%s'", fname.toLatin1().constData() );
         return;
     }
 
@@ -357,7 +357,7 @@ TimeZoneData::TimeZoneData( const QString & loc ) : mId( loc ), mDstRule( false 
 
         transInfo.time = TimeZonePrivate::setUtcTime( (time_t)secs );
         if (transInfo.time.isNull()){
-            qWarning("Invalid transistion time for %s", (const char *)id().toLatin1());
+            qWarning("Invalid transistion time for %s", id().toLatin1().constData());
         }
         transInfo.timeTypeIndex = 0;
         transitionTimes[i] = transInfo;
@@ -729,8 +729,8 @@ void TimeZoneLocation::load( QHash<QByteArray,TimeZoneLocation*> &store )
     }
     QFile file( TimeZonePrivate::zoneFile() );
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        qWarning( "Unable to open %s", (const char *)file.fileName().toLatin1() );
-        qFatal( "Fatal: Timezone data must be installed at %s, exiting", (const char *)TimeZonePrivate::zonePath().toLatin1() );
+        qWarning( "Unable to open %s", file.fileName().toLatin1().constData() );
+        qFatal( "Fatal: Timezone data must be installed at %s, exiting", TimeZonePrivate::zonePath().toLatin1().constData() );
         return;
     }
 
@@ -807,7 +807,7 @@ TimeZoneData *TzCache::data( const QString &id )
 
     TimeZoneData *d = new TimeZoneData( id );
     if ( !d->isValid() ) {
-        qWarning("QTimeZone::data Can't create a valid data object for '%s'", (const char *)id.toLatin1() );
+        qWarning("QTimeZone::data Can't create a valid data object for '%s'", id.toLatin1().constData() );
         delete d;
         return TimeZoneData::null;
     }

@@ -55,16 +55,9 @@ QMAKE_EXTRA_TARGETS*=lupdate packages syncqtopia first_syncqtopia
 }
 
 !subdirs {
-    # Set the default license
-    isEmpty(QTOPIA_LICENSE) {
-        free_package {
-            license(GPL)
-            depotProject:license(OpenSSL_COMPATIBLE)
-        } else {
-            license(COMMERCIAL)
-        }
-        echo("$$self: No LICENSE specified. Assuming $${QTOPIA_LICENSE}.")
-    }
+    # Set the license
+    license(GPL)
+    depotProject:license(OpenSSL_COMPATIBLE)
 
     # Ensure that all headers are seen by the build system
     HEADERS*=$$PRIVATE_HEADERS $$SEMI_PRIVATE_HEADERS

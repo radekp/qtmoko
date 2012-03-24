@@ -20,6 +20,7 @@
 #include <qmodemcallprovider.h>
 #include <qmodemcall.h>
 #include <qmodemservice.h>
+#include <qmodemllindicators.h>
 #include <qatutils.h>
 #include <qatresult.h>
 #include <qatresultparser.h>
@@ -164,6 +165,8 @@ QModemCallProvider::~QModemCallProvider()
 void QModemCallProvider::ringing
     ( const QString& number, const QString& callType, uint modemIdentifier )
 {
+    llIndicatorsRinging();
+    
     // If we already announced an incoming call, then reset the
     // missed call timer but otherwise ignore this.  This prevents
     // us from creating a new incoming call for every new RING.
@@ -972,4 +975,9 @@ void QModemCallProvider::setUseMissedTimer(bool useTimer)
 bool QModemCallProvider::useMissedTimer() const
 {
     return d->useMisssedTimer;
+}
+
+void QModemCallProvider::llIndicatorsRinging()
+{
+    QModemLLIndicators::Ringing();
 }

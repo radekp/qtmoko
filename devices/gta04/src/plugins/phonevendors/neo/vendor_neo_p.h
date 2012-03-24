@@ -36,6 +36,30 @@
 #include <qmodemservicenumbers.h>
 
 #include <alsa/asoundlib.h>
+#include <QTimer>
+
+class NeoModemService;
+
+class NeoCallProvider : public QModemCallProvider
+{
+    Q_OBJECT
+public:
+    NeoCallProvider(NeoModemService * service);
+    ~NeoCallProvider();
+
+public slots:
+     virtual void ringing(const QString & number, const QString & callType,
+                          uint modemIdentifier = 0);
+
+protected:
+    QTimer clccTimer;
+    NeoModemService *modemService;
+    bool hasRepeatingRings() const;
+
+private slots:
+    void doClcc();
+    void clcc(bool, const QAtResult &);
+};
 
 class NeoModemService : public QModemService
 {

@@ -757,8 +757,8 @@ void NeoModemService::suspend()
 
     chat("AT%CBHZ=0");
 
-//     // Turn off signal quality notifications while the system is suspended.
-     chat( "AT%CSQ=0", this, SLOT(mcsqOff()) );
+    // Turn off signal quality notifications while the system is suspended.
+    chat( "AT%CSQ=0", this, SLOT(mcsqOff()) );
 }
 
 void NeoModemService::wake()

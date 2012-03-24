@@ -1315,7 +1315,7 @@ void qtopia_load_fixedwords(QDawg* dawg, const QString& dictname, const QString&
         QString fn = QFile::exists(words_lang) ? words_lang : QString();
         if ( fn.isEmpty() )
             return;
-        qWarning("Generating '%s' dawg from word list.", (const char *)fn.toLatin1());
+        qWarning("Generating '%s' dawg from word list.", fn.toLatin1().constData());
         QFile in(fn);
         QFile dawgfile(fn+".dawg");
         if ( in.open(QIODevice::ReadOnly) && dawgfile.open(QIODevice::WriteOnly) ) {

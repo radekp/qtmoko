@@ -59,8 +59,8 @@ public:
     uint nextModemIdentifier();
 
 public slots:
-    void ringing( const QString& number, const QString& callType,
-                  uint modemIdentifier = 0 );
+    virtual void ringing( const QString& number, const QString& callType,
+                          uint modemIdentifier = 0 );
     void hangupRemote( QModemCall *call );
 
 protected:
@@ -92,6 +92,7 @@ protected:
     void setUseDetectTimer(bool);
     bool useMissedTimer() const;
     void setUseMissedTimer(bool);
+    void llIndicatorsRinging();
 
 protected slots:
     virtual void resetModem();

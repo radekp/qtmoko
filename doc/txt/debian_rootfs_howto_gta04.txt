@@ -30,7 +30,7 @@ Step 1
 
 * We will be installing new image to /media/card:
 
-cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,timeout,libpng12-0,libjpeg62,libmng1,libtiff4,libxtst6,sqlite3,rfkill squeeze /media/card/ http://cdn.debian.net/debian/
+cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg62,libmng1,libtiff4,libxtst6,sqlite3,rfkill,ntpdate squeeze /media/card/ http://cdn.debian.net/debian/
 
 Step 2
 ======
@@ -58,7 +58,8 @@ iface usb0 inet static
 __END__
 cat > /media/card/etc/fstab << __END__
 rootfs  /                auto    defaults,errors=remount-ro,noatime 0 1
-/dev/mmcblk0p1 /media/card auto  defaults                           0 0
+/dev/mmcblk0p1 /boot     auto  defaults                           0 0
+/dev/mmcblk0p3 /media/card auto  defaults                           0 0
 /dev/mmcblk0p4 swap      swap    defaults                           0 0
 proc    /proc            proc    defaults                           0 0
 #tmpfs   /var/cache/apt   tmpfs   defaults,noatime                   0 0
@@ -82,6 +83,7 @@ echo "deb http://cdn.debian.net/debian squeeze contrib" >> /media/card/etc/apt/s
 echo "deb http://cdn.debian.net/debian squeeze non-free" >> /media/card/etc/apt/sources.list
 echo "deb http://security.debian.org/ squeeze/updates main contrib non-free" >> /media/card/etc/apt/sources.list
 echo "deb http://qtmoko.sourceforge.net/debian/gta04 /" >> /media/card/etc/apt/sources.list
+echo "deb http://qtmoko.sourceforge.net/apps /" >> /media/card/etc/apt/sources.list
 
 Step 4
 ======
@@ -92,9 +94,9 @@ Step 4
   joydev is used in qtmaze for accelerometers, hso is for UMTS.
 
 echo g_ether > /media/card/etc/modules
-echo ppp_generic >> /media/card/etc/modules
 echo joydev >> /media/card/etc/modules
 echo hso >> /media/card/etc/modules
+echo ledtrig-timer >> /media/card/etc/modules
 
 * Configure bluez4 for handsfreee calls, otherwise there is no sounds:
 
@@ -111,28 +113,17 @@ chroot /media/card
 update-rc.d -f alsa-utils remove
 exit
 
-Step 4.1 - DHCP server - not using now
-======================================
+Step 4.1 - stable device nodes for UMTS
+=======================================
 
-* DHCP server will arrange USB networking with PC out-of-the-box for
-  distributions using NetworkManager.
+* Modem device is by default on /dev/ttyHS3, but it can rename after modem
+  disconnect. For details see:
+    http://lists.goldelico.com/pipermail/gta04-owner/2012-February/001515.html
+    http://lists.goldelico.com/pipermail/gta04-owner/2012-February/001563.html
+  We will use udev to create stable symlinks for us:
 
-* Not using now - the problem is that e.g. my notebook prefers usb0 over wifi
-  and internet does not work then.
-  
-* You need install package dhcp3-server in step1.
-
-cat > /media/card/etc/dhcp3/dhcpd.conf <<__END__
-subnet 192.168.0.0 netmask 255.255.255.0 {
-    option routers 192.168.0.202;
-    option domain-name-servers 208.67.222.222, 208.67.220.220;
-
-    pool {
-        max-lease-time 7200;
-        range 192.168.0.200 192.168.0.201;
-        allow unknown clients;
-    }
-}
+cat > /media/card/etc/udev/rules.d/hso.rules <<__END__
+SUBSYSTEM=="tty", ACTION=="add", KERNEL=="ttyHS*", ATTR{hsotype}=="?*", SYMLINK+="ttyHS_\$attr{hsotype}", OPTIONS+="string_escape=replace"
 __END__
 
 
@@ -239,12 +230,31 @@ cd /media/card/bin/
 rm sh
 ln -s dash sh
 
+
+Step 7.6 - libertas firmware
+============================
+
+* Wifi needs sd8686.bin and sd8686_helper.bin in /lib/firmware:
+
+chroot /media/card
+wget http://ftp.de.debian.org/debian/pool/non-free/libe/libertas-firmware/libertas-firmware_9.70.7.p0.0-1_all.deb
+dpkg -i libertas-firmware_9.70.7.p0.0-1_all.deb
+rm libertas-firmware_9.70.7.p0.0-1_all.deb
+cd /lib/firmware
+mv sd8686.bin 1
+mv sd8686_helper.bin 2
+rm -f *.bin
+mv 1 sd8686.bin
+mv 2 sd8686_helper.bin
+exit
+
+
 Step 8 - install QtMoko
 =======================
 
 * I use qemu armel host for building qtmoko package. It should be as simple as
 
-git checkout v37_gta04
+git checkout v39_gta04
 dpkg-buildpackage
 
 * Note that you may need to install some dependencies before building:
@@ -264,11 +274,12 @@ git submodule update --init
 * Install it
 
 chroot /media/card/
-wget http://qtmoko.sourceforge.net/debian/gta04/qtmoko-gta04_38-1_armel.deb
-dpkg -i qtmoko-gta04_38-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/gta04/qtmoko-gta04_41-1_armel.deb
+dpkg -i qtmoko-gta04_41-1_armel.deb
 update-rc.d qtmoko-gta04 defaults
-rm qtmoko-gta04_38-1_armel.deb
+rm qtmoko-gta04_41-1_armel.deb
 exit
+killall qpe.sh  # recent versions start qtmoko after install, so kill it
 
 
 Step 9 - Linux kernel
@@ -280,7 +291,7 @@ http://github.com/radekp/linux-2.6/
 
 * Checkout branch for your qtmoko version:
 
-git checkout v2.6.32-gta04-qtmoko-v37
+git checkout v3.2-gta04-qtmoko-v41
 
 * Create package in buildhost:
 
@@ -293,9 +304,9 @@ dpkg-buildpackage
 * Install kernel image:
 
 chroot /media/card
-wget http://qtmoko.sourceforge.net/debian/gta04/linux-image-2.6.32-qtmoko-gta04_37-1_armel.deb
-dpkg -i linux-image-2.6.32-qtmoko-gta04_37-1_armel.deb
-rm linux-image-2.6.32-qtmoko-gta04_37-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/gta04/linux-image-3.2-qtmoko-gta04_41-1_armel.deb
+dpkg -i linux-image-3.2-qtmoko-gta04_41-1_armel.deb
+rm linux-image-3.2-qtmoko-gta04_41-1_armel.deb
 exit
 
 
@@ -304,14 +315,14 @@ Step 9.1 - Linux kernel cross compiling - not using anymore for releases
 
 * If you want to cross compile kernel and make uboot image on PC:
 
-make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm gta04a3_defconfig
+make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm gta04a3_nodebug_defconfig
 make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm uImage
 make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm modules
 make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm modules_install INSTALL_MOD_PATH=GTA04
 find  GTA04/lib/modules -name *.ko -exec /opt/toolchains/arm920t-eabi/bin/arm-linux-strip -R .not -R .comment --strip-unneeded {} \;
 
-Step 9.2 - Remove bluetooth from init scripts to save power and until it works good
-===================================================================================
+Step 9.2 - Remove bluetooth from init scripts until it works good
+=================================================================
 
 chroot /media/card
 update-rc.d -f bluetooth remove
@@ -352,10 +363,10 @@ Step 10 - release tarball
 =========================
 
 cd /media/card
-tar -czvf ../qtmoko-debian.tar.gz .
+tar -czvf ../qtmoko-debian-gta04-v41.tar.gz .
 
-Step 11 - make ubifs images - not using yet
-===========================================
+Step 11 - make ubifs image
+==========================
 
 * Delete contents of boot, because for NAND it's not needed:
 
@@ -394,22 +405,39 @@ cd /root
 cat > ubinize.cfg <<__END__
 [ubifs]
 mode=ubi
-image=qtmoko-debian.ubifs
+image=ubifs.img
 vol_id=0
-vol_size=230MiB
+vol_size=492MiB
 vol_type=dynamic
-vol_name=om-gta02-rootfs
+vol_name=rootfs
 vol_flags=autoresize
 __END__
 
-mkfs.ubifs -r /media/card -o qtmoko-debian.ubifs -x zlib -m 2048 -e 126976 -c 2047
-ubinize -o qtmoko-debian.ubi -m 2048 -p 128KiB -s 2048 -O 2048 ubinize.cfg
-rm qtmoko-debian.ubifs
 
-Step 12 - jffs2
-===============
+mkfs.ubifs -r /media/card -m 2048 -e 129024 -c 4007 -o ubifs.img
+ubinize -o qtmoko-debian-gta04-v42.ubi -m 2048 -p 128KiB -s 512 ubinize.cfg
+rm ubifs.img
+
+* To install it on the device you need to boot from SD and:
+
+ubiformat /dev/mtd4 -f /qtmoko-debian-gta04-v41.ubi
+
+* To check that it's mountable:
+
+ubiattach /dev/ubi_ctrl -m 4
+mount -t ubifs ubi0:rootfs /mnt/ubifs/
+
+
+Step 12 - jffs2 - not using anymore
+===================================
 
 * Same first 2 steps as with ubi (copy&delete /boot)
+
+* Create jffs2 image: 
+
+cd /media
+mkfs.jffs2 -o qtmoko-debian-gta04-nosum-v41.jffs2 -e 0x20000 -n -d/media/card
+sumtool -n -e 0x20000 -p -i qtmoko-debian-gta04-nosum-v41.jffs2 -o qtmoko-debian-gta04-v41.jffs2
 
 * Create tarbal for NAND:
 

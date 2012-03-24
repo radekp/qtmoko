@@ -19,6 +19,7 @@
 
 #include "systemsuspend.h"
 #include "qtopiainputevents.h"
+#include "qtopialog.h"
 #include <QList>
 
 /*!
@@ -257,8 +258,14 @@ SystemSuspendPrivate::~SystemSuspendPrivate()
 
 void SystemSuspendPrivate::operationCompleted()
 {
-    if(sender() == waitingOn)
+    if(sender() == waitingOn) {
+        qLog(PowerManagement) << " ...operationCompleted for" << waitingOn;
         waitingOn = 0;
+        // post a dumb event to make sure the loop in systemSuspend
+        // gets awakened ASAP after waitingOn is changed
+        QEvent *e = new QEvent(QEvent::None);
+        QApplication::instance()->postEvent(this, e);
+    }
 }
 
 bool SystemSuspendPrivate::suspendSystem()
@@ -274,7 +281,9 @@ bool SystemSuspendPrivate::suspendSystem()
 
     // Check can suspend
     for(int ii = handlers.count(); ii > 0; --ii) {
+        qLog(PowerManagement) << handlers.at(ii - 1) << "checking whether canSuspend...";
         if(!handlers.at(ii - 1)->canSuspend()) {
+            qLog(PowerManagement) << " ...refused, canceling suspend";
             emit systemSuspendCanceled();
             return false;
         }
@@ -287,11 +296,18 @@ bool SystemSuspendPrivate::suspendSystem()
     emit systemSuspending();
     for(int ii = handlers.count(); ii > 0; --ii) {
         waitingOn = handlers.at(ii - 1);
+        qLog(PowerManagement) << waitingOn << "suspending...";
         if(!waitingOn->suspend()) {
-            while(waitingOn)
-                QApplication::instance()->processEvents(QEventLoop::AllEvents | QEventLoop::WaitForMoreEvents);
-            if (inputEvent)
+            qLog(PowerManagement) << " ...waiting for completion...";
+            while(waitingOn) {
+                QApplication::instance()->processEvents(QEventLoop::AllEvents |
+                                                        QEventLoop::WaitForMoreEvents);
+                //qLog(PowerManagement) << "  ...processEvents done";
+            }
+            if (inputEvent) {
+                qLog(PowerManagement) << "canceling suspend on inputevent";
                 break;
+            }
         } else {
             waitingOn = 0;
         }
@@ -302,9 +318,12 @@ bool SystemSuspendPrivate::suspendSystem()
 
     for(int ii = 0; ii < handlers.count(); ++ii) {
         waitingOn = handlers.at(ii);
+        qLog(PowerManagement) << handlers.at(ii) << "waking up...";
         if(!waitingOn->wake()) {
+            qLog(PowerManagement) << " ...waiting for completion...";
             while(waitingOn)
-                QApplication::instance()->processEvents(QEventLoop::AllEvents | QEventLoop::WaitForMoreEvents);
+                QApplication::instance()->processEvents(QEventLoop::AllEvents |
+                                                        QEventLoop::WaitForMoreEvents);
         } else {
             waitingOn = 0;
         }

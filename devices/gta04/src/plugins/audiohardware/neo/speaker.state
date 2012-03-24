@@ -260,18 +260,20 @@ state.gta04 {
 	}
 	control.24 {
 		comment.access 'read write'
-		comment.type BOOLEAN
+		comment.type ENUMERATED
 		comment.count 1
+		comment.item.0 'Not swapped'
+		comment.item.1 Swapped
 		iface MIXER
-		name 'Analog Right Sub Mic Capture Switch'
-		value false
+		name 'Digimic LR Swap'
+		value 'Not swapped'
 	}
 	control.25 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
 		iface MIXER
-		name 'Analog Right AUXR Capture Switch'
+		name 'Analog Right Sub Mic Capture Switch'
 		value false
 	}
 	control.26 {
@@ -279,7 +281,7 @@ state.gta04 {
 		comment.type BOOLEAN
 		comment.count 1
 		iface MIXER
-		name 'Analog Left Main Mic Capture Switch'
+		name 'Analog Right AUXR Capture Switch'
 		value false
 	}
 	control.27 {
@@ -287,7 +289,7 @@ state.gta04 {
 		comment.type BOOLEAN
 		comment.count 1
 		iface MIXER
-		name 'Analog Left Headset Mic Capture Switch'
+		name 'Analog Left Main Mic Capture Switch'
 		value false
 	}
 	control.28 {
@@ -295,7 +297,7 @@ state.gta04 {
 		comment.type BOOLEAN
 		comment.count 1
 		iface MIXER
-		name 'Analog Left AUXL Capture Switch'
+		name 'Analog Left Headset Mic Capture Switch'
 		value false
 	}
 	control.29 {
@@ -303,10 +305,18 @@ state.gta04 {
 		comment.type BOOLEAN
 		comment.count 1
 		iface MIXER
+		name 'Analog Left AUXL Capture Switch'
+		value false
+	}
+	control.30 {
+		comment.access 'read write'
+		comment.type BOOLEAN
+		comment.count 1
+		iface MIXER
 		name 'Analog Left Carkit Mic Capture Switch'
 		value true
 	}
-	control.30 {
+	control.31 {
 		comment.access 'read write'
 		comment.type ENUMERATED
 		comment.count 1
@@ -316,7 +326,7 @@ state.gta04 {
 		name 'TX2 Capture Route'
 		value Digimic1
 	}
-	control.31 {
+	control.32 {
 		comment.access 'read write'
 		comment.type ENUMERATED
 		comment.count 1
@@ -326,7 +336,7 @@ state.gta04 {
 		name 'TX1 Capture Route'
 		value Analog
 	}
-	control.32 {
+	control.33 {
 		comment.access 'read write'
 		comment.type ENUMERATED
 		comment.count 1
@@ -336,7 +346,7 @@ state.gta04 {
 		name 'Vibra Route'
 		value 'Local vibrator'
 	}
-	control.33 {
+	control.34 {
 		comment.access 'read write'
 		comment.type ENUMERATED
 		comment.count 1
@@ -348,7 +358,7 @@ state.gta04 {
 		name 'Vibra Mux'
 		value AudioL2
 	}
-	control.34 {
+	control.35 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -356,7 +366,7 @@ state.gta04 {
 		name 'HandsfreeR Switch'
 		value true
 	}
-	control.35 {
+	control.36 {
 		comment.access 'read write'
 		comment.type ENUMERATED
 		comment.count 1
@@ -368,7 +378,7 @@ state.gta04 {
 		name 'HandsfreeR Mux'
 		value AudioR2
 	}
-	control.36 {
+	control.37 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -376,7 +386,7 @@ state.gta04 {
 		name 'HandsfreeL Switch'
 		value true
 	}
-	control.37 {
+	control.38 {
 		comment.access 'read write'
 		comment.type ENUMERATED
 		comment.count 1
@@ -388,7 +398,7 @@ state.gta04 {
 		name 'HandsfreeL Mux'
 		value AudioL2
 	}
-	control.38 {
+	control.39 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -396,7 +406,7 @@ state.gta04 {
 		name 'CarkitR Mixer Voice'
 		value false
 	}
-	control.39 {
+	control.40 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -404,7 +414,7 @@ state.gta04 {
 		name 'CarkitR Mixer AudioR1'
 		value false
 	}
-	control.40 {
+	control.41 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -412,7 +422,7 @@ state.gta04 {
 		name 'CarkitR Mixer AudioR2'
 		value false
 	}
-	control.41 {
+	control.42 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -420,7 +430,7 @@ state.gta04 {
 		name 'CarkitL Mixer Voice'
 		value false
 	}
-	control.42 {
+	control.43 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -428,7 +438,7 @@ state.gta04 {
 		name 'CarkitL Mixer AudioL1'
 		value false
 	}
-	control.43 {
+	control.44 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -436,7 +446,7 @@ state.gta04 {
 		name 'CarkitL Mixer AudioL2'
 		value false
 	}
-	control.44 {
+	control.45 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -444,7 +454,7 @@ state.gta04 {
 		name 'HeadsetR Mixer Voice'
 		value false
 	}
-	control.45 {
+	control.46 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -452,7 +462,7 @@ state.gta04 {
 		name 'HeadsetR Mixer AudioR1'
 		value false
 	}
-	control.46 {
+	control.47 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -460,7 +470,7 @@ state.gta04 {
 		name 'HeadsetR Mixer AudioR2'
 		value false
 	}
-	control.47 {
+	control.48 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -468,7 +478,7 @@ state.gta04 {
 		name 'HeadsetL Mixer Voice'
 		value false
 	}
-	control.48 {
+	control.49 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -476,7 +486,7 @@ state.gta04 {
 		name 'HeadsetL Mixer AudioL1'
 		value false
 	}
-	control.49 {
+	control.50 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -484,7 +494,7 @@ state.gta04 {
 		name 'HeadsetL Mixer AudioL2'
 		value false
 	}
-	control.50 {
+	control.51 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -492,7 +502,7 @@ state.gta04 {
 		name 'PredriveR Mixer Voice'
 		value false
 	}
-	control.51 {
+	control.52 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -500,7 +510,7 @@ state.gta04 {
 		name 'PredriveR Mixer AudioR1'
 		value false
 	}
-	control.52 {
+	control.53 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -508,7 +518,7 @@ state.gta04 {
 		name 'PredriveR Mixer AudioR2'
 		value false
 	}
-	control.53 {
+	control.54 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -516,7 +526,7 @@ state.gta04 {
 		name 'PredriveR Mixer AudioL2'
 		value false
 	}
-	control.54 {
+	control.55 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -524,7 +534,7 @@ state.gta04 {
 		name 'PredriveL Mixer Voice'
 		value false
 	}
-	control.55 {
+	control.56 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -532,7 +542,7 @@ state.gta04 {
 		name 'PredriveL Mixer AudioL1'
 		value false
 	}
-	control.56 {
+	control.57 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -540,7 +550,7 @@ state.gta04 {
 		name 'PredriveL Mixer AudioL2'
 		value false
 	}
-	control.57 {
+	control.58 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -548,7 +558,7 @@ state.gta04 {
 		name 'PredriveL Mixer AudioR2'
 		value false
 	}
-	control.58 {
+	control.59 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -556,7 +566,7 @@ state.gta04 {
 		name 'Earpiece Mixer Voice'
 		value false
 	}
-	control.59 {
+	control.60 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -564,7 +574,7 @@ state.gta04 {
 		name 'Earpiece Mixer AudioL1'
 		value false
 	}
-	control.60 {
+	control.61 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -572,7 +582,7 @@ state.gta04 {
 		name 'Earpiece Mixer AudioL2'
 		value false
 	}
-	control.61 {
+	control.62 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -580,7 +590,7 @@ state.gta04 {
 		name 'Earpiece Mixer AudioR1'
 		value false
 	}
-	control.62 {
+	control.63 {
 		comment.access 'read write'
 		comment.type INTEGER
 		comment.count 1
@@ -591,29 +601,29 @@ state.gta04 {
 		name 'Voice Digital Loopback Volume'
 		value 0
 	}
-	control.63 {
-		comment.access 'read write'
-		comment.type INTEGER
-		comment.count 1
-		comment.range '0 - 7'
-		comment.dbmin -2400
-		comment.dbmax 0
-		iface MIXER
-		name 'Right Digital Loopback Volume'
-		value 7
-	}
 	control.64 {
 		comment.access 'read write'
 		comment.type INTEGER
 		comment.count 1
 		comment.range '0 - 7'
-		comment.dbmin -2400
+		comment.dbmin -3000
+		comment.dbmax 0
+		iface MIXER
+		name 'Right Digital Loopback Volume'
+		value 7
+	}
+	control.65 {
+		comment.access 'read write'
+		comment.type INTEGER
+		comment.count 1
+		comment.range '0 - 7'
+		comment.dbmin -3000
 		comment.dbmax 0
 		iface MIXER
 		name 'Left Digital Loopback Volume'
 		value 7
 	}
-	control.65 {
+	control.66 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -621,7 +631,7 @@ state.gta04 {
 		name 'Voice Analog Loopback Switch'
 		value false
 	}
-	control.66 {
+	control.67 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -629,7 +639,7 @@ state.gta04 {
 		name 'Left2 Analog Loopback Switch'
 		value false
 	}
-	control.67 {
+	control.68 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -637,7 +647,7 @@ state.gta04 {
 		name 'Right2 Analog Loopback Switch'
 		value false
 	}
-	control.68 {
+	control.69 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1
@@ -645,7 +655,7 @@ state.gta04 {
 		name 'Left1 Analog Loopback Switch'
 		value false
 	}
-	control.69 {
+	control.70 {
 		comment.access 'read write'
 		comment.type BOOLEAN
 		comment.count 1

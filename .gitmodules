@@ -109,3 +109,6 @@
 [submodule "src/3rdparty/applications/FBReader"]
 	path = src/3rdparty/applications/FBReader
 	url = git://github.com/radekp/FBReader.git
+[submodule "src/3rdparty/applications/gta04-gsm-voice-routing"]
+	path = src/3rdparty/applications/gta04-gsm-voice-routing
+	url = git://github.com/radekp/gta04-gsm-voice-routing.git

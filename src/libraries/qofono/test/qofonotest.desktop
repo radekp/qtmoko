@@ -1,0 +1,9 @@
+[Desktop Entry]
+Comment[]=oFono test program for QtMoko
+Exec=ofonotest
+Type=Application
+Name[]=QOFonoTest
+Icon=qofonotest/qofonotest
+[Translation]
+File=QtopiaApplications
+Context=qofonotest

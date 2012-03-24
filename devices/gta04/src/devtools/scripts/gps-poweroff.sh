@@ -1,2 +1,3 @@
 #!/bin/sh
-echo "Not implemented for GTA04"
+echo 0 >/sys/devices/virtual/gpio/gpio145/value
+echo 1 >/sys/devices/virtual/gpio/gpio145/value

@@ -1,7 +1,7 @@
 Cross compling from sources
 ===========================
 
-  * Make sure you have libqt4-dev installed on your host PC
+  * Make sure you have installed on your host PC: libqt4-dev, libv4l-dev
 
   * You can also do fetch all build dependecies for qt:
 

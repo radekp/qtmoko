@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#ifdef QT_QWS_NEO
+#ifdef QT_QWS_GTA04
 
 #include "neohardware.h"
 
@@ -247,5 +247,5 @@ bool NeoHardware::getCableStatus()
     return (charge != ("Discharging"));
 }
 
-#endif // QT_QWS_NEO
+#endif // QT_QWS_GTA04
 

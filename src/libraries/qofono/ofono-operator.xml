@@ -1,0 +1,17 @@
+<node>
+	<interface name="org.freedesktop.DBus.Introspectable">
+		<method name="Introspect">
+			<arg type="s" direction="out"/>
+		</method>
+	</interface>
+	<interface name="org.ofono.NetworkOperator">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="Register"/>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+	</interface>
+</node>

@@ -1,0 +1,151 @@
+QtMoko and oFono
+================
+
+* This is my log and notes about porting QtMoko on ofono.org
+  framework. It's written for goldelico's GTA04 phone.
+
+
+Starting oFono
+==============
+
+* First you need oFono installed on your phone. You can build it on
+  the phone. Some useful commands:
+
+    apt-get build-dep ofono
+    apt-get install python-dbus mdbus2
+    http://lists.ofono.org/pipermail/ofono/2009-June/000096.html
+
+* To start oFono 
+
+    env OFONO_AT_DEBUG=1 ofonod -n -d
+
+* Start it up:
+
+    cd ofono/test
+    ./enable-modem
+    ./online-modem
+
+* Explore the api:
+
+    mdbus2 --system
+    mdbus2 --system org.ofono
+    mdbus2 --system org.ofono /hso_0
+
+* Dump the api to file:
+
+    dbus-send --print-reply --system --dest=org.ofono / org.freedesktop.DBus.Introspectable.Introspect > ofono.xml
+    dbus-send --print-reply --system --dest=org.ofono /hso_0 org.freedesktop.DBus.Introspectable.Introspect >> ofono.xml
+
+  and similary after registering to network and making call:
+
+    dbus-send --print-reply --system --dest=org.ofono /hso_0/voicecall01 org.freedesktop.DBus.Introspectable.Introspect > /ofono-voicecall.xml
+    dbus-send --print-reply --system --dest=org.ofono /hso_0/operator/23001 org.freedesktop.DBus.Introspectable.Introspect > /ofono-operator.xml
+
+
+QT bindings for oFono
+=====================
+
+* Really nice starting point is here:
+
+    http://matgnt.wordpress.com/2010/07/
+
+
+
+
+Develop on PC
+=============
+
+* ofono uses dbus as communication transport. Thankfully dbus calls can be
+  redirected from phone to PC. Nice tutorial is here [1].
+
+* SSH to your phone running SHR unstable and do:
+
+    dbus-daemon-proxy --system --port 8081
+
+* On your PC do:
+
+    export DBUS_SYSTEM_BUS_ADDRESS=tcp:host=192.168.0.202,port=8081
+    mdbus2 --system
+
+  and you will see dbus interface of your phone. This interface we will call
+  from our QT dialer/SMS handler etc...
+
+
+
+
+QT bindings for oFono
+=====================
+
+* We can use FSO for turning on/off leds from command line on your phone. We
+  will now do it from Qt/C++ program.
+
+* QT can autogenerate C++ files for calling dbus. The tool is called
+  qdbusxml2cpp. As input it needs XML files that describe dbus objects.
+
+* FSO maintains XML descriptions for their dbus objects in git:
+
+http://git.freesmartphone.org/?p=aurora.git;a=summary
+
+* You have to clone that git and build it with:
+
+./autogen.sh
+make
+make install
+
+* Resulting XML description files are in xml folder. You can try to generate
+  e.g. our LED interface:
+
+qdbusxml2cpp -p org.freesmartphone.Device.LED org.freesmartphone.Device.LED.xml
+
+* QtMoko has script for generating all FSO APIs in src/libraries/qfso
+
+
+QT program for LEDS
+===================
+
+* You can open FSO bindings from and example program in QtCreator. It's in
+  QtMoko's git under libraries/qfso/test.
+
+* It should built just fine. Now you need dbus-daemon-proxy running on your
+  phone (see above) and you need to tell QtCreator to connect to that proxy. In
+  "Projects" you have to set:
+
+DBUS_SYSTEM_BUS_ADDRESS to tcp:host=192.168.0.202,port=8081
+
+  you can check it also in screenshot creator_dbus_proxy_env.png
+
+* If you run the program and have correct environment then dbus-daemon-proxy
+  program should inform you about new connection when you press led checkbox
+  and leds should turn on/off.
+
+
+GSM
+===
+
+* qdbusxml2cpp can't automatically generate functions with more complicated
+  types in signature. As a workaround, you can delete such methods from xml.
+
+* Another way how to fix these errors is appending something like:
+
+<annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+
+  before the problematic type.
+
+* For even more complex types we have to specify our custom type instead of
+  QVariantMap. Those types should be able to serialize and deserialize to dbus.
+  Please check e.g. OrgFreesmartphoneGSMCallDetail. And dont forget to register
+  metatypes information before calling function with these types:
+
+OrgFreesmartphoneGSMCallDetail::registerMetaType();
+
+* For more information about dbus marshalling of custom classes see:
+
+http://techbase.kde.org/Development/Tutorials/D-Bus/CustomTypes
+
+* Hopefully all QT annotations should be now in upstream FSO.
+
+
+
+
+[1] https://github.com/radekp/qtmoko/blob/master/README
+[2] http://blog.shr-project.org/2010/05/howto-develop-and-debug-the-shr-phone-stack-on-your-desktop.html

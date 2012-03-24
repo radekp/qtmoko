@@ -1,0 +1,9 @@
+[SkinFile]
+Up=gta04-skin.png
+Down=gta04-skin-down.png
+Screen=313 302 480 640
+Areas=2
+HasMouseHover=false
+
+"Hangup"	0x1100005 975 845 1040 845 1040 910 975 910
+"F7"	0x1000036 95 125 145 125 145 225 95 225

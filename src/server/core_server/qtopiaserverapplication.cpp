@@ -59,14 +59,16 @@ Q_GLOBAL_STATIC(QtopiaServerTasksPrivate, qtopiaServerTasks);
   The QtopiaServerApplication class acts as a QtopiaApplication instance in
   Qt Extended Server.  QtopiaServerApplication is primarily responsible for bringing
   up and shutting down the Qt Extended server and acts as the "core" controller in
-  the system. This class is part of the Qt Extended server and cannot be used by other Qt Extended applications.
+  the system. This class is part of the Qt Extended server and cannot be used by
+  other Qt Extended applications.
 
   The Qt Extended server is structured as a collection of largely independent
   \i tasks that are responsible for performing a small, well defined portion
   of work or functionality which often form the "backend" to other system
   capabilities.  For example, the network management APIs ultimately
   communicate with the QtopiaNetworkServer task, other tasks may operate more
-  independently.  Tasks can be thought of as the building blocks that form the Qt Extended server, when arranged appropriately.
+  independently.  Tasks can be thought of as the building blocks that form the
+  Qt Extended server, when arranged appropriately.
 
   Tasks are QObjects and may work together by exporting C++ interfaces.
   Other tasks or modules within the server may request tasks that support a
@@ -119,7 +121,8 @@ The following group names are reserved and have a special purpose:
 \table
   \header \o Group Name \o Description
 \row
-    \o prestartup  \o  The \c {prestartup} contains tasks that will be started immediately after Qt Extended is executed.
+    \o prestartup  \o  The \c {prestartup} contains tasks that will be started immediately after
+                       Qt Extended is executed.
 \row
     \o startup \o The \c {startup} group contains tasks to be launched at startup.
 \row
@@ -223,10 +226,19 @@ Tasks are constructed in one of two ways: preemptively or on-demand.
 
   \table
   \header \o Item \o Type \o Description
-  \row \o \c {/System/Tasks/<TaskName>/Order/Static} \o int \o The preemptive order that the system determined it would launch tasks.  This may be different from the actual order if one task demand loads another that would otherwise be loaded later.
-  \row \o \c {/System/Tasks/<TaskName>/Order/Launch} \o int \o The order that the tasks were actually launched in.  This key will only exist if the task is active.
-  \row \o \c {/System/Tasks/<TaskName>/Order/Interface} \o int \o The order that the task will be given when determining interface associations.
-  \row \o \c {/System/Tasks/<TaskName>/State} \o String \o  "Disable" if the task was in the \c {exclude} list, "Active" if the task is running, or "Inactive" if not.
+  \row \o \c {/System/Tasks/<TaskName>/Order/Static} \o int \o The
+    preemptive order that the system determined it would launch tasks.
+    This may be different from the actual order if one task demand loads
+    another that would otherwise be loaded later.
+  \row \o \c {/System/Tasks/<TaskName>/Order/Launch} \o int \o The
+    order that the tasks were actually launched in.  This key will only
+    exist if the task is active.
+  \row \o \c {/System/Tasks/<TaskName>/Order/Interface} \o int \o The
+   order that the task will be given when determining interface
+   associations.
+  \row \o \c {/System/Tasks/<TaskName>/State} \o String \o "Disable"
+   if the task was in the \c {exclude} list, "Active" if the task is
+   running, or "Inactive" if not.
   \endtable
   
   A tutorial on how to develop new server tasks can be found in 
@@ -234,9 +246,16 @@ Tasks are constructed in one of two ways: preemptively or on-demand.
 
   \section2 Server task plug-ins
   
-  The above server tasks are linked into the Qt Extended server at build time. To increase the flexibility server tasks can be provided via a plug-in mechanism. This allows the addition of new tasks after the deployment of the server binary. Server task plugins must implement the ServerTaskPlugin interface in order to be recognized by the system. 
+  The above server tasks are linked into the Qt Extended server at
+  build time. To increase the flexibility server tasks can be provided
+  via a plug-in mechanism. This allows the addition of new tasks after
+  the deployment of the server binary. Server task plugins must
+  implement the ServerTaskPlugin interface in order to be recognized
+  by the system.
 
-  For more information on how to develop plug-in based server tasks refer to the \l {Tutorial: Writing server task plugin}{Server task plug-in tutorial}.
+  For more information on how to develop plug-in based server tasks
+  refer to the \l {Tutorial: Writing server task plugin}{Server task
+  plug-in tutorial}.
 
   \section1 Qt Extended Server Widgets
 

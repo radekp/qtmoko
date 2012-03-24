@@ -21,7 +21,7 @@
 #define CAMERA_H
 
 #include "gfxcanvas.h"
-#include <linux/videodev.h>
+#include <libv4l1-videodev.h>
 
 class Camera : public QObject, public GfxCanvasWindow, public GfxClock
 {

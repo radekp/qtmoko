@@ -84,7 +84,7 @@ PhoneServer::PhoneServer( QObject* parent )
 
     // Create the AT-based modem service. If QTOPIA_PHONE is set we create a
     // handler for it. Possible case sensitive values are:
-    // QTOPIA_PHONE=Dummy, QTOPIA_PHONE=AT, QTOPIA_PHONE=Fso
+    // QTOPIA_PHONE=Dummy, QTOPIA_PHONE=AT, QTOPIA_PHONE=Fso, QTOPIA_PHONE=oFono
     char *env = getenv( "QTOPIA_PHONE" );
     QTelephonyService *service = 0;
     QByteArray target(env ? env : "AT");

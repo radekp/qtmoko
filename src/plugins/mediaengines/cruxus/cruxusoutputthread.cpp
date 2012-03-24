@@ -88,6 +88,7 @@ public:
 
     void suspend();
     void resume();
+    void close();
 
 protected:
     void run();
@@ -231,6 +232,16 @@ void OutputThreadPrivate::resume()
     silenceDuration = max_silence_duration;
     paused = false;
     qLog(Media) << "OutputThreadPrivate::resume()";
+}
+
+void OutputThreadPrivate::close()
+{
+    if(audioOutput && opened) {
+        QMutexLocker lock(&mutex);
+        opened = false;
+        audioOutput->close();
+    }
+    qLog(Media) << "OutputThreadPrivate::close()";
 }
 
 inline int OutputThreadPrivate::readFromDevice
@@ -379,6 +390,7 @@ bool OutputThread::open(QIODevice::OpenMode mode)
 
 void OutputThread::close()
 {
+    d->close();
 }
 
 // private slots:

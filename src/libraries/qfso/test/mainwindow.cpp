@@ -68,7 +68,7 @@ void MainWindow::checkIface(QDBusAbstractInterface *iface)
     ui->tbInit->append(status + " " + iface->service() + " " + iface->path());
 }
 
-void MainWindow::showVariantMap(QVariantMap map, QString caption)
+QString variantMapToStr(QVariantMap map)
 {
     QString str;
     for(int i = 0; i < map.count(); i++)
@@ -76,7 +76,12 @@ void MainWindow::showVariantMap(QVariantMap map, QString caption)
         QString key = map.keys().at(i);
         str += key + ": " + map.value(key).toString() + "\n";
     }
-    QMessageBox::information(this, caption, str);
+    return str;
+}
+
+void MainWindow::showVariantMap(QVariantMap map, QString caption)
+{
+    QMessageBox::information(this, caption, variantMapToStr(map));
 }
 
 void MainWindow::showVariantMapResult(QFsoDBusPendingReply<QVariantMap> reply, QString caption)

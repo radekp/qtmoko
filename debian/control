@@ -12,7 +12,7 @@ Package: qtmoko-neo
 Provides: qtmoko
 Conflicts: qtmoko
 Architecture: armel
-Depends: ${misc:Depends}, ${shlibs:Depends}, bluez-alsa, ttf-dejavu, sqlite3, psmisc, alsa-utils
+Depends: ${misc:Depends}, ${shlibs:Depends}, bluez-alsa, ttf-dejavu, sqlite3, psmisc, alsa-utils, ntpdate
 Description: Smartphone environment based on QT Extended - Neo FreeRunner flavor
  QtMoko provides a fully integrated phone stack plus smartphone environment
  for Linux based smartphones.

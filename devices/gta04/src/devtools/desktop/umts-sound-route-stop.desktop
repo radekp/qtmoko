@@ -1,9 +1,0 @@
-[Translation]
-File=QtopiaApplications
-Context=PowerManagerServices
-[Desktop Entry]
-Comment[]=UMTS sound routing stop
-Exec=qterminal -c umts-sound-route-stop.sh
-Icon=devtools/devtools
-Type=ConsoleApplication
-Name[]=UMTS sound routing stop

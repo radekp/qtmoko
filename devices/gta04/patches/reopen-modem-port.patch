@@ -1,0 +1,63 @@
+diff --git a/src/libraries/qtopiacomm/serial/qserialport.cpp b/src/libraries/qtopiacomm/serial/qserialport.cpp
+index 6dbabdd..4d8ffa7 100644
+--- a/src/libraries/qtopiacomm/serial/qserialport.cpp
++++ b/src/libraries/qtopiacomm/serial/qserialport.cpp
+@@ -27,6 +27,7 @@
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <errno.h>
++#include <time.h>
+ #include <sys/types.h>
+ #include <sys/time.h>
+ #include <sys/stat.h>
+@@ -58,6 +59,7 @@ public:
+         this->keepOpen = true;
+         this->notifier = 0;
+         this->timer  = 0;
++        this->zeroReadSecs = 0;
+     }
+     ~QSerialPortPrivate()
+     {
+@@ -80,6 +82,7 @@ public:
+     bool    keepOpen;
+     QSocketNotifier *notifier;
+     QTimer *timer;
++    time_t  zeroReadSecs;
+ };
+ 
+ /*!
+@@ -450,6 +453,34 @@ qint64 QSerialPort::readData( char *data, qint64 maxlen )
+         qLog(Modem) << "QSerialPort::readData: other end closed the connection" ;
+         close();
+     }
++    if(result == 0) {
++        if(d->device != "/dev/ttyHS_Application") {
++            return 0;
++        }
++        struct timespec tp;
++        if (!clock_gettime(CLOCK_MONOTONIC, &tp) == 0)
++            return 0;
++
++        if(d->zeroReadSecs == 0) {
++            d->zeroReadSecs = tp.tv_sec;
++            return 0;
++        }
++        if(tp.tv_sec - d->zeroReadSecs < 10) {
++            return 0;
++        }
++        qWarning() << "QSerialPort::readData: received 0 bytes in last 10 secs, reopening modem";
++        ::close( d->fd );
++        setOpenMode( NotOpen );
++        while ( !open( ReadWrite ) ) {
++            qWarning() << "Failed to open " << d->device << ": " << errorString();
++            usleep(3 * 1000 * 1000);
++        }
++        qDebug() << "Opened " << d->device;
++        d->zeroReadSecs = 0;
++        return 0;
++    } else {
++        d->zeroReadSecs = 0;
++    }
+     return result;
+ #else
+     return -1;

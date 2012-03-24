@@ -176,9 +176,7 @@ sub configopt
         croak "You must use Qtopia::Paths and call get_paths() before using Qtopia::Vars";
     }
     if ( ! @configureoptions ) {
-        if ( -f "$dir/LICENSE.TROLL" ) {
-            push(@configureoptions, "depot");
-        } elsif ( -f "$dir/LICENSE.GPL" ) {
+        if ( -f "$dir/LICENSE.GPL" ) {
             push(@configureoptions, "free");
         }
         if ( -d "$dir/src/qtopiadesktop" ) {

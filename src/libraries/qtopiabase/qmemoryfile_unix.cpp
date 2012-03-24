@@ -168,7 +168,7 @@ QMemoryFileData * QMemoryFile::openData (const QString &fileName, int flags,
                         qWarning("QMemoryFile error: %s", strerror(errno));
                 }
                 else
-                    qWarning("QMemoryFile: No such named memory created : %s", (const char*)fileName.toLatin1());
+		  qWarning("QMemoryFile: No such named memory created : %s", fileName.toLatin1().constData());
             }else{
                 // attach to previously created shared memory
                 block = (char*)shmat(shmId, NULL, shmAtFlag );
@@ -234,7 +234,7 @@ QMemoryFileData * QMemoryFile::openData (const QString &fileName, int flags,
                                  memFlags,
                                  f, 0 ); // from offset of 0 of f
             if ( !block || block == (char*)MAP_FAILED ){
-                qWarning("QMemoryFile: Failed to mmap %s", (const char *)fileName.toLatin1());
+	      qWarning("QMemoryFile: Failed to mmap %s", fileName.toLatin1().constData());
                 block = NULL;
             }else{
                 this->flags = flags;

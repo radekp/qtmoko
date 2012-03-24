@@ -44,6 +44,8 @@ QPassThroughSerialIODevice::~QPassThroughSerialIODevice()
 
 bool QPassThroughSerialIODevice::open( OpenMode mode )
 {
+    if ( enabled )
+        device->open( mode );
     setOpenMode( mode | QIODevice::Unbuffered );
     emit opened();
     return true;
@@ -51,6 +53,8 @@ bool QPassThroughSerialIODevice::open( OpenMode mode )
 
 void QPassThroughSerialIODevice::close()
 {
+    if ( enabled )
+        device->close();
     setOpenMode( NotOpen );
     emit closed();
 }

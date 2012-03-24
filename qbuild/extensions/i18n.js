@@ -81,6 +81,9 @@ The directory to store .ts files in (leave empty for the project directory).
 
 */
 
+var lupdate_silent = "-silent "; // must end with a space if non-empty
+//lupdate_silent = "";
+
 function i18n_init()
 {
     if ( project.absName.match(/\{file\}\/$/) )
@@ -199,11 +202,14 @@ function i18n_handle_translatables()
     var all_languages = project.property("AVAILABLE_LANGUAGES");
     var trtarget = project.property("TRTARGET").strValue();
     var srcdir = project.property("TS_DIR").strValue();
+    var trnsubdir = project.property("TRANSLATION_SUBDIR").strValue();
+    var trndir = srcdir+"/"+trnsubdir;
 
     // The rule to create .ts files
     var rule = project.rule()
     var cmd = new Array();
     cmd.push("rm -f translatables.pro");
+    cmd.push("mkdir -p "+trndir);
 
     var list = new Array("HEADERS", "SOURCES", "FORMS");
     for (var ii in list) {
@@ -216,12 +222,12 @@ function i18n_handle_translatables()
     var list = all_languages.value();
     for (var ii in list) {
         if (list[ii] == string_language.strValue()) continue; // not the string language
-        var ts = srcdir+"/"+trtarget+"-"+list[ii]+".ts";
+        var ts = trndir+"/"+trtarget+"-"+list[ii]+".ts";
         cmd.push("echo \"TRANSLATIONS+="+ts+"\" >>translatables.pro");
     }
     for (var ii in cmd)
         rule.commands.append("#(ve)"+cmd[ii]);
-    var command = "$$HOST_QT_BINS/lupdate -silent $$path(translatables.pro,generated)";
+    var command = "$$HOST_QT_BINS/lupdate "+lupdate_silent+"$$path(translatables.pro,generated)";
     rule.commands.append("#(eh)echo $$shellQuote("+command+")");
     rule.commands.append("#(e)cd "+srcdir+";"+command);
     i18n_depend_on_qt(rule.name);
@@ -229,9 +235,9 @@ function i18n_handle_translatables()
     if ( !string_language.isEmpty() ) {
         // Now do a -pluralonly run for the string language
         rule.commands.append("#(ve)grep -v '^TRANSLATIONS' translatables.pro >translatables2.pro");
-        var ts = srcdir+"/"+trtarget+"-"+string_language.strValue()+".ts";
+        var ts = trndir+"/"+trtarget+"-"+string_language.strValue()+".ts";
         rule.commands.append("#(ve)echo \"TRANSLATIONS+="+ts+"\" >>translatables2.pro");
-        command = "$$HOST_QT_BINS/lupdate -silent -pluralonly $$path(translatables2.pro,generated)";
+        command = "$$HOST_QT_BINS/lupdate "+lupdate_silent+"-pluralonly $$path(translatables2.pro,generated)";
         rule.commands.append("#(eh)echo $$shellQuote("+command+")");
         rule.commands.append("#(e)cd "+srcdir+";"+command);
     }
@@ -331,7 +337,7 @@ function i18n_hint_nct(obj)
     var cmd = new Array();
     cmd.push("cd "+data.outdir.value);
     var nct_lupdate = project.property("I18N.NCT_LUPDATE").strValue();
-    var command = nct_lupdate+" ";
+    var command = nct_lupdate+" "+lupdate_silent;
     if ( obj.property("hint").contains("content") ) {
         if ( data.trtarget.value.match(/^Qtopia/) ) {
             command += " -depot $$path(/,project)";
@@ -389,7 +395,8 @@ function i18n_hint_themecfg(obj)
     var cmd = new Array();
     cmd.push("cd "+data.outdir.value);
     var nct_lupdate = project.property("I18N.THEME_LUPDATE").strValue();
-    var command = nct_lupdate+" $$shellQuote($$AVAILABLE_LANGUAGES) $$shellQuote($$STRING_LANGUAGE) $$[INPUT.ABS]";
+    var command = nct_lupdate+" "+lupdate_silent+
+	"$$shellQuote($$AVAILABLE_LANGUAGES) $$shellQuote($$STRING_LANGUAGE) $$[INPUT.ABS]";
     cmd.push(command);
     rule.commands.append("#(eh)echo $$shellQuote("+command+")");
     rule.commands.append("#(e)"+cmd.join(";"));
@@ -440,7 +447,7 @@ function i18n_hint_extra_ts(obj)
             "existing");
         if ( project.filesystemFile(ts) ) {
             var qm = "$$QTOPIA_IMAGE/i18n/"+lang+"/"+data.outfile.value+".qm";
-            rule.commands.append("$$HOST_QT_BINS/lrelease -silent -compress -nounfinished -removeidentical "+ts+" -qm "+qm);
+            rule.commands.append("$$HOST_QT_BINS/lrelease "+lupdate_silent+"-compress -nounfinished -removeidentical "+ts+" -qm "+qm);
         } else {
             rule.commands.append("#(eh)echo $$shellQuote(WARNING: "+ts+" is missing and cannot be installed.)");
         }

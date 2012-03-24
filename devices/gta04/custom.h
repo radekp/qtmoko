@@ -31,7 +31,7 @@
 
 #define QPE_NEED_CALIBRATION
 
-#define QTOPIA_PHONE_DEVICE "/dev/ttySAC0"
+#define QTOPIA_PHONE_DEVICE "/dev/ttyHS3"
 //#define QTOPIA_PHONE_VENDOR "ficgta01"
 
 #ifdef Q_WS_QWS
@@ -54,6 +54,6 @@
 #define V4L_VIDEO_DEVICE            "" //no video
 #endif
 
-#define NMEA_GPS_DEVICE "/dev/ttySAC1"
+#define NMEA_GPS_DEVICE "/dev/ttyO1"
 
 #define GOOGLE_CALENDAR_CONTEXT

@@ -30,7 +30,7 @@ Step 1
 
 * We will be installing new image to /media/card:
 
-cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,ppp,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,timeout,libpng12-0,libjpeg62,libmng1,libtiff4,libxtst6,sqlite3 squeeze /media/card/ http://cdn.debian.net/debian/
+cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,ppp,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,timeout,libpng12-0,libjpeg62,libmng1,libtiff4,libxtst6,sqlite3,ntpdate squeeze /media/card/ http://cdn.debian.net/debian/
 
 Step 2
 ======
@@ -82,6 +82,7 @@ echo "deb http://cdn.debian.net/debian squeeze contrib" >> /media/card/etc/apt/s
 echo "deb http://cdn.debian.net/debian squeeze non-free" >> /media/card/etc/apt/sources.list
 echo "deb http://security.debian.org/ squeeze/updates main contrib non-free" >> /media/card/etc/apt/sources.list
 echo "deb http://qtmoko.sourceforge.net/debian/ /" >> /media/card/etc/apt/sources.list
+echo "deb http://qtmoko.sourceforge.net/apps /" >> /media/card/etc/apt/sources.list
 
 Step 4
 ======
@@ -322,10 +323,10 @@ git submodule update --init
 * Install it
 
 chroot /media/card/
-wget http://qtmoko.sourceforge.net/debian/qtmoko-neo_38-1_armel.deb
-dpkg -i qtmoko-neo_38-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/qtmoko-neo_39-1_armel.deb
+dpkg -i qtmoko-neo_39-1_armel.deb
 update-rc.d qtmoko-neo defaults
-rm qtmoko-neo_38-1_armel.deb
+rm qtmoko-neo_39-1_armel.deb
 exit
 killall qpe.sh  # recent versions start qtmoko after install, so kill it
 
@@ -352,9 +353,9 @@ dpkg-buildpackage
 * Install kernel image:
 
 chroot /media/card
-wget http://qtmoko.sourceforge.net/debian/linux-image-2.6.34-qtmoko-gta02_v38-1_armel.deb
-dpkg -i linux-image-2.6.34-qtmoko-gta02_v38-1_armel.deb
-rm linux-image-2.6.34-qtmoko-gta02_v38-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/linux-image-2.6.34-qtmoko-gta02_v39-1_armel.deb
+dpkg -i linux-image-2.6.34-qtmoko-gta02_v39-1_armel.deb
+rm linux-image-2.6.34-qtmoko-gta02_v39-1_armel.deb
 exit
 
 * Create boot args and symlink for qi:

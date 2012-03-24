@@ -19,6 +19,7 @@ WPA_CONF=/etc/wpa_supplicant/wpa_supplicant.conf
 
 ###############################
 
+#set -x
 
 print_debug()
 {
@@ -61,7 +62,7 @@ try_ip()
     COUNT=0
     echo "Trying to find ip: $COUNT"
        until [ "$COUNT" -gt "10" ]; do
-           IP=`/sbin/ifconfig eth0|grep inet[^6]|awk 'BEGIN{FS=":"}{print $2}'|awk '{print $1}'`
+           IP=`/sbin/ifconfig wlan0|grep inet[^6]|awk 'BEGIN{FS=":"}{print $2}'|awk '{print $1}'`
            if [ -n "$IP" ]; then
                echo "$IP" > /home/root/Documents/$1.txt
                rescan_docs
@@ -336,9 +337,7 @@ print_debug "$*"
 start()
 {
     print_debug "starting $*";
-    ifdown usb0
-
-    om wifi maxperf "$1" 1 > /dev/null 2>&1
+#    ifdown usb0
 
     . $HOME/Settings/Network/$1
 
@@ -392,7 +391,6 @@ start()
         echo "}" >> $WPACONF
        
         /sbin/ifconfig $1 up
-	om led gta02-power:blue 1 > /dev/null 2>&1
 
         if [ "$WIRELESS_AP" != "" ]; then
             /sbin/iwconfig $1 ap $WIRELESS_AP
@@ -400,11 +398,11 @@ start()
             /sbin/iwconfig $1 ap any
         fi
 
-        if [ "$WIRELESS_BITRATE" != "" ] && [ "$WIRELESS_BITRATE" != "auto" ]; then
-            /sbin/iwconfig $1 rate ${WIRELESS_BITRATE}M auto
-        else
-            /sbin/iwconfig $1 rate auto
-        fi
+#        if [ "$WIRELESS_BITRATE" != "" ] && [ "$WIRELESS_BITRATE" != "auto" ]; then
+#            /sbin/iwconfig $1 rate ${WIRELESS_BITRATE}M auto
+#        else
+#            /sbin/iwconfig $1 rate auto
+#        fi
 
         if [ "$WIRELESS_NICK" != "" ]; then
             /sbin/iwconfig $1 nick "$WIRELESS_NICK"
@@ -441,7 +439,7 @@ start()
             static)
                 /sbin/ifconfig $1 $IPADDR netmask $NETMASK broadcast $BROADCAST up
 
-                if [ "$1" = "eth0" ]; then
+                if [ "$1" = "wlan0" ]; then
                     update_hosts neo $IPADDR
                 else
                     update_hosts neo-$1 $IPADDR
@@ -479,8 +477,6 @@ stop()
         rm /home/root/Documents/$1.txt
         rescan_docs
     fi
-    om wifi maxperf "$1" 0 > /dev/null 2>&1
-    om led gta02-power:blue 0 > /dev/null 2>&1
     killall -q wpa_supplicant
 
     ifup usb0

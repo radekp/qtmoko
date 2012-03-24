@@ -16,18 +16,25 @@ if ( $isWindows ) {
 
 
 use constant DEBUG => 0;
-my $silent = "-silent";
 
-# Usage: nct_lupdate [ -nowarn ] [ -depot path ] [ -content trtarget ] "lang1 lang2 ... langn" string_language files
+# Usage: nct_lupdate [ -nowarn ] [ -silent ] [ -depot path ] [ -content trtarget ] "lang1 lang2 ... langn" string_language files
+
+my $lupdate = "$HOST_QT_BINS/lupdate";
 
 my $global = 0;
 my $depot;
 my $warn_on = 1;
+my $silent = "";
 my $content = 0;
 my $trtarget = "";
+my $locations = "-locations none";
 if ( $ARGV[0] eq "-nowarn" ) {
     shift(@ARGV);
     $warn_on = 0;
+}
+if ( $ARGV[0] eq "-silent" ) {
+    shift(@ARGV);
+    $silent = "-silent";
 }
 if ( $ARGV[0] eq "-depot" ) {
     shift(@ARGV);
@@ -203,7 +210,7 @@ for my $tsfile ( keys %contextinfo ) {
 	if ( $global ) {
 	    $filename = $depot."/i18n/".$lang;
             if ( ! -e $filename ) {
-                mkdir ($filename, 0755) || print "Failed to create $filename\n";
+                mkdir ($filename, 0755) || print "nct_lupdate: Failed to create $filename\n";
             }
 	    $filename = $filename."/".$tsfile.".ts";
 	} else {
@@ -212,19 +219,19 @@ for my $tsfile ( keys %contextinfo ) {
         print CPP "TRANSLATIONS += $filename\n";
     }
     close CPP;
-    my $cmd = "$HOST_QT_BINS/lupdate $silent $tmp.pro";
-    print "$cmd\n";
-    system($cmd);
+    my $args = "$silent $locations $tmp.pro";
+    print "nct_lupdate: lupdate $args\n";
+    system("$lupdate $args");
 
     if ( $STRING_LANGUAGE ) {
         # Now strip out the languages and re-run lupdate for the string language with -pluralonly
-        open CPP, ">$tmp.pro" or die "Can't write $tmp.pro";
+        open CPP, ">$tmp.2.pro" or die "Can't write $tmp.2.pro";
         print CPP join("\n", @output)."\n";
 	my $filename;
 	if ( $global ) {
 	    $filename = $depot."/i18n/".$STRING_LANGUAGE;
             if ( ! -e $filename ) {
-                mkdir ($filename, 0755) || print "Failed to create $filename\n";
+                mkdir ($filename, 0755) || print "nct_lupdate: Failed to create $filename\n";
             }
 	    $filename = $filename."/".$tsfile.".ts";
 	} else {
@@ -232,13 +239,14 @@ for my $tsfile ( keys %contextinfo ) {
 	}
         print CPP "TRANSLATIONS += $filename\n";
         close CPP;
-        $cmd = "$HOST_QT_BINS/lupdate $silent -pluralonly $tmp.pro";
-        print "$cmd\n";
-        system($cmd);
+        $args = "$silent $locations -pluralonly $tmp.2.pro";
+        print "nct_lupdate: lupdate $args\n";
+        system("$lupdate $args");
     }
 
     unlink $tmp;
     unlink "$tmp.pro";
+    unlink "$tmp.2.pro";
 }
 
 if ( $content ) {

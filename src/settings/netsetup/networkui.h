@@ -39,55 +39,62 @@ class NetworkUI : public QDialog
 {
     Q_OBJECT
 public:
-    NetworkUI( QWidget * parent = 0, Qt::WFlags fl = 0);
+    NetworkUI(QWidget * parent = 0, Qt::WFlags fl = 0);
     ~NetworkUI();
 
     void setCurrentTab(int tab);
 
 private:
     void init();
-    void updateExtraActions( const QString& config, QtopiaNetworkInterface::Status newState );
+    void updateExtraActions(const QString & config,
+                            QtopiaNetworkInterface::Status newState);
 #ifdef QTOPIA_CELL
-    void applyRemoteSettings( const QString& from, const QtopiaNetworkProperties& prop );
+    void applyRemoteSettings(const QString & from,
+                             const QtopiaNetworkProperties & prop);
 #endif
-    void addService(const QString& newConfFile);
+    void addService(const QString & newConfFile);
 
 private slots:
     void addService();
     void removeService();
     void serviceSelected();
+    void doAction(QString config, QString type);
     void doProperties();
     void updateActions();
     void updateIfaceStates();
-    void tabChanged( int index );
+    void tabChanged(int index);
     void setGateway();
     void updateConfig();
+    void tableCellClicked(int row, int column);
 
 public slots:
 #ifdef QTOPIA_CELL
-    void otaDatagram( QOtaReader *reader, const QByteArray& data,
-                      const QString& sender );
+    void otaDatagram(QOtaReader * reader, const QByteArray & data,
+                     const QString & sender);
 #endif
-    void lanDatagram(const QByteArray &data);
+    void lanDatagram(const QByteArray & data);
 
 private:
-    QTableWidget* table;
-    QTabWidget* tabWidget;
-    WapUI* wapPage;
-    VpnUI* vpnPage;
-    QMenu* contextMenu;
-    QMultiMap<QString, QPointer<QAction> > actionMap;
+     QTableWidget * table;
+    QTabWidget *tabWidget;
+    WapUI *wapPage;
+    VpnUI *vpnPage;
+    QMenu *contextMenu;
+     QMultiMap < QString, QPointer < QAction > >actionMap;
     QAction *a_add, *a_remove, *a_props, *a_gateway, *a_startStop;
 };
 
 class NetworkSetupService : public QtopiaAbstractService
 {
     Q_OBJECT
-    friend class NetworkUI;
+     friend class NetworkUI;
 private:
-    NetworkSetupService(NetworkUI *parent)
-        : QtopiaAbstractService("NetworkSetup", parent)
-        { this->parent = parent; publishAll(); }
+    NetworkSetupService(NetworkUI * parent)
+    :QtopiaAbstractService("NetworkSetup", parent)
+    {
+        this->parent = parent;
+        publishAll();
+    }
 
 public:
     ~NetworkSetupService();
@@ -96,13 +103,13 @@ public slots:
     void configureData();
 #ifdef QTOPIA_CELL
     void configureWap();
-    void pushWapNetworkSettings( const QDSActionRequest& request );
-    void pushNokiaNetworkSettings( const QDSActionRequest& request );
+    void pushWapNetworkSettings(const QDSActionRequest & request);
+    void pushNokiaNetworkSettings(const QDSActionRequest & request);
 #endif
-    void pushLanNetworkSettings(const QDSActionRequest &request);
+    void pushLanNetworkSettings(const QDSActionRequest & request);
 
 private:
-    NetworkUI *parent;
+    NetworkUI * parent;
 };
 
 #endif

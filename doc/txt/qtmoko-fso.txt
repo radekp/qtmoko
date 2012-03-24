@@ -34,9 +34,11 @@ Develop on PC
 * FSO uses dbus as communication transport. Thankfully dbus calls can be
   redirected from phone to PC. Nice tutorial is here [1].
 
-* First install latest SHR unstable
+* You will need dbus-daemon-proxy program. You can compile from these sources:
 
-* SSH to your phone running SHR unstable and do:
+    git clone git://git.collabora.co.uk/git/user/alban/dbus-daemon-proxy
+
+* SSH to your phone and do:
 
 dbus-daemon-proxy --system --port 8081
 

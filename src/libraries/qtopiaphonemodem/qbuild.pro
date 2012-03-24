@@ -41,7 +41,8 @@ HEADERS=\
     qmodemvibrateaccessory.h\
     qmodemrffunctionality.h\
     qmodemgprsnetworkregistration.h\
-    qmodemcallvolume.h
+    qmodemcallvolume.h\
+    qmodemllindicators.h
 
 PRIVATE_HEADERS=\
     qmodempinmanager_p.h\
@@ -76,5 +77,6 @@ SOURCES=\
     qmodemrffunctionality.cpp\
     qmodemgprsnetworkregistration.cpp\
     qmodempppdmanager.cpp\
-    qmodemcallvolume.cpp
+    qmodemcallvolume.cpp\
+    qmodemllindicators.cpp
 

@@ -20,7 +20,7 @@
 #ifndef NEOHARDWARE_H
 #define NEOHARDWARE_H
 
-#ifdef QT_QWS_NEO
+#ifdef QT_QWS_GTA04
 
 #include <QObject>
 #include <QProcess>

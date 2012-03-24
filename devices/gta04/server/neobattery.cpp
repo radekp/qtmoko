@@ -177,7 +177,7 @@ void NeoBattery::timerEvent(QTimerEvent *)
   \internal */
 void NeoBattery::updateStatus()
 {
-    qDebug() << "NeoBattery::updateStatus isSmartBattery=" << isSmartBattery;
+    qLog(PowerManagement) << "NeoBattery::updateStatus isSmartBattery=" << isSmartBattery;
     if (isSmartBattery)
         QTimer::singleShot(1000, this, SLOT(updateSysStatus()));
     else

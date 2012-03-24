@@ -9,15 +9,12 @@ CONFIG+=qtopia
 HEADERS=cell.h mainwindow.h
 SOURCES=cell.cpp main.cpp mainwindow.cpp
 RESOURCES=pics/pics.qrc
-TRANSLATIONS+=translations/qnetwalk_de.ts \
-                translations/qnetwalk_es.ts \
-                translations/qnetwalk_fr.ts \
-                translations/qnetwalk_it.ts \
-                translations/qnetwalk_nl.ts \
-                translations/qnetwalk_pl.ts \
-                translations/qnetwalk_pt_BR.ts \
-                translations/qnetwalk_ru.ts
 DEFINES+=QTOPIA_PHONE
+
+STRING_LANGUAGE=en_US
+AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
+LANGUAGES=$$QTOPIA_LANGUAGES
+TRANSLATION_SUBDIR=translations
 
 pkg [
     name=qnetwalk

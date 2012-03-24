@@ -20,7 +20,7 @@
 #ifndef NEOKBDHANDLER_H
 #define NEOKBDHANDLER_H
 
-#ifdef QT_QWS_NEO
+#ifdef QT_QWS_GTA04
 
 #include <QObject>
 #include <QWSKeyboardHandler>
@@ -88,6 +88,6 @@ private slots:
     void inputEvent(struct input_event&);
 };
 
-#endif // QT_QWS_NEO
+#endif // QT_QWS_GTA04
 
 #endif

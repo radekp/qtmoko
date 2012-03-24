@@ -1,6 +1,61 @@
+qtmoko (42-1) unstable; urgency=low
+
+  * ntpdate is now installed as part of rootfs image (Yann Dirson)
+  * we have working ubifs images now
+  * fixed atd killing (Yann Dirson)
+  * fixed failed suspends #69 (Yann Dirson)
+  * bluetooth now works on GTA04 (with bt-poweron.sh script)
+  * many build cleanups and fixes (Yann Dirson)
+  * fixed problem with fonts in qvfb (Yann Dirson)
+  * disabled dimming in default gta04 conf
+  * fixed nerongps version to old good one
+  * closing modem before suspend and opening after resume on GTA04
+
+ -- Radek Polak <psonek2@seznam.cz>  Tue, 20 Mar 2012 21:52:00 +0100
+
+qtmoko (41-1) unstable; urgency=low
+
+  * gsm-voice-routing has highest -20 priority
+  * Disabled UMTS on GTA04 to workaround disconnect problem
+  * Low level modem LED indicators
+  * Added support for oFono telephony backend
+  * Wifi is manually turned on when running from devtmpfs
+  * Removed udev from init again (using devtmps for fast boot)
+  * GTA04 kernel is built with nodebug options
+  * RED led is turned off when QtMoko starts
+  * Build without unnecessary tools (Yann Dirson)
+  * Disable forced Qt rebuilds (Yann Dirson)
+  * NeronGPS compiles on 64bit (Yann Dirson)
+  * Fixes in translations (Yann Dirson)
+  * Newer v4l headers (Yann Dirson)
+  * fixed black screen in settings for locked mode
+  * /media/card is now FAT on /dev/mmcblk0p3
+  * better description for ringtones settings icon
+
+ -- Radek Polak <psonek2@seznam.cz>  Thu, 16 Feb 2012 23:07:00 +0100
+
+qtmoko (40-1) unstable; urgency=low
+
+  * added qtmoko apps repository
+  * using /dev/ttyHS_Application for gta04 modem (and udev rule for it)
+  * gta04 earpiece is a bit louder
+  * reworked wifi plugin (periodic search, easier to use)
+  * arora and profiles have better description
+  * wifi - make it scan and work on GTA04
+  * gps should be working on gta04
+  * ugly patch for modem port disapear on GTA04 (apply it manualy)
+  * fixed incoming/missed calls and remote hangup on gta04
+  * gta02 - revert closing pcm in cruxus 
+
+ -- Radek Polak <psonek2@seznam.cz>  Thu, 16 Feb 2012 23:07:00 +0100
+
 qtmoko (39-1) unstable; urgency=low
 
-  * fixed alsa scenarios path
+  * fixed alsa scenarios path on GTA02
+  * gta04-gsm-voice-routing for gsm voice calls on GTA04
+  * fixed cruxus to close pcm device when not used
+  * powering up modem with gpio186 on GTA04A04 in qpe.sh
+  * remaped long AUX button function to short POWER
 
  -- Radek Polak <psonek2@seznam.cz>  Sat, 04 Feb 2012 22:22:00 +0100
 

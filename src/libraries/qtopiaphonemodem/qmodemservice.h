@@ -25,6 +25,7 @@
 #include <qserialiodevicemultiplexer.h>
 #include <qatchat.h>
 #include <qatresult.h>
+#include <qvaluespace.h>
 
 class QModemServicePrivate;
 class QModemCallProvider;
@@ -88,9 +89,11 @@ private slots:
     void firstTimeInit();
     void phoneBookPreload();
     void stkInitDone();
+    void phoneVsChanged();
 
 private:
     QModemServicePrivate *d;
+    QValueSpaceItem phoneVs;
 };
 
 #endif

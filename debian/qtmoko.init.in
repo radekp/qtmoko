@@ -36,7 +36,7 @@ SCRIPTNAME=/etc/init.d/$NAME
 #
 do_start()
 {
-    /opt/qtmoko/qpe.sh &
+    /opt/qtmoko/qpe.sh 2>&1 | logger -t 'Qtopia' &
     return 0
 }
 

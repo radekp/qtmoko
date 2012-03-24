@@ -19,7 +19,7 @@
 
 #include "neokbdhandler.h"
 
-#ifdef QT_QWS_NEO
+#ifdef QT_QWS_GTA04
 #include <QFile>
 #include <QTextStream>
 #include <QScreen>
@@ -228,4 +228,4 @@ void NeoKbdHandler::inputEvent(struct input_event& event)
 
 
 
-#endif // QT_QWS_NEO
+#endif // QT_QWS_GTA04

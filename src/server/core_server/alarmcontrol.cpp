@@ -187,7 +187,7 @@ void TimerReceiverObject::resetTimer()
             atfilename = fn;
             triggerAtd();
         } else {
-            qWarning("Cannot open atd file %s",(const char *)fn.toLatin1());
+	  qWarning("Cannot open atd file %s",fn.toLatin1().constData());
         }
     }
     // Qt timers (does the actual alarm)

@@ -29,7 +29,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/mman.h>
-#include <linux/videodev.h>
+#include <libv4l1-videodev.h>
 #include <custom.h>
 
 #include <QtCore>
@@ -39,7 +39,7 @@
 #include <qcameratools.h>
 
 #ifdef QTOPIA_HAVE_V4L2
-
+#include <linux/videodev2.h>
 
 class V4L2Webcam;
 class Preview : public QCameraPreviewCapture

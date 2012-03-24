@@ -27,14 +27,11 @@ class NeoMultiplexerPlugin : public QSerialIODeviceMultiplexerPlugin
 {
     Q_OBJECT
 public:
-    NeoMultiplexerPlugin( QObject* parent = 0 );
-    virtual ~NeoMultiplexerPlugin();
+    NeoMultiplexerPlugin(QObject * parent = 0);
+    virtual ~ NeoMultiplexerPlugin();
 
-    bool detect( QSerialIODevice *device );
-    QSerialIODeviceMultiplexer *create( QSerialIODevice *device );
-
-private:
-    bool muxEnabled;
+    bool detect(QSerialIODevice * device);
+    QSerialIODeviceMultiplexer *create(QSerialIODevice * device);
 };
 
 #endif

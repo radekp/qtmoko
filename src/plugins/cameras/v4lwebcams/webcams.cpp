@@ -422,7 +422,7 @@ void Still::setValue(quint32 id, int value)
 }
 
 #endif /* QTOPIA_HAVE_V4L2 */
-#include <linux/videodev.h>
+#include <libv4l1-videodev.h>
 
 V4L1Preview::V4L1Preview(V4L1Webcam* w) : wc(w)
 {

@@ -35,20 +35,10 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 
-QTOPIA_EXPORT_PLUGIN( NeoMultiplexerPlugin )
+QTOPIA_EXPORT_PLUGIN(NeoMultiplexerPlugin)
 
-// Define this to disable GSM 07.10 multiplexing, but still do wakeup handling.
-//#define NEO_NO_MUX
-
-// Size of GSM 07.10 frames to use with the multiplexer.
-#ifndef NEO_FRAME_SIZE
-#define NEO_FRAME_SIZE 64
-#endif
-
-#define N_TIHTC 17
-
-NeoMultiplexerPlugin::NeoMultiplexerPlugin( QObject* parent )
-    : QSerialIODeviceMultiplexerPlugin( parent )
+NeoMultiplexerPlugin::NeoMultiplexerPlugin(QObject * parent)
+:  QSerialIODeviceMultiplexerPlugin(parent)
 {
 }
 
@@ -56,42 +46,13 @@ NeoMultiplexerPlugin::~NeoMultiplexerPlugin()
 {
 }
 
-bool NeoMultiplexerPlugin::detect( QSerialIODevice *device )
+bool NeoMultiplexerPlugin::detect(QSerialIODevice *)
 {
-    qLog(Hardware) << __PRETTY_FUNCTION__;
-    
-    QSerialPort *port = qobject_cast<QSerialPort *>( device );
-    device->discard();
-    int rc;
-
-    struct termios t;
-    rc = tcgetattr(port->fd(), &t);
-    t.c_cflag |= CRTSCTS;
-    rc = tcsetattr(port->fd(), TCSANOW, &t);
-
-    QSettings cfg("Trolltech", "Modem");
-    QString multiplexing = cfg.value("Multiplexing/Active", "yes").toString();
-    muxEnabled &= (multiplexing != "no");
-    qLog(Mux) << "Neo multiplexing " << (muxEnabled ? "enabled" : "disabled")
-              << multiplexing;
-
-    // disable echoing of commands
-    QSerialIODeviceMultiplexer::chat(device, "ATE0");
-    device->readAll();
-
-    if (muxEnabled) {
-        // Issue the AT+CMUX command to determine if this device
-        // uses GSM 07.10-style multiplexing.
-        return QGsm0710Multiplexer::cmuxChat( device, NEO_FRAME_SIZE, true );
-    }
     return true;
 }
 
-QSerialIODeviceMultiplexer *NeoMultiplexerPlugin::create( QSerialIODevice *device )
+QSerialIODeviceMultiplexer *NeoMultiplexerPlugin::create(QSerialIODevice *
+                                                         device)
 {
-    qLog(Hardware) << __PRETTY_FUNCTION__;
-
-    if (muxEnabled)
-        return new QGsm0710Multiplexer( device, NEO_FRAME_SIZE, true );
-    return new QNullSerialIODeviceMultiplexer( device );
+    return new QNullSerialIODeviceMultiplexer(device);
 }
