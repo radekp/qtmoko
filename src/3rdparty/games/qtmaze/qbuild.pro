@@ -17,7 +17,8 @@ DEFINES+=QTOPIA
 
 # Specify the languages that make lupdate should produce .ts files for
 STRING_LANGUAGE=en_US
-#LANGUAGES=en_US
+AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
+LANGUAGES=$$QTOPIA_LANGUAGES
 
 # Package information (used for qbuild packages)
 pkg [

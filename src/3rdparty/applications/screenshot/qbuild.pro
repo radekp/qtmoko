@@ -1,7 +1,11 @@
 TEMPLATE=app
 TARGET=screenshot
-CONFIG+=qtopia no_singleexec no_quicklaunch no_tr
+CONFIG+=qtopia no_singleexec no_quicklaunch
 
+# I18n info
+STRING_LANGUAGE=en_US
+AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
+LANGUAGES=$$QTOPIA_LANGUAGES
 
 HEADERS             = screenshot.h
 SOURCES             = main.cpp \

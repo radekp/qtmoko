@@ -1,8 +1,14 @@
 #qtopia_project(qtopia app)
 TEMPLATE=app
 TARGET=simplefm
-CONFIG+=qtopia no_quicklaunch no_singleexec no_tr
+CONFIG+=qtopia no_quicklaunch no_singleexec
 DEFINES+=QTOPIA_PHONE
+
+# I18n info
+STRING_LANGUAGE=en_US
+AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
+LANGUAGES=$$QTOPIA_LANGUAGES
+
 HEADERS = simplefm.h \
 		qurlview.h \
 		qabstracturlmodel.h \

@@ -27,8 +27,6 @@
 -release
 
 -sound-system alsa
--languages en_US
-
 
 -ui-type mobile
 -dynamic-rotation

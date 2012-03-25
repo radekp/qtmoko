@@ -50,7 +50,7 @@
 SimpleFM::SimpleFM(QWidget *parent, Qt::WindowFlags fl)
   : QMainWindow(parent,fl)
 {
-  setWindowTitle("File Manager");
+  setWindowTitle(tr("File Manager"));
   setCentralWidget(setupUI());
 }
 
@@ -70,7 +70,7 @@ QWidget *SimpleFM::setupUI()
 
   button->setFocusPolicy(Qt::NoFocus);
   lbPath = new QLabel();
-  lbPath->setText("Path:");
+  lbPath->setText(tr("Path") + ":");
   cmbPath->setEditable(true);
   cmbPath->addItem(QDir::homePath());
   cmbPath->setCurrentIndex(0);
@@ -138,9 +138,9 @@ QWidget *SimpleFM::setupUI()
   connect (acFileProperties, SIGNAL(triggered()), this, SLOT(fileProperties()));
   connect (acParentDirectory, SIGNAL(triggered()), this, SLOT(parentDirectory()));
 
-  addView("Home", "local",QDir::homePath(),QIcon(":icon/folder_home"));
-  addView("Root", "local",QDir::rootPath(),QIcon(":icon/folder_red"));
-  addView("Root <2>", "local",QDir::rootPath(),QIcon(":icon/folder_red"));
+  addView(tr("Home"), "local",QDir::homePath(),QIcon(":icon/folder_home"));
+  addView(tr("Root"), "local",QDir::rootPath(),QIcon(":icon/folder_red"));
+  addView(tr("Root") + " <2>", "local",QDir::rootPath(),QIcon(":icon/folder_red"));
   connect(tbSessions, SIGNAL(currentChanged(int)),
                 this, SLOT(currentViewChanged(int)));
 
