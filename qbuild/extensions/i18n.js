@@ -341,7 +341,11 @@ function i18n_hint_nct(obj)
     var cmd = new Array();
     cmd.push("cd "+data.outdir.value);
     var nct_lupdate = project.property("I18N.NCT_LUPDATE").strValue();
+    var trnsubdir = project.property("TRANSLATION_SUBDIR").strValue();
     var command = nct_lupdate+" "+lupdate_silent;
+    if ( trnsubdir != "") {
+        command += " -subdir "+trnsubdir;
+    }
     if ( obj.property("hint").contains("content") ) {
         if ( data.trtarget.value.match(/^Qtopia/) ) {
             command += " -depot $$path(/,project)";
