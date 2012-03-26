@@ -1,0 +1,752 @@
+===============================================================================
+                                   V32
+===============================================================================
+
+Hi,
+i have released new experimental qtmoko images. They are now based on debian 
+squeeze and they have new (not finished) bluetooth support based on bluez4.
+
+You can download and get more info here [1] [2].
+
+Here are changes since v31:
+
+- switched from debian lenny->squeeze
+- switched from bluez3->bluez4
+- fixed the bug in power manager (switching battery/lock/charger)
+- fixed USB device/host scripts for recent kernel
+- fixed default DNS
+- qx can install X server (xglamo/xorg-glamo)
+- X server is no longer in image
+- updated omhacks
+- fixed qvga in qmplayer/qmokoplayer
+- GPS is now really powered down when no one uses it
+- SD card image has also manual pages and other data
+- qemu build host for people who want to make release themselves (see [4])
+- added files and info for native compiling on ARM host
+
+As far as i have tested - most of the stuff should be ok. But the release i 
+marked experimental, because the changes are big.
+
+Bluetooth is still work in progress. There are still some functions not 
+implemented and bluetooth handsfree is bugged (see below). I was able it to 
+pair with new device, you can see available services, you can use obex for 
+sending/receiving/browsing, A2DP works just fine. I am not sure if works the 
+scenario when headset connects to Neo, but Neo->Headset direction works. There 
+is also bug that sometimes you cant see just paired device. Workaround is exit 
+bt settings and enter it back.
+
+Bluetooth handset: after pairing and connecting i can always hear phone 
+ringing, i can use the buttons, but sound is there just randomly. For me it 
+works somehing like this:
+
+remove pairing with headset (if any).
+reboot phone
+make normal call (no bluetooth headset involved)
+pair with headset
+connect handsfree
+make call with bt headset - sound is ok
+
+Once it starts working it's ok. It would be nice to reproduce this bug and fix 
+it. Any suggestions and findings out how to reproduce are very welcome.
+
+As for QX - it can now install X server. You will need interenet connection. 
+The xorg install should be quite ok, Xglamo install is hack, you will have to 
+wait long time and it gives no output, but it should work. I'll fix it for next 
+release.
+
+Enjoy new version and bug reports are welcome (alhought i can start fixing them 
+not sooner then after 3 weeks). And also patches are welcome - i dont have 
+single one for this release!!!
+
+Cheers
+
+Radek
+
+[1] https://sourceforge.net/projects/qtmoko/files/Experimental/
+[2] http://www.qtmoko.org/wiki/Main_Page
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] 
+https://github.com/radekp/qtmoko/blob/master/doc/txt/debian_rootfs_howto.txt
+
+
+===============================================================================
+                                   V31
+===============================================================================
+
+Hi,
+new stable qtmoko release v31 is now out. You can download images for SD card 
+and NAND flash from sourceforge [1] and sources from github [2].
+
+QtMoko is distribution for Freerunner based on debian rootfs and qtopia phone 
+stack and GUI. For more info please see [3] and [4].
+
+Changes since previous version:
+
+- fixed invisible call button in finximod theme (Joif)
+- translated to French (Gregoire Juge)
+- updated Danish translation (Ole Carlsen)
+- better layout in docked keyboard
+- commented completion strip in docked keyboard
+- VT not switch to graphics which fixes X hang in VT_WAITACTIVE (Gennady+Me)
+- fix QX crash after pause/resume
+- using openssh-server instead of dropbear again
+
+This is first "stable" release based on kernel 2.6.34. I think nearly all 
+regressions to andy-tracking 2.6.29 are fixed so i will tag last commit with 
+2.6.29 support and will merge 2.6.34 support in master.
+
+Docked keyboard (the one suitable for terminal) is now much better. It has 
+same layout as in SHR, which means you will have cursor keys on main screen. 
+The completion strip was IMO quite useless and wasted only space so it's now 
+disabled.
+
+As for the VT fix (or hack ;-) it's now possible to use any X server with QX. 
+So you can install full xserver and use it instead of Xglamo which is default.
+
+So happy new year!
+
+Regards
+
+Radek
+
+
+[1] https://sourceforge.net/projects/qtmoko/files/
+[2] https://github.com/radekp/qtmoko
+[3] http://www.qtmoko.org/
+[4] http://activationrecord.net/radekp/qtmoko/
+
+
+===============================================================================
+                                   V30
+===============================================================================
+
+Hi,
+qtmoko-v30 images are out now. They can be downloaded from sourceforge page 
+[1].
+
+Qtmoko is debian+qtopia based distribution for Freerunner. For more info check 
+[2] [3].
+
+For most users it's probably not worth upgrading, the changelog is very short:
+
+- fixed headset jack detection
+- Danish translations (Ole Carlsen)
+- GPRS fix (Timo Juhani Lindfors)
+- battery_platform for dumb batteries as module
+- force GPS power up on resume (Gennady Kupava)
+
+The headset jack can now be detected by using input device for it (patch by 
+larsc that creates this device is now included in kernel).
+
+GPRS should be now more stable thanks to Timo's fix [4]. Please test and share 
+results :)
+
+Dumb batteries could work now. You should do:
+
+        modprobe platform_battery
+
+or
+
+        echo ppp_generic >> /media/card/etc/modules
+
+to make it work. First one is for temporary test, second for permanent (reboot 
+needed). I havent tried, because i dont have dumb battery so again please test 
+it yourself and share results.
+
+GPS powerup fix is probably needed only for uboot users, so i havent tested it 
+also.
+
+Last probably most important change is that qtmoko and SHR have now same 
+source code. I have merged KMS patches from SHR and we have now same souce 
+code (only kernel config is now different).
+
+I have also changed a bit my kernel branches. I will have two branches for 
+each release:
+
+
+
+[1] http://sourceforge.net/projects/qtmoko/files/Experimental/
+[2] http://www.qtmoko.org/
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] http://docs.openmoko.org/trac/ticket/2264
+
+===============================================================================
+                                   V29
+===============================================================================
+
+Skipped
+
+===============================================================================
+                                   V28
+===============================================================================
+
+Hi,
+there is now new v28 release of qtmoko ready for downloading flashing and
+testing. You can download it from our sourceforge page under "Experimental"
+folder [1].
+
+QtMoko is distribution for Neo Freerunner based on debian+qtopia. For more
+info please check [2] [3].
+
+This new release is based on 2.6.34 linux kernel. There are some noticable
+changes since v27:
+
+- switched from jffs2 to ubifs for better speed and performance
+- qi with ubifs support and faster glamo timings (gena2x + ghislain)
+- QX has it's own window manager
+- QX can use qtmoko virtual keyboard
+- removed qx_helper program hack
+- fixed wifi bind/unbind (power on/off) devtool script (thanks to lindi)
+- using dropbear instead of openssh-server
+- vibrator and leds now work (lindi)
+- updated omhacks (lindi)
+- resume reason sysfs node is back (lindi)
+
+Ubifs seems to have better performance. I didnt have time to do any
+benchmarks, but v28 can boot in 1 minute and after booting to GUI it consumes
+just 36 MB of ram.
+
+Another advantage is that ubifs can do mmap operations which means that apt-
+get now works without hacks in /etc/fstab with tmpfs for /var/cache/apt.
+
+For booting ubifs you need to flash patched qi [4]. You can find this qi in on
+download page. It has also faster glamo timing which means that graphics
+should be faster now.
+
+I did some experimental work on QX - application for running X window
+applications in qtmoko. Now QX has it's own window manager. It has now only
+"hello world" features, but it can be improved later. Important thing is that
+X apps can be better integrated in qtmoko and we now dont need matchbox+gtk
+libs installed by default which saves ~8MB in rootfs.
+
+You can still easily use old matchbox. Just use checkbox in application
+settings.
+
+Special thanks go to lindi for work on omhacks and kernel, JaMa for figuring
+out how to use ubifs and thanks also to others that i forgot to mention.
+
+I am sorry that i didnt have time to fix your bug. Maybe for next release or
+best to send your patches if you dont want to wait :)
+
+Cheers
+
+Radek
+
+
+[1] https://sourceforge.net/projects/qtmoko/files/Experimental/
+[2] http://qtmoko.org/
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] http://github.com/radekp/qi
+
+===============================================================================
+                                   V27
+===============================================================================
+
+Hi,
+new experimintal qtmoko-v27 with 2.6.34 kernel is out now. You can download it
+from our sourceforge page [1]
+
+Qtmoko is distribution based on debian+qtopia, for more info see [2][3][4].
+
+Changes from latest v26 stable release:
+
+* New 2.6.34 kernel [5]
+* GPRS fixes (Alex Samorukov and Pierre)
+* Alarm fixes (Alex Samorukov)
+* Using devtmpfs for faster boot and more memory
+
+For new kernel credits go to Gennady Kupava, Lars-Peter Clausen and
+Thibaut Girka. Lars for porting to newer versions and upstreaming, Gena for
+help with the power consumption bug, fixing WS problems and being nice to help
+anytime, Thibaut for upstreaming and blanking fix.
+
+I have been testing 2.6.34 kernel for one week now and to me it looks ok.
+There can be issues with SD card [6], the touchscreen driver is missing
+filtering so it's a bit jittery and i think accelerometers are somehow strange
+now.
+
+Please report if you find any other regressions against 2.6.29. Otherwise i
+will probably switch to 2.6.34 as stable kernel in next releases.
+
+As for GPRS - it should work again and a bit better. However we still probably
+need better multiplexing - plan is to use kernel gsm multiplexer.
+
+Alarm now uses RTC_WKALM and instead of deprecated RTC_ALM and we no longer
+build with BROKEN_RTC_ALARM which could cause random wakeup at night.
+
+In the end i have decided to use devtmpfs as default /dev manager. You can
+easily switch back to udev by just apt-get install udev.
+
+I hope i havent missed anything. Please report mainly regressions again v26
+version. For me this version is good enough for daily use - i hope same will
+be for you.
+
+Regards
+
+Radek
+
+
+[1] https://sourceforge.net/projects/qtmoko/files/Experimental/
+[2] http://qtmoko.org/
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] http://github.com/radekp
+[5] http://github.com/radekp/linux-2.6/tree/qtmoko-v27
+[6] http://www.shr-project.org/trac/ticket/1143
+
+===============================================================================
+                                   V26
+===============================================================================
+
+Hello,
+qtmoko has new v26 release. You can get it from our sourceforge page [1].
+
+Qtmoko is distribution for Openmoko Freerunner phone based on debian and
+qtopia. You can find more info here [2] [3] [4].
+
+Here is list of changes since previous stable version (v24):
+
+* Fixed WS (white screen) problem in qmplayer & QX rotation (Gennady Kupava)
+* Fixed unresponsive touchscreen after resume (Gennady Kupava)
+* Better mass storage scripts (Alex Samorukov)
+* Use blue indicator is used for wifi activity (Alex Samorukov)
+* Reconnect wifi after resume (Alex Samorukov)
+* Updated QtMaze with better graphics and other enhancements (Anton Olkhovik)
+* We use kernel modules for bluetooth
+* QMplayer supports command line arguments (Anton Olkhovik)
+* QMplayer support for youtube videos (Anton Olkhovik)
+* QMplayer can encode videos suitable for Freerunner's screen
+* More reliable GPRS connection (Alex Samorukov)
+* Dont mount /var/cache/apt for SD card images which makes apt work better
+* Working for bluetooth hands free for GSM calls
+* Shell scripts that are executed on suspend/resume (Piotr Gabryjeluk)
+* APGS and GPS standby support (Piotr Gabryjeluk)
+* Fixed "When locked" power management mode
+* Bigger QTerminal (no tabs whith only one session)
+* Support for A2DP bluetooth audio
+* Raptor - GUI for apt package manager
+* QMplayer - support for playlists (Anton Olkhovik)
+* New nice theme called finximod (Joif)
+* Stripped kernel modules for saving more space
+* Deleted unused dejavu fonts for more space
+* Use stylesheet for better html forms rendering in Arora (Ant+Alex)
+* Arora supports downloading and playing youtube videos (Anton Olkhovik)
+* Arora is smaller uses tab labels and better animation (Alex Samorukov)
+* Tab bar size and zooming as upstream Arora does (Alex Samorukov)
+* Fixed "not found error page" in Arora (Alex Samorukov)
+* We have kernel sources on github [5]
+* New apps - qweather (Anton Olkhovik) and qneoriod game (Bala)
+* PDF support in eyepiece (Alex Samorukov)
+* Fixed crashing qdictopia (Alex Samorukov)
+
+Most of the changes dont need comments, but some require explanation.
+
+First of all kernel fixes from Gennady deserve big credit. Finally after years
+you should not see any white screen. Watching videos in qvga and rotating X
+server now works flawlessly. Thanks!
+
+Kernel sources with current .config can be found on github [5]. Updated
+instructions for building are in rootfs howto [6].
+
+You can now watch youtube videos from Arora web browser. Nice howto is here
+[7]. There is currently problem that mplayer cant handle flv files. I think this
+is due to changes in youtube videos format, because it worked with apt-get
+installed mplayer before. But you can download the video and encode it to mp4
+in qmplayer right on the device.
+
+QtMoko should now save AGPS data before GPS is switched off (e.g. after you end
+NeronGPS). After GPS is switched on, it will supply those stored data and you
+will get fast fix. AGPS data is stored in /var/cache/agpsdata.
+
+Bluetooth headsets can be now used for both audio and GSM calls. GSM calls
+needed fix because of kernel bug. The fix is userspace program gta02-gsm-bt-fix
+by Gabrys and is started/stoped when handsfree connects/disconnects. There is
+problem that you must have incomming call first. If you make outgoing call
+first, you will have no audio. This should be fixed in newer kernels but we dont
+know fix for 2.6.29 kernel used in this release.
+
+A2DP (bluetooth audio) support works too but with some glitches. You need
+headset with A2DP support. After pairing press "Supported services" from
+bluetooth device context menu. New button "Connect audio (A2DP)" should then
+appear. Sometimes it fails to connect. For me it help putting headset in
+pairing mode, restart phone and then the button works. If you make the
+bluetooth audio device default it will work in all alsa programs, but expect
+problems e.g. with GSM calls. If you dont make it default GSM will be ok.
+However only QMplayer can detect it and use it now.
+
+Other changes should not need more explanation, but if you would like to know
+some details i will be happy to answer questions.
+
+Thanks for everybody who helped with this release. I hope you'll like the
+changes and new features.
+
+Cheers
+
+Radek
+
+
+[1] https://sourceforge.net/projects/qtmoko/files/
+[2] http://qtmoko.org/
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] http://github.com/radekp
+[5] http://github.com/radekp/linux-2.6
+[6]
+http://github.com/radekp/qtmoko/blob/master/doc/txt/debian_rootfs_howto.txt
+[7] http://activationrecord.net/radekp/pub/qtmoko_youtube_howto.jpg
+
+===============================================================================
+                                   V25
+===============================================================================
+
+Hi,
+i have released experimental qtmoko image with 2.6.34 kernel based on debian
+testing (squeeze). You can download tarbal from here [1]. There are no JFFS2
+images for this release.
+
+This version is not for daily use. I plan to release stable release short
+after. Here is my list of problems:
+
+- too high current in suspend (~20mA). Your battery will discharge sooner.
+- no vibrator
+- no touchscreen filtering - you see jitter e.g. in scribble drawing program
+- no bluetooth (qtmoko needs bluez4 support)
+
+On the other hand here is list of what is good:
+
+- devtmpfs & upstart make it boot faster (90s on slow class 2 SD card)
+- more packages thanks to newer debian (e.g. mencoder)
+- no WS when switching vga->qvga
+- more drivers - i saw something like combined usb network+usb mass storage
+
+If you want to build yourself:
+
+- kernel with config is here [2]
+- /etc/init.d/qpe.sh needs modifications to be upstart compatible
+- /etc/init.d/qpe.sh must create device nodes that devtmpfs does not create:
+
+mknod /dev/ttySAC0 c 204 64 -m 660
+mknod /dev/ttySAC1 c 204 65 -m 660
+mknod /dev/ttySAC2 c 204 66 -m 660
+
+- disable udev and enable qpe.sh:
+
+update-rc.d qpe.sh defaults
+update-rc.d -f udev-mtab remove
+update-rc.d -f udev remove
+
+- /usr/share/udhcpc/default.script needs to be launched with bash (dash does
+not like the syntax for adding route)
+
+- i need 3s rootdelay in /boot/append-GTA02
+
+I hope some kernel developer will be successful with high power consumtion bug
+[3]. I have spent quite some time to find out where is problem, but without
+success. I think it's not problem of modem power management, because i have
+ported modem power management from 2.6.29 kernel and nothing changed. I have
+also tried to disable as many drivers as possible. I have tried booting with
+qi and with uboot from both SD card and NAND, but nothing helped.
+
+If this bug is not fixed, it IMO makes no sence to switch to 2.6.32 or higher
+kernels.
+
+Happy playing with this experimental release, thanks for feedback and stay
+tuned for next stable release with bluetooth headset support, AGPS, youtube
+videos and other cool features.
+
+Regards
+
+Radek
+
+
+[1] https://sourceforge.net/projects/qtmoko/files/experimental/qtmoko-debian-
+experimental-v25.tar.gz/download
+[2] http://github.com/radekp/linux-2.6
+[3] http://docs.openmoko.org/trac/ticket/2349
+
+
+===============================================================================
+                                   V24
+===============================================================================
+
+Hi,
+new QtMoko images v24 are out! You can download from our sourceforge [1]
+or visit our homepage [2][3].
+
+QtMoko is stable distribution combining Debian rootfs and Qtopia or
+QtExtended user interface.
+
+List of changes since previous stable version (v22):
+
+- Polish translations (Tomasz Czajkowski)
+- Package manager displays package version (Anton Olkhovik)
+- Disabled logging by default to save flash
+- In Settings->Logging can be logging started/stopped/enabled/disabled
+- GUI for modem settings (deep sleep and multiplexing) in NeoControl
+- GUI for call volume in NeoControl
+- Fixed gsm alsa state to use recommended "Mic 2" instead of "Right PGA"
+- Wifi maxperf can be turned on/off in devtools
+- Automatically set wifi to maxperf when connecting (Alina Friedrichsen)
+- Automatically restart hcid if it crashed (Alex Samorukov)
+- Removed setting sd_max_clk because it was causing problems (Alex Samorukov)
+- Smaller icon for QNetWalk game - old icon was 1.5MB big @#!@#!
+- Fixed not found page in Arora (Alex Samorukov)
+- Tab bar size and zooming as upstream Arora does (Alex Samorukov)
+- Enabled web cache in Arora  (Alex Samorukov)
+- Switching between USB mass storage and USB ethernet via devtools
+- Disabled dimming/suspend by default
+
+Kernel for this image is still based on 2.6.29-rc3 (andy-tracking) with
+custom kernel config [4] with no debug and no preemnt and most of
+Freerunner hardware drivers built in + wifi fix is included.
+
+
+[1] http://sourceforge.net/projects/qtmoko/files/
+[2] http://qtmoko.org
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] http://github.com/radekp/qtmoko/tree/master/devices/neo/linux_kernel/
+
+===============================================================================
+                                   V23
+===============================================================================
+
+N/A
+
+===============================================================================
+                                   V22
+===============================================================================
+
+Hi,
+i have uploaded new stable QtMoko debian images [1].
+
+QtMoko is stable distribution based on Qtopia (or QtExtended). For more info
+check our homepage.
+
+This new version is mainly bug fix release. Changes from previous version
+include:
+
+- fixed power management to correctly detect cable
+- fixed GPS power up script (NeronGPS now works just fine again)
+- workaround for the GSM (restart not needed now)
+- added omhacks for controlling Neo hardware from command line
+- new application Neocontrol for controlling Neo sysfs and other tasks
+- implemented power management for locked/unlocked screen
+- build fixes and code improvements (Bartlomiej Zimon)
+
+As for the fixes: first two are quite clear. The problem with GSM not
+registering can be partially solved by putting sleep after we power the modem
+on. GSM registering now failed for me only first time after flashing. Then i
+tried many times and haven't hit the problem again so let's hope it's fixed
+now. Anyway 2.6.32 does not have this problem - so 2.6.32 is long term
+solution.
+
+Omhacks [4] is great for various low level openmoko setting. It's from Debian
+and credits to it's authors. I will slowly migrate everything to use it's API.
+
+Neocontrol is work in progress application. Most of the functionality is not
+implemented yet. The switching to QVGA is only experimental and it will most
+probably not work for you. Watching the sysfs is on the other hand working and
+is useful.
+
+I have also implemented power management for locked/unlocked screen. If you
+set intervals to 0 in "When locked" mode - it will not be used and Qtmoko will
+use suspend intervals based on power source. This feature is still quite
+experiment and i think sometimes it does now properly.
+
+As for upgrading to new version: the kernel, rootfs and all except /opt is the
+same. You can just grab qtmoko-update-v22.tar.gz, stop Qtopia and unpack it.
+
+ssh root@192.168.0.202
+cd /
+wget http://sourceforge.net/projects/qtmoko/files/qtmoko-update-
+v22.tar.gz/download
+/etc/init.d/qpe.sh stop
+tar xzvpf qtmoko-update-v22.tar.gz
+
+Btw please check MD5SUMs:
+
+7bd189c4ab152f92517b82d748f22a8a  qtmoko-debian-v22.jffs2
+79012074ea1c2c6498b7524ab2e70fb7  qtmoko-debian-v22.tar.gz
+96e7c199a9001b6b1d0a4f8a45effc47  qtmoko-update-v22.tar.gz
+8ea022a3eaaba471ad6809b8923934e0  uImage-v22.bin
+
+
+Plans for next version remain the same except that i have now GTA01 device
+(thanks to Pavel Machek), so if all goes right i will release also gta01
+images.
+
+Hope you'll like this new version
+
+Cheers
+
+Radek
+
+[1] http://sourceforge.net/projects/qtmoko/files/
+[2] http://qtmoko.org/
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] http://git.debian.org/?p=pkg-fso/omhacks.git
+
+===============================================================================
+                                   V21
+===============================================================================
+
+Hi,
+today we have also new stable qtmoko images still based on andy-tracking
+2.6.29 kernel. It can be dowloaded from usual location [1].
+
+QtMoko is distribution based on Qtopia (or QtExtended) from Trolltech for your
+Neo Freerunner. For more info please see homepage [2][3] or dowload source
+code [4].
+
+Here is list of changes since previous stable version (v19):
+
+- hopefully fixed bug #80 (lost sms, thanks to Judge_Gregg's great bug report)
+- SMS messages should stay on SIM now
+- wifi always available after boot (OM bug #2327) thanks to Gennady for his fix.
+- more sane power management values by default (suspend after 5 minutes)
+- added path to /usr/games (for scummvm and other games)
+- modified kernel config - all FR hardware is now build in
+- in QX you can enable rotation using accelerometers
+- QMplayer uses /media/card for saving media if possible
+
+I hope there are no regressions from previous version. If yes, please let me
+know i will try to fix them for next release.
+
+I am quite scared to say it but hopefully SMS will be working 100% from now
+on. I know i have told this like 3 times before, but now i had really great
+bug report and i could reproduce the bug - big thanks to Judge Gregg bug
+report and idea to revert the commit which was deleting SMS from SIM. Now SMS
+are also kept on SIM if possible which is good.
+
+As for QX and rotation - you can setup application (via Favourites menu) and
+enable rotation. It will use accelerometers and xrandr to rotate the screen.
+For me it works only when booted with uboot and still i sometimes get white
+screen. But i was able to play Broken Sword in scummvm - and it's great
+experience - this game rocks on Neo.
+
+I am now using kernel config with nodebug and nopreempt. All FR's hardware is
+built in and it will work even when /lib/modules are missing. Drivers for USB
+devices are still as modules. You can find kernel config and wifi patch here
+[5].
+
+If you have v19 installed, you can try to upgrade without reflashing. Following
+proccess is not tested but should work:
+
+1/ download v21 tarbal
+2/ replace /opt with the one in tarbal in your existing rootfs
+3/ unpack /lib/modules from tarbal to your existing rootfs
+4/ edit /etc/modules and delete all contents from it
+5/ flash or replace kernel from tarbal (/boot/uImage-GTA02.bin)
+
+I have a lot of plans for next version, but now enjoy new version i hope it
+will serve well.
+
+Cheers
+
+Radek
+
+[1] http://sourceforge.net/projects/qtmoko/files/
+[2] http://qtmoko.org/
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] https://docs.openmoko.org/trac/ticket/2327
+[5] http://github.com/radekp/qtmoko/tree/master/devices/neo/linux_kernel/
+
+===============================================================================
+                                   V20
+===============================================================================
+
+Hi,
+i have uploaded new testing qtmoko images with 2.6.32 kernel. Current stable
+images v21 are still based on andy-tracking 2.6.29 kernel - i will do anounce
+for them in separate mail.
+
+You can download as usually from [1] check homepage [2][3] and sources [4].
+
+Here is list of changes since previous testing version (v18):
+
+- more sane power management values by default (suspend after 5 minutes)
+- workarounded stray mouse clicks in X
+- backported accelerometers from andy-tracking
+- backported usb host mode from andy-tracking
+- wifi is now alwas available after boot
+- hopefully fixed bug #80 (lost sms, thanks to Judge_Gregg's great bug report)
+- added path to /usr/games (for scummvm and other games)
+- modified kernel config - all FR hardware is not build in
+
+I hope we are again closer to working phone with 2.6.32 kernel with this
+release now. There are 2 things missing now:
+
+1/ bluetooth is not powered on after resume
+2/ xrandr is not working (screen goes white)
+
+So if you are adventurous you can use this version and report bugs, otherwise
+you can use v21 which can be more stable.
+
+The kernel patches were sent to kernel mailing list and they current state can
+be found here [5].
+
+Cheers
+
+Radek
+
+
+[1] http://sourceforge.net/projects/qtmoko/files/
+[2] http://qtmoko.org/
+[3] http://activationrecord.net/radekp/qtmoko/
+[1] http://github.com/radekp/qtmoko/tree/lin2632/devices/neo/linux_kernel/
+
+===============================================================================
+                                   V19
+===============================================================================
+
+Hi,
+new images version 19 of QtMoko on debian are out now! You can download from
+here [1]. QtMoko is stable distribution for Openmoko Freerunner phone. For
+more info visit our homepage [2][3], For source code check [4],
+
+Here is list of changes from v16:
+
+- Spain translation (Esteban Monge)
+- Fixed compiling on systems with QT 4.6
+- Fixed freeze while removing wifi-settings (Jeroen Nijhof)
+- Fixed bing fonts in SMS email and others (Jeroen Nijhof)
+- Fixed saving suspend interval in power management (Jeroen Nijhof)
+- NeronGPS and Arora in default instalation
+- Removed some demos and not working apps
+- QX now suspends on call or when SMS arrives
+- Workaround for incomming SMS bug
+- Two kernels. Slow with debug, fast with nodebug
+- Fixed web browser crashes
+- Downgrade to QT 4.5.3
+
+I have decided to do version 19 and skip 17 and 18. The reason is that i did
+experimental kernel named v17 which could be confusing and i want to reserve
+v18 for version with 2.6.32 kernel.
+
+As for the changes - credits go to Jeroen for fixing bugs and Esteban for
+translations, thanks a lot!
+
+There were some troubles with QT 4.6 so for this release they are gone, but i
+hope they will be back soon.
+
+I am now also providing two kernels - one vanilla andy-tracking with debugging
+stuff and one with stripped config. The first one is slow but stable. The second
+one is fast, but for me it had problems with switching to QVGA (WSOD) and
+sometimes wifi does not work (Suspend/resume can fix it). You can
+decide which one you want to use. Just flash your favourite kernel (for jffs
+image) or change the symlink in /boot (for SD card image).
+
+Last important note on incomming SMS. I did quite dirty hack that displays on
+homescreen text "1 missed sms", if modem registers new SMS but Qtopia mail
+does not receive it correctly. In this case you have to restart Qtopia (Qt
+Extended) and the SMS should arrive. Please tell me, if it works for you.
+
+and enjoy new version
+
+Regards
+
+Radek
+
+
+[1] http://sourceforge.net/projects/qtmoko/files/
+[2] http://qtmoko.org
+[3] http://activationrecord.net/radekp/qtmoko/
+[4] http://github.com/radekp/qtmoko

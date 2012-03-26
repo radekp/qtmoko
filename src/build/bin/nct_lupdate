@@ -17,7 +17,7 @@ if ( $isWindows ) {
 
 use constant DEBUG => 0;
 
-# Usage: nct_lupdate [ -nowarn ] [ -silent ] [ -depot path ] [ -content trtarget ] "lang1 lang2 ... langn" string_language files
+# Usage: nct_lupdate [ -nowarn ] [ -silent ] [ -depot path ] [ -content trtarget ] [ -subdir trsubdir ] "lang1 lang2 ... langn" string_language files
 
 my $lupdate = "$HOST_QT_BINS/lupdate";
 
@@ -27,6 +27,7 @@ my $warn_on = 1;
 my $silent = "";
 my $content = 0;
 my $trtarget = "";
+my $trsubdir = "";
 my $locations = "-locations none";
 if ( $ARGV[0] eq "-nowarn" ) {
     shift(@ARGV);
@@ -45,6 +46,10 @@ if ( $ARGV[0] eq "-content" ) {
     shift(@ARGV);
     $content = 1;
     $trtarget = shift(@ARGV);
+}
+if ( $ARGV[0] eq "-subdir" ) {
+    shift(@ARGV);
+    $trsubdir = shift(@ARGV) . "/";
 }
 my @LANGS = split(/\s+/,shift(@ARGV));
 my $STRING_LANGUAGE = shift(@ARGV);
@@ -214,7 +219,7 @@ for my $tsfile ( keys %contextinfo ) {
             }
 	    $filename = $filename."/".$tsfile.".ts";
 	} else {
-	    $filename = $tsfile."-".$lang.".ts";
+	    $filename = $trsubdir.$tsfile."-".$lang.".ts";
 	}
         print CPP "TRANSLATIONS += $filename\n";
     }
@@ -235,7 +240,7 @@ for my $tsfile ( keys %contextinfo ) {
             }
 	    $filename = $filename."/".$tsfile.".ts";
 	} else {
-	    $filename = $tsfile."-".$STRING_LANGUAGE.".ts";
+	    $filename = $trsubdir.$tsfile."-".$STRING_LANGUAGE.".ts";
 	}
         print CPP "TRANSLATIONS += $filename\n";
         close CPP;

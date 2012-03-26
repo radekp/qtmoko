@@ -3,11 +3,7 @@ TARGET=qtopiatheming
 MODULE_NAME=qtopiatheming
 VERSION=4.0.0
 
-CONFIG+=qtopia hide_symbols singleexec
-
-STRING_LANGUAGE=en_US
-AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
-LANGUAGES=$$QTOPIA_LANGUAGES
+CONFIG+=qtopia hide_symbols singleexec no_tr
 
 pkg [
     name=libqtopiatheming

@@ -235,7 +235,7 @@ function i18n_handle_translatables()
     if ( !string_language.isEmpty() ) {
         // Now do a -pluralonly run for the string language
         rule.commands.append("#(ve)grep -v '^TRANSLATIONS' translatables.pro >translatables2.pro");
-        var ts = srcdir+"/"+trtarget+"-"+string_language.strValue()+".ts";
+        var ts = trndir+"/"+trtarget+"-"+string_language.strValue()+".ts";
         rule.commands.append("#(ve)echo \"TRANSLATIONS+="+ts+"\" >>translatables2.pro");
         command = "$$HOST_QT_BINS/lupdate "+lupdate_silent+"-pluralonly $$path(translatables2.pro,generated)";
         rule.commands.append("#(eh)echo $$shellQuote("+command+")");
@@ -255,7 +255,9 @@ function i18n_handle_translatables()
 
     // The rule to install .qm files
     rule = project.rule();
-    rule.commands.append(linstall+" $$TRTARGET $$shellQuote($$TRANSLATIONS) $$QTOPIA_IMAGE/i18n $$TS_DIR");
+    var licmd = linstall+" $$TRTARGET $$shellQuote($$TRANSLATIONS) $$QTOPIA_IMAGE/i18n "+trndir;
+    rule.commands.append("#(eh)echo $$shellQuote("+licmd+")");
+    rule.commands.append("#(e)"+licmd);
     i18n_depend_on_qt(rule.name);
 
     var image = installs_getImage();
@@ -322,7 +324,9 @@ function i18n_hint_nct(obj)
     if (!obj.property("hint").contains("content") || !data.trtarget.value.match(/^Qtopia/)) {
         // The rule to install .qm files
         var rule = project.rule("nct_linstall_"+obj.name);
-        rule.commands.append("#(e)"+linstall+" "+data.trtarget.value+" $$shellQuote($$TRANSLATIONS) $$QTOPIA_IMAGE/i18n $$path(.,project)");
+        var licmd = linstall+" "+data.trtarget.value+" $$shellQuote($$TRANSLATIONS) $$QTOPIA_IMAGE/i18n $$path(.,project)";
+        rule.commands.append("#(eh)echo $$shellQuote("+licmd+")");
+        rule.commands.append("#(e)"+licmd);
         i18n_depend_on_qt(rule.name);
 
         var image = installs_getImage();
@@ -337,7 +341,11 @@ function i18n_hint_nct(obj)
     var cmd = new Array();
     cmd.push("cd "+data.outdir.value);
     var nct_lupdate = project.property("I18N.NCT_LUPDATE").strValue();
+    var trnsubdir = project.property("TRANSLATION_SUBDIR").strValue();
     var command = nct_lupdate+" "+lupdate_silent;
+    if ( trnsubdir != "") {
+        command += " -subdir "+trnsubdir;
+    }
     if ( obj.property("hint").contains("content") ) {
         if ( data.trtarget.value.match(/^Qtopia/) ) {
             command += " -depot $$path(/,project)";
@@ -382,7 +390,9 @@ function i18n_hint_themecfg(obj)
     var linstall = project.property("I18N.LINSTALL").strValue();
     // The rule to install .qm files
     var rule = project.rule("theme_linstall_"+obj.name);
-    rule.commands.append("#(e)"+linstall+" "+data.trtarget.value+" $$shellQuote($$TRANSLATIONS) $$QTOPIA_IMAGE/i18n $$path(.,project)");
+    var licmd = linstall+" "+data.trtarget.value+" $$shellQuote($$TRANSLATIONS) $$QTOPIA_IMAGE/i18n $$path(.,project)";
+    rule.commands.append("#(eh)echo $$shellQuote("+licmd+")");
+    rule.commands.append("#(e)"+licmd);
     i18n_depend_on_qt(rule.name);
 
     var image = installs_getImage();

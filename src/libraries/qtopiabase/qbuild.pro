@@ -6,13 +6,14 @@ VERSION=4.0.0
 CONFIG+=qtopia hide_symbols singleexec
 QTOPIA=
 MODULES*=mathlib
-# Included directly because it's not a module
+# Included directly because it is not a module
 DEPENDS*=/src/3rdparty/libraries/dlmalloc::persisted
 enable_dbus_ipc:QT*=dbus
 
 STRING_LANGUAGE=en_US
 AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
 LANGUAGES=$$QTOPIA_LANGUAGES
+TRANSLATION_SUBDIR=translations
 
 pkg [
     name=libqtopiabase
