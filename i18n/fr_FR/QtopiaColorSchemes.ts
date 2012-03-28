@@ -29,7 +29,7 @@
     </message>
     <message>
         <source>home_wvga</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Orange</source>

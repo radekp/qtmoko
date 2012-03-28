@@ -11,7 +11,12 @@
     <message>
         <source>Appearance</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Apparence</translation>
+        <translation type="obsolete">Apparence</translation>
+    </message>
+    <message utf8="true">
+        <source>Ap­pear­ance</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -24,7 +29,12 @@
     <message>
         <source>Application Services</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Services des Applications</translation>
+        <translation type="obsolete">Services des Applications</translation>
+    </message>
+    <message utf8="true">
+        <source>Ap­pli­ca­tion Ser­vices</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -37,7 +47,12 @@
     <message>
         <source>Bluetooth</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Bluetooth</translation>
+        <translation type="obsolete">Bluetooth</translation>
+    </message>
+    <message utf8="true">
+        <source>Blue­tooth</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -57,7 +72,12 @@
     <message>
         <source>Call Forwarding</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Transfert d&apos;Appels</translation>
+        <translation type="obsolete">Transfert d&apos;Appels</translation>
+    </message>
+    <message utf8="true">
+        <source>Call For­warding</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -70,7 +90,12 @@
     <message>
         <source>Call Networks</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Réseaux d&apos;Appels</translation>
+        <translation type="obsolete">Réseaux d&apos;Appels</translation>
+    </message>
+    <message utf8="true">
+        <source>Call Net­works</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -83,7 +108,12 @@
     <message>
         <source>Call Options</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Options d&apos;Appel</translation>
+        <translation type="obsolete">Options d&apos;Appel</translation>
+    </message>
+    <message utf8="true">
+        <source>Call Op­tions</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -96,7 +126,12 @@
     <message>
         <source>Date/Time</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Date/Heure</translation>
+        <translation type="obsolete">Date/Heure</translation>
+    </message>
+    <message utf8="true">
+        <source>Date/­Time</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -120,7 +155,12 @@
     <message>
         <source>Handwriting</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Ecriture Manuelle</translation>
+        <translation type="obsolete">Ecriture Manuelle</translation>
+    </message>
+    <message utf8="true">
+        <source>Hand­wri­ting</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -141,7 +181,12 @@
     <message>
         <source>Language</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Langue</translation>
+        <translation type="obsolete">Langue</translation>
+    </message>
+    <message utf8="true">
+        <source>Lan­guage</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -165,7 +210,12 @@
     <message>
         <source>Power Management</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Gestion de l&apos;énergie</translation>
+        <translation type="obsolete">Gestion de l&apos;énergie</translation>
+    </message>
+    <message utf8="true">
+        <source>Pow­er Man­age­ment</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -185,7 +235,12 @@
     <message>
         <source>Internet</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Internet</translation>
+        <translation type="obsolete">Internet</translation>
+    </message>
+    <message utf8="true">
+        <source>In­ter­net</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -202,7 +257,11 @@
     <message>
         <source>Profiles</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Profils</translation>
+        <translation type="obsolete">Profils</translation>
+    </message>
+    <message>
+        <source>Ringtones and profiles</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -215,7 +274,12 @@
     <message>
         <source>Recalibrate</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Recalibration</translation>
+        <translation type="obsolete">Recalibration</translation>
+    </message>
+    <message utf8="true">
+        <source>Re­cal­i­brate</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -228,7 +292,12 @@
     <message>
         <source>Rotation</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Rotation</translation>
+        <translation type="obsolete">Rotation</translation>
+    </message>
+    <message utf8="true">
+        <source>Ro­ta­tion</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -241,7 +310,12 @@
     <message>
         <source>Security</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Sécurité</translation>
+        <translation type="obsolete">Sécurité</translation>
+    </message>
+    <message utf8="true">
+        <source>Se­cu­ri­ty</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -254,7 +328,12 @@
     <message>
         <source>Server Widgets</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Serveur de Widgets</translation>
+        <translation type="obsolete">Serveur de Widgets</translation>
+    </message>
+    <message utf8="true">
+        <source>Ser­ver Wid­gets</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -267,7 +346,12 @@
     <message>
         <source>Shutdown</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Eteindre</translation>
+        <translation type="obsolete">Eteindre</translation>
+    </message>
+    <message utf8="true">
+        <source>Shut­down</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -280,7 +364,12 @@
     <message>
         <source>Software Packages</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Gestion des Logiciels</translation>
+        <translation type="obsolete">Gestion des Logiciels</translation>
+    </message>
+    <message utf8="true">
+        <source>Soft­ware Pack­ages</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -313,12 +402,17 @@
     <message>
         <source>USB Connection Mode</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
-        <translation>Mode de Connexion USB</translation>
+        <translation type="obsolete">Mode de Connexion USB</translation>
     </message>
     <message utf8="true">
         <source>USB ConÂ­necÂ­tion Mode</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation type="obsolete">Connection USB</translation>
+    </message>
+    <message utf8="true">
+        <source>USB Con­nec­tion Mode</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

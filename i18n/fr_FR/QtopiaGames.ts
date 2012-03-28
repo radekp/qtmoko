@@ -15,6 +15,11 @@
     <message>
         <source>Asteroids</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="obsolete">Astéroïdes</translation>
+    </message>
+    <message utf8="true">
+        <source>As­ter­oids</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Astéroïdes</translation>
     </message>
 </context>
@@ -34,6 +39,11 @@
         <source>Fifteen Pieces Strategy Game</source>
         <translation>Jeu de Puzzle</translation>
     </message>
+    <message utf8="true">
+        <source>Fif­teen Pie­ces</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation>Pousse-pousse</translation>
+    </message>
 </context>
 <context>
     <name>Mindbreaker</name>
@@ -50,6 +60,11 @@
         <source>MindÂ­breakÂ­er</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation type="obsolete">Master Mind</translation>
+    </message>
+    <message utf8="true">
+        <source>Mind­break­er</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation>Master Mind</translation>
     </message>
 </context>
 <context>
@@ -72,12 +87,17 @@
     </message>
     <message>
         <source>A Parachute Attack Game</source>
-        <translation>Attaquez les Parachutes</translation>
+        <translation>Attaquez les Parachutistes</translation>
     </message>
     <message utf8="true">
         <source>ParaÂ­Shoot</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation type="obsolete">ParaShoot</translation>
+    </message>
+    <message utf8="true">
+        <source>Para­Shoot</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation>ParaShoot</translation>
     </message>
 </context>
 <context>

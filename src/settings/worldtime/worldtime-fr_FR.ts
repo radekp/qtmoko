@@ -7,7 +7,7 @@
         <location filename="worldtime.cpp" line="57"/>
         <location filename="worldtime.cpp" line="225"/>
         <source>World Time</source>
-        <translation>Horaires dans le Monde</translation>
+        <translation>Heure dans le Monde</translation>
     </message>
     <message>
         <location filename="worldtime.cpp" line="98"/>

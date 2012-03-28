@@ -37,6 +37,11 @@
     </message>
     <message>
         <source>Calculator</source>
+        <translation type="obsolete">Calculatrice</translation>
+    </message>
+    <message utf8="true">
+        <source>Cal­cu­la­tor</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Calculatrice</translation>
     </message>
 </context>
@@ -53,6 +58,11 @@
     </message>
     <message>
         <source>Calendar</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="obsolete">Calendrier</translation>
+    </message>
+    <message utf8="true">
+        <source>Cal­en­dar</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Calendrier</translation>
     </message>
@@ -71,6 +81,11 @@
     <message>
         <source>Call History</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="obsolete">Historique des Appels</translation>
+    </message>
+    <message utf8="true">
+        <source>Call His­to­ry</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Historique des Appels</translation>
     </message>
 </context>
@@ -78,6 +93,11 @@
     <name>Camera</name>
     <message utf8="true">
         <source>CamÂ­era</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="obsolete">Appareil Photo</translation>
+    </message>
+    <message utf8="true">
+        <source>Cam­era</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Appareil Photo</translation>
     </message>
@@ -106,6 +126,11 @@
     </message>
     <message>
         <source>Contacts</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="obsolete">Contacts</translation>
+    </message>
+    <message utf8="true">
+        <source>Con­tacts</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Contacts</translation>
     </message>
@@ -149,6 +174,11 @@
     </message>
     <message>
         <source>Messages</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="obsolete">Messages</translation>
+    </message>
+    <message utf8="true">
+        <source>Mes­sages</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Messages</translation>
     </message>
@@ -201,6 +231,11 @@
     <message>
         <source>Pictures</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="obsolete">Images</translation>
+    </message>
+    <message utf8="true">
+        <source>Pic­tures</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Images</translation>
     </message>
 </context>
@@ -213,6 +248,11 @@
     </message>
     <message>
         <source>SIM Applications</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation type="obsolete">Applications SIM</translation>
+    </message>
+    <message utf8="true">
+        <source>SIM Ap­pli­ca­tions</source>
         <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
         <translation>Applications SIM</translation>
     </message>
@@ -232,6 +272,11 @@
     <message>
         <source>System Information</source>
         <translation>Informations Système</translation>
+    </message>
+    <message utf8="true">
+        <source>Sys­tem Info</source>
+        <comment>Use soft hyphen (char U00AD) to indicate hyphenation</comment>
+        <translation>Infos Système</translation>
     </message>
 </context>
 <context>
@@ -264,7 +309,7 @@
     </message>
     <message>
         <source>World Time</source>
-        <translation>Temps dans le Monde</translation>
+        <translation>Heure dans le Monde</translation>
     </message>
 </context>
 </TS>

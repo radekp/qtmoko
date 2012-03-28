@@ -2,7 +2,6 @@
 -xplatform nokia
 -arch arm
 -prefix /opt/Qtopia
--languages en_US
 
 # For the touchscreen
 -extra-qt-embedded-config "-qt-mouse-tslib" 

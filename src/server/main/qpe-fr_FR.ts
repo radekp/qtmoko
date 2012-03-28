@@ -20,7 +20,7 @@
     </message>
     <message>
         <source>FastLoad</source>
-        <translation>FastLoad</translation>
+        <translation>Chargement Rapide</translation>
     </message>
 </context>
 <context>
@@ -35,31 +35,31 @@
     </message>
     <message>
         <source>Starting now</source>
-        <translation>Démarrage</translation>
+        <translation>Commence maintenant</translation>
     </message>
     <message>
         <source>Started 1 minute ago</source>
-        <translation>Démarré il y a 1 minute</translation>
+        <translation>Commencé il y a 1 minute</translation>
     </message>
     <message>
         <source>Started %1 minutes ago</source>
-        <translation>Démarré il y a %1 minutes</translation>
+        <translation>Commencé il y a %1 minutes</translation>
     </message>
     <message>
         <source>Started 1 hour ago</source>
-        <translation>Démarré il y a 1 heure</translation>
+        <translation>Commencé il y a 1 heure</translation>
     </message>
     <message>
         <source>Started %1 hours ago</source>
-        <translation>Démarré il y a %1 heures</translation>
+        <translation>Commencé il y a %1 heures</translation>
     </message>
     <message>
         <source>Started 1 day ago</source>
-        <translation>Démarré il y a 1 jour</translation>
+        <translation>Commencé il y a 1 jour</translation>
     </message>
     <message>
         <source>Started %1 days ago</source>
-        <translation>Démarré il y a %1 jours</translation>
+        <translation>Commencé il y a %1 jours</translation>
     </message>
     <message>
         <source>Today</source>
@@ -266,7 +266,7 @@
         <source>Touch the crosshairs firmly
 and accurately to
 recalibrate the screen.</source>
-        <translation>Appuyez sur l&apos;écran&lt;/br&gt;
+        <translation>Pointez sur les réticules&lt;/br&gt;
 avec précision pour&lt;/br&gt;
 recalibrer l&apos;écran.</translation>
     </message>

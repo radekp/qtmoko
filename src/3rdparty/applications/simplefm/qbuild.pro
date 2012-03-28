@@ -1,8 +1,15 @@
 #qtopia_project(qtopia app)
 TEMPLATE=app
 TARGET=simplefm
-CONFIG+=qtopia no_quicklaunch no_singleexec no_tr
+CONFIG+=qtopia no_quicklaunch no_singleexec
 DEFINES+=QTOPIA_PHONE
+
+# I18n info
+STRING_LANGUAGE=en_US
+AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
+LANGUAGES=$$QTOPIA_LANGUAGES
+TRANSLATION_SUBDIR=translations
+
 HEADERS = simplefm.h \
 		qurlview.h \
 		qabstracturlmodel.h \
@@ -18,7 +25,8 @@ SOURCES = main.cpp \
 desktop [
 files=simplefm.desktop
 path=/apps/Applications
-hint=desktop
+hint=desktop nct
+trtarget=simplefm-nct
 ]
 #INSTALLS+=desktop
 pics [
