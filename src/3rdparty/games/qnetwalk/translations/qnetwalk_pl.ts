@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="pl_PL">
 <context>
     <name>MainWindow</name>
     <message>
@@ -129,15 +131,15 @@ Proszę, sprawdź ustawienia zmiennej środowiskowej BROWSER.</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustawienia</translation>
     </message>
     <message>
         <source>Game Over</source>
-        <translation type="unfinished"></translation>
+        <translation>Koniec gry</translation>
     </message>
     <message>
         <source>Congratulations! Score %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Gratulacje! Wynik %1</translation>
     </message>
 </context>
 </TS>
