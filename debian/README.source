@@ -2,14 +2,15 @@ Cross-building QtMoko on Debian
 -------------------------------
 
 It is possible to cross-build QtMoko on a Debian box using the emdebian
-tooltoolchain. The build is run the Debian way, using pbuilder on a Debian
-Wheezy or sid box. Most of the magic is handled by the pdebuild-cross package:
+toolchain. The build is run the Debian way, using pbuilder on a Debian
+wheezy or sid box. Most of the magic is handled by the pdebuild-cross package:
 
 $ sudo apt-get install pdebuild-cross
 
-The toolchain is set up via the multistrap package (pulled in by pdebuild-cross).
+The cross-build environement and toolchain are set up via the
+multistrap package (pulled in by pdebuild-cross).
 
-multistrap configuration file:
+multistrap configuration file (eg. /etc/pdebuild-cross/multistrap-qtmoko.conf):
 # ---%<--begin---
 [General]
 arch=
@@ -29,27 +30,34 @@ unpack=true
 omitrequired=false
 configscript=
 setupscript=/usr/share/multistrap/setcrossarch.sh
-debootstrap=Debian Toolchains
-aptsources=Debian Toolchains
+debootstrap=Debian Toolchains Backports
+aptsources=Debian
 tarballname=pdebuild-cross.tgz
 
 [Toolchains]
-packages=g++-4.4-arm-linux-gnueabi
+packages=g++-4.3-arm-linux-gnueabi
 reinstall=binutils-multiarch
 source=http://www.emdebian.org/debian
 keyring=emdebian-archive-keyring
 suite=testing
+omitdebsrc=true
+
+[Backports]
+packages=xapt
+source=http://backports.debian.org/debian-backports
+keyring=debian-archive-keyring
+suite=squeeze-backports
+omitdebsrc=true
 
 [Debian]
-packages=dpkg-dev binutils-multiarch build-essential makedev
-# Choose your preferred mirror
-source=http://ftp.fr.debian.org/debian
+packages=dpkg-dev binutils-multiarch build-essential makedev libdpkg-perl
+source=http://cdn.debian.net/debian
 keyring=debian-archive-keyring
-suite=unstable
-omitdebsrc=false
+suite=squeeze
+omitdebsrc=true
 # ---%<--end-----
 
-pdebuild-cross configuration file:
+pdebuild-cross configuration file (/etc/pdebuild-cross/pdebuild-cross.rc):
 # ---%<--begin---
 # this is your configuration file for pdebuild-cross.
 # /etc/pdebuild-cross/pdebuild-cross.rc is the one meant for editing.
@@ -61,9 +69,8 @@ pdebuild-cross configuration file:
 
 CROSSARCH=armel
 DEBBUILDOPTS="-aarmel"
-MULTISTRAPFILE=<path the the multistrap configuration file>
-#BASETGZ=/var/lib/pdebuild-cross/pdebuild-cross.tgz
-BASETGZ=/home/pdebuild-cross.tgz
+MULTISTRAPFILE=/etc/pdebuild-cross/multistrap-qtmoko.conf
+BASETGZ=/var/lib/pdebuild-cross/pdebuild-cross.tgz
 BUILDPLACE=/var/lib/pdebuild-cross/build/
 BUILDRESULT=..
 APTCACHE=/var/lib/pdebuild-cross/aptcache/
@@ -84,15 +91,12 @@ Create the pbuilder chroot:
 $ sudo pdebuild-cross-create
 $ sudo pdebuild-cross-update
 
-Create the orig.tar.gz archive:
-
-$ tar czf ../qtmoko_<release>.orig.tar.gz -C .. --exclude .git --exclude .pc --exclude qtmoko/debian --transform 's:\./qtmoko:qtmoko-<release>:' ./qtmoko
-
 Build:
 
 $ pdebuild-cross -aarmel
 
 On my amd64 box the whole build takes about five hours.
 
+ -- Yann Dirson <dirson@debian.org>, Sun, 29 Apr 2012 18:25:22 +0200
 
  -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 11 Dec 2011 13:54:05 +0100

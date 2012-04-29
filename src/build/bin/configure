@@ -2109,10 +2109,10 @@ if ( opt("qtopia_ui") ) {
 opt("platform", "absolute") = fixpath(opt("platform", "absolute"));
 opt("xplatform", "absolute") = fixpath(opt("xplatform", "absolute"));
 if ( ! -e opt("platform", "absolute") ) {
-    die "ERROR: ".fixpath(opt("platform", "absolute"))." does not exist, check -platform parameter is correct.\n";
+    die "ERROR: ".opt("platform", "absolute")." does not exist, check -platform parameter is correct.\n";
 }
 if ( opt("qtopia_ui") && ! -e opt("xplatform", "absolute") ) {
-    die "ERROR: ".fixpath(opt("xplatform", "absolute"))." does not exist, check -xplatform parameter is correct.\n";
+    die "ERROR: ".opt("xplatform", "absolute")." does not exist, check -xplatform parameter is correct.\n";
 }
 # When building the SDK we want to create the 'default' mkspecs... we need a path
 # relative to the install prefix for that...

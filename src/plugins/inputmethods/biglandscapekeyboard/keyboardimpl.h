@@ -53,7 +53,6 @@ private slots:
     void sendKeyPress( ushort unicode, ushort keycode, ushort modifiers, bool press, bool repeat );
 private:
     Keyboard *input;
-    QList<QIMActionDescription*> keyboardActionDescriptionList;
     void queryResponse ( int property, const QVariant & result );
 };
 

@@ -54,8 +54,6 @@ KeyboardInputMethod::KeyboardInputMethod(QObject *parent)
 KeyboardInputMethod::~KeyboardInputMethod()
 {
     delete input;
-    while(!keyboardActionDescriptionList.isEmpty())
-        delete keyboardActionDescriptionList.takeLast();
 }
 
 QWidget *KeyboardInputMethod::inputWidget( QWidget *parent )
@@ -83,13 +81,13 @@ QIcon KeyboardInputMethod::icon() const
 
 QString KeyboardInputMethod::name() const
 {
-    return qApp->translate( "InputMethods", "Keyboard" );
+    return qApp->translate( "InputMethods", "LandscapeKeyboard" );
 //    return qApp->translate( "InputMethods", "Opti" );
 }
 
 QString KeyboardInputMethod::identifier() const
 {
-    return "Keyboard";
+    return "LandscapeKeyboard";
 }
 
 QString KeyboardInputMethod::version() const
