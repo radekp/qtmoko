@@ -67,7 +67,6 @@ public:
 
     QWidget* frame();
     void resetState();
-    QAction* menuActionToDuplicate(){ return mAction;};
     void menuActionActivated(int v);
 
 signals:
@@ -82,7 +81,6 @@ protected:
     KeyboardFrame *keyboardFrame;
     int microX;
     int microY;
-    QAction* mAction;
 };
 
 #endif

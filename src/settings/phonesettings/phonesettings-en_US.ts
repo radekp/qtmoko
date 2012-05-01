@@ -9,6 +9,7 @@
         <comment>%n = number of phone numbers</comment>
         <translation type="unfinished">
             <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
 </context>

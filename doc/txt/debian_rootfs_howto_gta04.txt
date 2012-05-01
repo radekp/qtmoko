@@ -132,6 +132,16 @@ cat > /media/card/etc/udev/rules.d/hso.rules <<__END__
 SUBSYSTEM=="tty", ACTION=="add", KERNEL=="ttyHS*", ATTR{hsotype}=="?*", SYMLINK+="ttyHS_\$attr{hsotype}", OPTIONS+="string_escape=replace"
 __END__
 
+Step 4.2 - charging udev rules
+==============================
+
+* For more info see:
+    http://lists.goldelico.com/pipermail/gta04-owner/2012-April/002272.html
+
+cat > /media/card/etc/udev/rules.d/gta04-charging.rules <<__END__
+SUBSYSTEM=="power_supply", ACTION=="change", DEVPATH=="*power_supply/twl4030_usb" ATTRS{1-0048/twl4030_usb/id}=="floating", ATTR{../../max_current}="500000"
+SUBSYSTEM=="power_supply", ACTION=="change", DEVPATH=="*power_supply/twl4030_usb" ATTRS{1-0048/twl4030_usb/id}=="102k", ATTR{../../max_current}="851000"
+__END__
 
 Step 4.5 - make it generate SSH keys on start
 =============================================

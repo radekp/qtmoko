@@ -6,6 +6,7 @@
     <message>
         <location filename="speeddialedit.cpp" line="34"/>
         <source>Speed Dial</source>
-        <translation>Hurtigopkald</translation></message>
+        <translation>Hurtigopkald</translation>
+    </message>
 </context>
 </TS>

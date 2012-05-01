@@ -222,115 +222,115 @@
 <context>
     <name>NetworkUI</name>
     <message>
-        <location filename="networkui.cpp" line="125"/>
+        <location filename="networkui.cpp" line="123"/>
         <source>Unavailable</source>
         <translation>Indisponible</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="129"/>
+        <location filename="networkui.cpp" line="127"/>
         <source>Offline</source>
         <translation>Hors Ligne</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="133"/>
+        <location filename="networkui.cpp" line="131"/>
         <source>Online</source>
         <translation>En Ligne</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="137"/>
+        <location filename="networkui.cpp" line="135"/>
         <source>Pending</source>
         <translation>En attente</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="145"/>
+        <location filename="networkui.cpp" line="143"/>
         <source>On Demand</source>
         <translation>À la demande</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="149"/>
+        <location filename="networkui.cpp" line="147"/>
         <source>Unknown</source>
         <translation>Inconnu</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="305"/>
-        <location filename="networkui.cpp" line="824"/>
-        <location filename="networkui.cpp" line="956"/>
+        <location filename="networkui.cpp" line="304"/>
+        <location filename="networkui.cpp" line="899"/>
+        <location filename="networkui.cpp" line="1035"/>
         <source>Internet</source>
         <translation>Internet</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="317"/>
+        <location filename="networkui.cpp" line="318"/>
         <source>These are the network services you currently have available.</source>
         <translation>Liste des services réseaux actuellement disponibles.</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="344"/>
+        <location filename="networkui.cpp" line="350"/>
         <source>New</source>
         <translation>Nouveau</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="348"/>
+        <location filename="networkui.cpp" line="354"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="352"/>
+        <location filename="networkui.cpp" line="359"/>
         <source>Default Gateway</source>
         <translation>Passerelle par défaut</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="357"/>
-        <location filename="networkui.cpp" line="500"/>
+        <location filename="networkui.cpp" line="364"/>
+        <location filename="networkui.cpp" line="514"/>
         <source>Start</source>
         <translation>Démarrer</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="364"/>
+        <location filename="networkui.cpp" line="372"/>
         <source>Properties...</source>
         <translation>Paramètres...</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="368"/>
+        <location filename="networkui.cpp" line="376"/>
         <source>Data</source>
         <translation>Donnée</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="373"/>
+        <location filename="networkui.cpp" line="381"/>
         <source>WAP</source>
         <translation>WAP</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="379"/>
+        <location filename="networkui.cpp" line="387"/>
         <source>VPN</source>
         <translation>VPN</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="494"/>
+        <location filename="networkui.cpp" line="508"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="636"/>
+        <location filename="networkui.cpp" line="696"/>
         <source>Network</source>
         <translation>Réseau</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="796"/>
+        <location filename="networkui.cpp" line="863"/>
         <source>&lt;qt&gt;Received network settings.  Do you wish to apply them?&lt;/qt&gt;</source>
         <translation>&lt;qt&gt;Paramètres réseaux reçus.  Voulez-vous les mettre en place?&lt;/qt&gt;</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="819"/>
+        <location filename="networkui.cpp" line="889"/>
         <source>&lt;qt&gt;Received network settings for &quot;%1&quot;.  Do you wish to apply them?&lt;/qt&gt;</source>
         <translation>&lt;qt&gt;Paramètres réseaux reçus pour &quot;%1&quot;.  Voulez-vous les mettre en place?&lt;/qt&gt;</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="821"/>
+        <location filename="networkui.cpp" line="894"/>
         <source>&lt;qt&gt;Received updated network settings for &quot;%1&quot;.  Do you wish to apply them?&lt;/qt&gt;</source>
         <translation>&lt;qt&gt;Paramètres réseaux mis à jour pour &quot;%1&quot;.  Voulez-vous les mettre en place?&lt;/qt&gt;</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="956"/>
+        <location filename="networkui.cpp" line="1036"/>
         <source>Apply default settings to new Ethernet interface?</source>
         <translation>Appliquer les réglages par défaut à la nouvelle interface Ethernet?</translation>
     </message>

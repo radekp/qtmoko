@@ -67,7 +67,8 @@ private:
     void installDNS(bool);
     bool isAvailableDevice( const QString& ) const;
     void updateTrigger( QtopiaNetworkInterface::Error code = QtopiaNetworkInterface::NoError, const QString& desc = QString() );
-
+    void updateNetSpaceStatus();
+    
     QtopiaNetworkConfiguration *configIface;
     Status ifaceStatus;
     mutable QString deviceName;
@@ -78,6 +79,7 @@ private:
     int netIndex;
 #endif
     QValueSpaceObject *netSpace;
+    QValueSpaceObject *wifiSpace;
     ScriptThread thread;
     bool delayedGatewayInstall;
     int trigger;

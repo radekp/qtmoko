@@ -33,6 +33,9 @@
         <status name="bluetooth" imageon="bluetooth-enabled.svg" on="expr:@/Communications/Bluetooth/LocalDevice/Enabled" active="expr:@/Communications/Bluetooth/LocalDevice/Enabled"/>
         <status name="bluetooth" imageon="bluetooth-visible.svg" on="expr:@/Communications/Bluetooth/LocalDevice/Visible" active="expr:@/Communications/Bluetooth/LocalDevice/Visible"/>
       </exclusive>
+      <exclusive rect="40.65%,0,9%x0">
+        <status name="wifi" imageon="wifi-enabled.svg" on="expr:@/Network/Interfaces/Wifi/State == 2" />
+      </exclusive>
       <exclusive rect="63%,0,9%x0">
         <status name="messages" imageon="messages.svg" on="expr:@/Communications/Messages/NewMessages > 0" active="expr:@/Communications/Messages/NewMessages > 0"/>
         <status name="smsfull" imageon="smsfull.svg" on="expr:@/Telephony/Status/SMSMemoryFull" active="expr:@/Telephony/Status/SMSMemoryFull"/>

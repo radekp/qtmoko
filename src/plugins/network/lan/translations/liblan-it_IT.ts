@@ -4,27 +4,27 @@
 <context>
     <name>ChooseNetworkUI</name>
     <message>
-        <location filename="../wirelessscan.cpp" line="1854"/>
+        <location filename="../wirelessscan.cpp" line="1827"/>
         <source>New WLAN&apos;s</source>
         <translation>Nuova WLAN</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1862"/>
+        <location filename="../wirelessscan.cpp" line="1835"/>
         <source>The following networks were detected in the local area:</source>
         <translation>Queste le seguenti reti Wireless disponibili attorno a te:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1873"/>
+        <location filename="../wirelessscan.cpp" line="1846"/>
         <source>Show hidden networks</source>
         <translation>Visualizza reti nascoste</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1915"/>
+        <location filename="../wirelessscan.cpp" line="1888"/>
         <source>&lt;No WLAN found&gt;</source>
         <translation>&lt;Nessuna rete Wireless&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1959"/>
+        <location filename="../wirelessscan.cpp" line="1931"/>
         <source>Mb/s</source>
         <comment>Megabit per seconds</comment>
         <translation></translation>
@@ -33,48 +33,48 @@
 <context>
     <name>LanImpl</name>
     <message>
-        <location filename="../lan.cpp" line="116"/>
-        <location filename="../lan.cpp" line="266"/>
+        <location filename="../lan.cpp" line="123"/>
+        <location filename="../lan.cpp" line="277"/>
         <source>Interface hasn&apos;t been initialized yet.</source>
         <translation>L&apos;interfaccia non é stata inizializzata.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="180"/>
+        <location filename="../lan.cpp" line="191"/>
         <source>Cannot set default gateway.</source>
         <translation>Impossibile impostare gateway predefinito.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="250"/>
+        <location filename="../lan.cpp" line="261"/>
         <source>No WLAN found in sourrounding area</source>
         <translation>Nessuna rete Wireless attorno a te.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="270"/>
+        <location filename="../lan.cpp" line="281"/>
         <source>Interface is not available.</source>
         <translation>Interfaccia non disponibile.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="276"/>
+        <location filename="../lan.cpp" line="287"/>
         <source>Interface already started/active.</source>
         <translation>Interfaccia già avviata.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="316"/>
+        <location filename="../lan.cpp" line="327"/>
         <source>IP address missing.</source>
         <translation>Indirizzo IP mancante.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="330"/>
+        <location filename="../lan.cpp" line="341"/>
         <source>Subnet mask missing.</source>
         <translation>Maschera di sottorete mancante.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="344"/>
+        <location filename="../lan.cpp" line="355"/>
         <source>Broadcast address missing.</source>
         <translation>Indirizzo broadcast mancante.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="512"/>
+        <location filename="../lan.cpp" line="523"/>
         <source>Interface is not running.</source>
         <translation>Interfaccia non attiva.</translation>
     </message>
@@ -205,153 +205,152 @@
 <context>
     <name>WSearchPage</name>
     <message>
-        <location filename="../wirelessscan.cpp" line="884"/>
+        <location filename="../wirelessscan.cpp" line="885"/>
         <source>Protocol</source>
         <translation>Protocollo:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="885"/>
+        <location filename="../wirelessscan.cpp" line="886"/>
         <source>Access point</source>
         <translation>Indirizzo AP:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="886"/>
+        <location filename="../wirelessscan.cpp" line="887"/>
         <source>ESSID</source>
         <translation>ESSID:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="887"/>
+        <location filename="../wirelessscan.cpp" line="888"/>
         <source>Mode</source>
         <translation>Modalità:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="888"/>
+        <location filename="../wirelessscan.cpp" line="889"/>
         <source>Network ID</source>
         <translation>ID Rete:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="889"/>
+        <location filename="../wirelessscan.cpp" line="890"/>
         <source>Bit rate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="890"/>
+        <location filename="../wirelessscan.cpp" line="891"/>
         <source>Frequency</source>
         <translation>Frequenza:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="891"/>
+        <location filename="../wirelessscan.cpp" line="892"/>
         <source>Channel</source>
         <translation>Canale:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="892"/>
+        <location filename="../wirelessscan.cpp" line="893"/>
         <source>Encryption</source>
         <translation>Criptazione:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="893"/>
+        <location filename="../wirelessscan.cpp" line="894"/>
         <source>Security</source>
         <translation>Sicurezza:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="894"/>
+        <location filename="../wirelessscan.cpp" line="895"/>
         <source>Quality</source>
         <translation>Qualità</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="895"/>
+        <location filename="../wirelessscan.cpp" line="896"/>
         <source>Signal level</source>
         <translation>Livello di segnale:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="896"/>
+        <location filename="../wirelessscan.cpp" line="897"/>
         <source>Noise level</source>
         <translation>Livello di disturbo:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="897"/>
+        <location filename="../wirelessscan.cpp" line="898"/>
         <source>More info</source>
         <translation>Maggiori informazioni..</translation>
     </message>
     <message>
         <location filename="../wirelessscan.cpp" line="991"/>
-        <location filename="../wirelessscan.cpp" line="1200"/>
+        <location filename="../wirelessscan.cpp" line="1199"/>
         <source>Connection state:
 &lt;center&gt;&lt;b&gt;not connected&lt;/b&gt;&lt;/center&gt;</source>
         <translation>Stato connessione:
 &lt;center&gt;&lt;b&gt;Non connesso.&lt;/b&gt;&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="998"/>
-        <location filename="../wirelessscan.cpp" line="1367"/>
+        <location filename="../wirelessscan.cpp" line="999"/>
+        <location filename="../wirelessscan.cpp" line="1365"/>
         <source>Wireless networks:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1020"/>
+        <location filename="../wirelessscan.cpp" line="1021"/>
         <source>Show hidden networks</source>
         <translation type="unfinished">Visualizza reti nascoste</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1047"/>
+        <location filename="../wirelessscan.cpp" line="1048"/>
         <source>Change priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1358"/>
+        <location filename="../wirelessscan.cpp" line="1356"/>
         <source>Searching for wireless networks...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1656"/>
         <source>&lt;No WLAN found&gt;</source>
-        <translation type="unfinished">&lt;Nessuna rete Wireless&gt;</translation>
+        <translation type="obsolete">&lt;Nessuna rete Wireless&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1751"/>
+        <location filename="../wirelessscan.cpp" line="1724"/>
         <source>Connect to WLAN?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1752"/>
+        <location filename="../wirelessscan.cpp" line="1725"/>
         <source>Connect to %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1777"/>
+        <location filename="../wirelessscan.cpp" line="1750"/>
         <source>Network priority:</source>
         <translation>Priorità di rete</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1016"/>
+        <location filename="../wirelessscan.cpp" line="1017"/>
         <source>Rescan</source>
         <translation>Nuova scansione reti..</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1028"/>
+        <location filename="../wirelessscan.cpp" line="1029"/>
         <source>Add new networks...</source>
         <translation>Aggiungi una nuova rete..</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1034"/>
+        <location filename="../wirelessscan.cpp" line="1035"/>
         <source>Connect</source>
         <translation>Connettiti..</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1040"/>
+        <location filename="../wirelessscan.cpp" line="1041"/>
         <source>Delete</source>
         <translation>Rimuovi</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1064"/>
+        <location filename="../wirelessscan.cpp" line="1065"/>
         <source>&lt;No known networks&gt;</source>
         <translation>&lt;Nessuna rete configurata&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1085"/>
-        <location filename="../wirelessscan.cpp" line="1545"/>
-        <location filename="../wirelessscan.cpp" line="1701"/>
+        <location filename="../wirelessscan.cpp" line="1086"/>
+        <location filename="../wirelessscan.cpp" line="1541"/>
+        <location filename="../wirelessscan.cpp" line="1670"/>
         <source>Mb/s</source>
         <comment>Megabit per seconds</comment>
         <translation></translation>
@@ -365,7 +364,7 @@
 &lt;center&gt;Connesso a &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1445"/>
+        <location filename="../wirelessscan.cpp" line="1442"/>
         <source>Connection state:
 &lt;center&gt;Connecting to &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;</source>
         <comment>1=network name</comment>
@@ -373,7 +372,7 @@
 &lt;center&gt;Connessione in corso a &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1769"/>
+        <location filename="../wirelessscan.cpp" line="1742"/>
         <source>Moving %1</source>
         <comment>%1=essid</comment>
         <translation>Mi connetto a %1..</translation>
@@ -766,29 +765,29 @@
 <context>
     <name>WirelessScan</name>
     <message>
-        <location filename="../wirelessscan.cpp" line="568"/>
-        <location filename="../wirelessscan.cpp" line="656"/>
-        <location filename="../wirelessscan.cpp" line="717"/>
-        <location filename="../wirelessscan.cpp" line="1512"/>
-        <location filename="../wirelessscan.cpp" line="1681"/>
-        <location filename="../wirelessscan.cpp" line="1941"/>
+        <location filename="../wirelessscan.cpp" line="569"/>
+        <location filename="../wirelessscan.cpp" line="657"/>
+        <location filename="../wirelessscan.cpp" line="718"/>
+        <location filename="../wirelessscan.cpp" line="1509"/>
+        <location filename="../wirelessscan.cpp" line="1651"/>
+        <location filename="../wirelessscan.cpp" line="1914"/>
         <source>off</source>
         <translation>Spento</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="711"/>
+        <location filename="../wirelessscan.cpp" line="712"/>
         <source>open</source>
         <comment>open security</comment>
         <translation>reti aperte</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="713"/>
+        <location filename="../wirelessscan.cpp" line="714"/>
         <source>restricted</source>
         <comment>restricted security</comment>
         <translation>reti protette</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="720"/>
+        <location filename="../wirelessscan.cpp" line="721"/>
         <source>on</source>
         <translation>Acceso</translation>
     </message>

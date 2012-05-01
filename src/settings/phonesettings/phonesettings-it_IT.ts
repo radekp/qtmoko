@@ -464,6 +464,7 @@
         <comment>%n = number of phone numbers</comment>
         <translation>
             <numerusform>&lt;qt&gt;Impossibile memorizare più di %n numeri.&lt;/qt&gt;</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>

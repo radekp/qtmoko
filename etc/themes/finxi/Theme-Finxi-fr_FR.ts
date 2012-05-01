@@ -7,12 +7,14 @@
         <source>%1 missed</source>
         <translation type="unfinished">
             <numerusform>%1 manqué(s)</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%1 new</source>
         <translation type="unfinished">
             <numerusform>%1 nouveau(x)</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
 </context>

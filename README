@@ -37,7 +37,7 @@ cd ../build
 
   * Build it:
 
-../qtmoko/configure -device neo
+../qtmoko/configure -force-build-qt -device neo
 make
 make install
 

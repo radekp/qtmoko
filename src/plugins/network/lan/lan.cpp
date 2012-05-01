@@ -49,7 +49,7 @@ LanImpl::LanImpl( const QString& confFile)
 #ifndef NO_WIRELESS_LAN
     , roaming( 0 ), wlanRegProvider( 0 )
 #endif
-    , netSpace( 0 ), delayedGatewayInstall( false )
+    , netSpace( 0 ), wifiSpace(0), delayedGatewayInstall( false )
 {
     if ( !devToConfig ) {
         devToConfig = new QMap<QString,QString>();
@@ -69,6 +69,13 @@ LanImpl::~LanImpl()
         delete configIface;
     configIface = 0;
     qLog(Network) << "Deleting LanImpl instance";
+}
+
+void LanImpl::updateNetSpaceStatus()
+{
+    netSpace->setAttribute( "State", (int)ifaceStatus );
+    if(wifiSpace)
+        wifiSpace->setAttribute( "State", (int)ifaceStatus );
 }
 
 QtopiaNetworkInterface::Status LanImpl::status()
@@ -101,7 +108,7 @@ QtopiaNetworkInterface::Status LanImpl::status()
     }
 
     ifaceStatus = status;
-    netSpace->setAttribute( "State", (int)ifaceStatus );
+    updateNetSpaceStatus();
     updateTrigger();
     return ifaceStatus;
 }
@@ -112,7 +119,7 @@ void LanImpl::initialize()
         QString  path = QString("/Network/Interfaces/%1").arg( qHash( configIface->configFile() ) );
         netSpace = new QValueSpaceObject( path, this );
         netSpace->setAttribute( "Config", configIface->configFile() );
-        netSpace->setAttribute( "State", ifaceStatus );
+        updateNetSpaceStatus();
         netSpace->setAttribute( "ErrorString", tr("Interface hasn't been initialized yet.") );
         netSpace->setAttribute( "Error", QtopiaNetworkInterface::NotInitialized );
         netSpace->setAttribute( "NetDevice", QVariant() );
@@ -130,8 +137,6 @@ void LanImpl::initialize()
         qLog(Network) << "LanImpl: interface not available";
     }
 
-    netSpace->setAttribute( "State", ifaceStatus );
-    updateTrigger();
 #ifndef NO_WIRELESS_LAN
     QtopiaNetwork::Type t = type();
     if ( t & QtopiaNetwork::WirelessLAN ) {
@@ -140,15 +145,21 @@ void LanImpl::initialize()
 
         wlanRegProvider = new WlanRegistrationProvider( QString::number(qHash(configIface->configFile())), this );
         wlanRegProvider->initialize();
+        
+        if (!wifiSpace )
+            wifiSpace = new QValueSpaceObject( "/Network/Interfaces/Wifi", this );
     }
 #endif
+
+    updateNetSpaceStatus();
+    updateTrigger();
 }
 
 void LanImpl::cleanup()
 {
     if ( ifaceStatus != QtopiaNetworkInterface::Unknown ) {
         ifaceStatus = QtopiaNetworkInterface::Unknown;
-        netSpace->setAttribute( "State", ifaceStatus );
+        updateNetSpaceStatus();
         updateTrigger();
     } else {
         return;
@@ -487,7 +498,7 @@ bool LanImpl::start( const QVariant options )
     //we have to wait a bit until this interface is actually online
     //->then it can become the default gateway ->installs dns details as well
     ifaceStatus = QtopiaNetworkInterface::Pending;
-    netSpace->setAttribute( "State", ifaceStatus );
+    updateNetSpaceStatus();
     updateTrigger();
     delayedGatewayInstall = true;
     return true;

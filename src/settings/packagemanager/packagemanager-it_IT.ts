@@ -114,6 +114,7 @@
         <comment>%n =# of packages</comment>
         <translation>
             <numerusform>trovati %n pacchetti</numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>

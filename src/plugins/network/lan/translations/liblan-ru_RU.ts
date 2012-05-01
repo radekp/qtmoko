@@ -4,27 +4,27 @@
 <context>
     <name>ChooseNetworkUI</name>
     <message>
-        <location filename="../wirelessscan.cpp" line="1854"/>
+        <location filename="../wirelessscan.cpp" line="1827"/>
         <source>New WLAN&apos;s</source>
         <translation>Новая WLAN сеть</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1862"/>
+        <location filename="../wirelessscan.cpp" line="1835"/>
         <source>The following networks were detected in the local area:</source>
         <translation>В данной области были обнаружены следующие сети:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1873"/>
+        <location filename="../wirelessscan.cpp" line="1846"/>
         <source>Show hidden networks</source>
         <translation>Показать скрытые сети</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1915"/>
+        <location filename="../wirelessscan.cpp" line="1888"/>
         <source>&lt;No WLAN found&gt;</source>
         <translation>&lt;Сеть WLAN не найдена&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1959"/>
+        <location filename="../wirelessscan.cpp" line="1931"/>
         <source>Mb/s</source>
         <comment>Megabit per seconds</comment>
         <translation>Мбит/с</translation>
@@ -33,48 +33,48 @@
 <context>
     <name>LanImpl</name>
     <message>
-        <location filename="../lan.cpp" line="116"/>
-        <location filename="../lan.cpp" line="266"/>
+        <location filename="../lan.cpp" line="123"/>
+        <location filename="../lan.cpp" line="277"/>
         <source>Interface hasn&apos;t been initialized yet.</source>
         <translation>Интерфейс не инициализирован.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="180"/>
+        <location filename="../lan.cpp" line="191"/>
         <source>Cannot set default gateway.</source>
         <translation>Невозможно установить шлюз по умолчанию.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="250"/>
+        <location filename="../lan.cpp" line="261"/>
         <source>No WLAN found in sourrounding area</source>
         <translation>Сеть WLAN не найдена в данной области</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="270"/>
+        <location filename="../lan.cpp" line="281"/>
         <source>Interface is not available.</source>
         <translation>Интерфейс недоступен.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="276"/>
+        <location filename="../lan.cpp" line="287"/>
         <source>Interface already started/active.</source>
         <translation>Интерфейс уже запущен/активен.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="316"/>
+        <location filename="../lan.cpp" line="327"/>
         <source>IP address missing.</source>
         <translation>Отсутствует IP адрес.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="330"/>
+        <location filename="../lan.cpp" line="341"/>
         <source>Subnet mask missing.</source>
         <translation>Отсутствует маска подсети.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="344"/>
+        <location filename="../lan.cpp" line="355"/>
         <source>Broadcast address missing.</source>
         <translation>Отсутствует широковещательный адрес.</translation>
     </message>
     <message>
-        <location filename="../lan.cpp" line="512"/>
+        <location filename="../lan.cpp" line="523"/>
         <source>Interface is not running.</source>
         <translation>Интерфейс не запущен.</translation>
     </message>
@@ -228,153 +228,152 @@
 <context>
     <name>WSearchPage</name>
     <message>
-        <location filename="../wirelessscan.cpp" line="884"/>
+        <location filename="../wirelessscan.cpp" line="885"/>
         <source>Protocol</source>
         <translation>Протокол</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="885"/>
+        <location filename="../wirelessscan.cpp" line="886"/>
         <source>Access point</source>
         <translation>Точка доступа</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="886"/>
+        <location filename="../wirelessscan.cpp" line="887"/>
         <source>ESSID</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="887"/>
+        <location filename="../wirelessscan.cpp" line="888"/>
         <source>Mode</source>
         <translation>Режим</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="888"/>
+        <location filename="../wirelessscan.cpp" line="889"/>
         <source>Network ID</source>
         <translation>ID сети</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="889"/>
+        <location filename="../wirelessscan.cpp" line="890"/>
         <source>Bit rate</source>
         <translation>Битрейт</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="890"/>
+        <location filename="../wirelessscan.cpp" line="891"/>
         <source>Frequency</source>
         <translation>Частота</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="891"/>
+        <location filename="../wirelessscan.cpp" line="892"/>
         <source>Channel</source>
         <translation>Какнал</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="892"/>
+        <location filename="../wirelessscan.cpp" line="893"/>
         <source>Encryption</source>
         <translation>Шифрование</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="893"/>
+        <location filename="../wirelessscan.cpp" line="894"/>
         <source>Security</source>
         <translation>Безопасность</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="894"/>
+        <location filename="../wirelessscan.cpp" line="895"/>
         <source>Quality</source>
         <translation>Качество</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="895"/>
+        <location filename="../wirelessscan.cpp" line="896"/>
         <source>Signal level</source>
         <translation>Уровень сигнала</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="896"/>
+        <location filename="../wirelessscan.cpp" line="897"/>
         <source>Noise level</source>
         <translation>Уровень шума</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="897"/>
+        <location filename="../wirelessscan.cpp" line="898"/>
         <source>More info</source>
         <translation>Подробнее</translation>
     </message>
     <message>
         <location filename="../wirelessscan.cpp" line="991"/>
-        <location filename="../wirelessscan.cpp" line="1200"/>
+        <location filename="../wirelessscan.cpp" line="1199"/>
         <source>Connection state:
 &lt;center&gt;&lt;b&gt;not connected&lt;/b&gt;&lt;/center&gt;</source>
         <translation>Состояние соединения:
 &lt;center&gt;&lt;b&gt;не соединен&lt;/b&gt;&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="998"/>
-        <location filename="../wirelessscan.cpp" line="1367"/>
+        <location filename="../wirelessscan.cpp" line="999"/>
+        <location filename="../wirelessscan.cpp" line="1365"/>
         <source>Wireless networks:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1020"/>
+        <location filename="../wirelessscan.cpp" line="1021"/>
         <source>Show hidden networks</source>
         <translation type="unfinished">Показать скрытые сети</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1047"/>
+        <location filename="../wirelessscan.cpp" line="1048"/>
         <source>Change priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1358"/>
+        <location filename="../wirelessscan.cpp" line="1356"/>
         <source>Searching for wireless networks...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1656"/>
         <source>&lt;No WLAN found&gt;</source>
-        <translation type="unfinished">&lt;Сеть WLAN не найдена&gt;</translation>
+        <translation type="obsolete">&lt;Сеть WLAN не найдена&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1751"/>
+        <location filename="../wirelessscan.cpp" line="1724"/>
         <source>Connect to WLAN?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1752"/>
+        <location filename="../wirelessscan.cpp" line="1725"/>
         <source>Connect to %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1777"/>
+        <location filename="../wirelessscan.cpp" line="1750"/>
         <source>Network priority:</source>
         <translation>Приоритет сети:</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1016"/>
+        <location filename="../wirelessscan.cpp" line="1017"/>
         <source>Rescan</source>
         <translation>Повторное сканирование</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1028"/>
+        <location filename="../wirelessscan.cpp" line="1029"/>
         <source>Add new networks...</source>
         <translation>Добавить новые сети...</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1034"/>
+        <location filename="../wirelessscan.cpp" line="1035"/>
         <source>Connect</source>
         <translation>Соединение</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1040"/>
+        <location filename="../wirelessscan.cpp" line="1041"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1064"/>
+        <location filename="../wirelessscan.cpp" line="1065"/>
         <source>&lt;No known networks&gt;</source>
         <translation>&lt;Нет известных сетей&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1085"/>
-        <location filename="../wirelessscan.cpp" line="1545"/>
-        <location filename="../wirelessscan.cpp" line="1701"/>
+        <location filename="../wirelessscan.cpp" line="1086"/>
+        <location filename="../wirelessscan.cpp" line="1541"/>
+        <location filename="../wirelessscan.cpp" line="1670"/>
         <source>Mb/s</source>
         <comment>Megabit per seconds</comment>
         <translation>Мбит/с</translation>
@@ -388,7 +387,7 @@
 &lt;center&gt;Соединен с &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1445"/>
+        <location filename="../wirelessscan.cpp" line="1442"/>
         <source>Connection state:
 &lt;center&gt;Connecting to &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;</source>
         <comment>1=network name</comment>
@@ -396,7 +395,7 @@
 &lt;center&gt;Подключение к &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="1769"/>
+        <location filename="../wirelessscan.cpp" line="1742"/>
         <source>Moving %1</source>
         <comment>%1=essid</comment>
         <translation>Перемещение %1</translation>
@@ -789,29 +788,29 @@
 <context>
     <name>WirelessScan</name>
     <message>
-        <location filename="../wirelessscan.cpp" line="568"/>
-        <location filename="../wirelessscan.cpp" line="656"/>
-        <location filename="../wirelessscan.cpp" line="717"/>
-        <location filename="../wirelessscan.cpp" line="1512"/>
-        <location filename="../wirelessscan.cpp" line="1681"/>
-        <location filename="../wirelessscan.cpp" line="1941"/>
+        <location filename="../wirelessscan.cpp" line="569"/>
+        <location filename="../wirelessscan.cpp" line="657"/>
+        <location filename="../wirelessscan.cpp" line="718"/>
+        <location filename="../wirelessscan.cpp" line="1509"/>
+        <location filename="../wirelessscan.cpp" line="1651"/>
+        <location filename="../wirelessscan.cpp" line="1914"/>
         <source>off</source>
         <translation>выкл.</translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="711"/>
+        <location filename="../wirelessscan.cpp" line="712"/>
         <source>open</source>
         <comment>open security</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="713"/>
+        <location filename="../wirelessscan.cpp" line="714"/>
         <source>restricted</source>
         <comment>restricted security</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../wirelessscan.cpp" line="720"/>
+        <location filename="../wirelessscan.cpp" line="721"/>
         <source>on</source>
         <translation>вкл.</translation>
     </message>

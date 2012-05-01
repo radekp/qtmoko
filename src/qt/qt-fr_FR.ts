@@ -2,24 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0">
 <context>
-    <name>AudioOutput</name>
-    <message>
-        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/audiooutput.cpp" line="375"/>
-        <source>&lt;html&gt;The audio playback device &lt;b&gt;%1&lt;/b&gt; does not work.&lt;br/&gt;Falling back to &lt;b&gt;%2&lt;/b&gt;.&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/audiooutput.cpp" line="388"/>
-        <source>&lt;html&gt;Switching to the audio playback device &lt;b&gt;%1&lt;/b&gt;&lt;br/&gt;which just became available and has higher preference.&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/audiooutput.cpp" line="391"/>
-        <source>Revert back to device &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>CloseButton</name>
     <message>
         <location filename="../../qtopiacore/qt/src/gui/widgets/qtabbar.cpp" line="2259"/>
@@ -57,6 +39,24 @@
     <message>
         <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/phononnamespace.cpp" line="65"/>
         <source>Accessibility</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Phonon::AudioOutput</name>
+    <message>
+        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/audiooutput.cpp" line="375"/>
+        <source>&lt;html&gt;The audio playback device &lt;b&gt;%1&lt;/b&gt; does not work.&lt;br/&gt;Falling back to &lt;b&gt;%2&lt;/b&gt;.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/audiooutput.cpp" line="388"/>
+        <source>&lt;html&gt;Switching to the audio playback device &lt;b&gt;%1&lt;/b&gt;&lt;br/&gt;which just became available and has higher preference.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/audiooutput.cpp" line="391"/>
+        <source>Revert back to device &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -128,6 +128,8 @@ have libgstreamer-plugins-base installed.</source>
     <message>
         <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="42"/>
         <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="60"/>
+        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="189"/>
+        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="204"/>
         <source>Volume: %1%</source>
         <translation type="unfinished"></translation>
     </message>
@@ -136,6 +138,11 @@ have libgstreamer-plugins-base installed.</source>
         <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="63"/>
         <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="117"/>
         <source>Use this slider to adjust the volume. The leftmost position is 0%, the rightmost is %1%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="184"/>
+        <source>Muted</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2691,11 +2698,6 @@ Do you want to delete it anyway?</source>
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <location filename="../../qtopiacore/qt/src/gui/util/qdesktopservices_mac.cpp" line="165"/>
-        <source>Home</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <location filename="../../qtopiacore/qt/src/network/access/qnetworkaccessdatabackend.cpp" line="74"/>
         <source>Operation not supported on %1</source>
@@ -6218,16 +6220,6 @@ Do you want to overwrite it?</source>
 <context>
     <name>QtXmlPatterns</name>
     <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/acceltree/qacceltreebuilder.cpp" line="205"/>
-        <source>An %1-attribute with value %2 has already been declared.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/acceltree/qacceltreebuilder.cpp" line="218"/>
-        <source>An %1-attribute must have a valid %2 as value, which %3 isn&apos;t.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../qtopiacore/qt/src/xmlpatterns/acceltree/qacceltreeresourceloader.cpp" line="314"/>
         <source>%1 is an unsupported encoding.</source>
         <translation type="unfinished"></translation>
@@ -6306,21 +6298,6 @@ Do you want to overwrite it?</source>
     <message>
         <location filename="../../qtopiacore/qt/src/xmlpatterns/data/qabstractduration.cpp" line="107"/>
         <source>At least one time component must appear after the %1-delimiter.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/data/qabstractfloatmathematician.cpp" line="64"/>
-        <source>No operand in an integer division, %1, can be %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/data/qabstractfloatmathematician.cpp" line="71"/>
-        <source>The first operand in an integer division, %1, cannot be infinity (%2).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/data/qabstractfloatmathematician.cpp" line="77"/>
-        <source>The second operand in a division, %1, cannot be zero (%2).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6430,31 +6407,6 @@ Do you want to overwrite it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcastingplatform.cpp" line="134"/>
-        <source>No casting is possible with %1 as the target type.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcastingplatform.cpp" line="149"/>
-        <source>It is not possible to cast from %1 to %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcastingplatform.cpp" line="176"/>
-        <source>Casting to %1 is not possible because it is an abstract type, and can therefore never be instantiated.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcastingplatform.cpp" line="199"/>
-        <source>It&apos;s not possible to cast the value %1 of type %2 to %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcastingplatform.cpp" line="207"/>
-        <source>Failure when casting from %1 to %2: %3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcommentconstructor.cpp" line="67"/>
         <source>A comment cannot contain %1</source>
         <translation type="unfinished"></translation>
@@ -6462,16 +6414,6 @@ Do you want to overwrite it?</source>
     <message>
         <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcommentconstructor.cpp" line="73"/>
         <source>A comment cannot end with a %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcomparisonplatform.cpp" line="167"/>
-        <source>No comparisons can be done involving the type %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qcomparisonplatform.cpp" line="181"/>
-        <source>Operator %1 is not available between atomic values of type %2 and %3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6497,11 +6439,6 @@ Do you want to overwrite it?</source>
     <message>
         <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qdocumentcontentvalidator.cpp" line="86"/>
         <source>An attribute node cannot be a child of a document node. Therefore, the attribute %1 is out of place.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/expr/qevaluationcache.cpp" line="117"/>
-        <source>Circularity detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6602,11 +6539,6 @@ Do you want to overwrite it?</source>
     <message>
         <location filename="../../qtopiacore/qt/src/xmlpatterns/functions/qassemblestringfns.cpp" line="88"/>
         <source>%1 is not a valid XML 1.0 character.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/functions/qcomparingaggregator.cpp" line="197"/>
-        <source>The first argument to %1 cannot be of type %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6717,41 +6649,6 @@ Do you want to overwrite it?</source>
     <message>
         <location filename="../../qtopiacore/qt/src/xmlpatterns/janitors/qitemverifier.cpp" line="67"/>
         <source>The item %1 did not match the required type %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/parser/qmaintainingreader.cpp" line="183"/>
-        <source>Attribute %1 cannot appear on the element %2. Only the standard attributes can appear.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/parser/qmaintainingreader.cpp" line="189"/>
-        <source>Attribute %1 cannot appear on the element %2. Only %3 is allowed, and the standard attributes.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/parser/qmaintainingreader.cpp" line="197"/>
-        <source>Attribute %1 cannot appear on the element %2. Allowed is %3, %4, and the standard attributes.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/parser/qmaintainingreader.cpp" line="206"/>
-        <source>Attribute %1 cannot appear on the element %2. Allowed is %3, and the standard attributes.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/parser/qmaintainingreader.cpp" line="219"/>
-        <source>XSL-T attributes on XSL-T elements must be in the null namespace, not in the XSL-T namespace which %1 is.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/parser/qmaintainingreader.cpp" line="231"/>
-        <source>The attribute %1 must appear on element %2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/xmlpatterns/parser/qmaintainingreader.cpp" line="239"/>
-        <source>The element with local name %1 does not exist in XSL-T.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7251,20 +7148,6 @@ Do you want to overwrite it?</source>
     <message>
         <location filename="../../qtopiacore/qt/src/xmlpatterns/utils/qxpathhelper_p.h" line="120"/>
         <source>Only the Unicode Codepoint Collation is supported(%1). %2 is unsupported.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>VolumeSlider</name>
-    <message>
-        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="184"/>
-        <source>Muted</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="189"/>
-        <location filename="../../qtopiacore/qt/src/3rdparty/phonon/phonon/volumeslider.cpp" line="204"/>
-        <source>Volume: %1%</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -223,115 +223,115 @@
 <context>
     <name>NetworkUI</name>
     <message>
-        <location filename="networkui.cpp" line="125"/>
+        <location filename="networkui.cpp" line="123"/>
         <source>Unavailable</source>
         <translation>Non disponibile</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="129"/>
+        <location filename="networkui.cpp" line="127"/>
         <source>Offline</source>
         <translation>Disconnesso</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="133"/>
+        <location filename="networkui.cpp" line="131"/>
         <source>Online</source>
         <translation>Connesso!</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="137"/>
+        <location filename="networkui.cpp" line="135"/>
         <source>Pending</source>
         <translation>In attesa..</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="145"/>
+        <location filename="networkui.cpp" line="143"/>
         <source>On Demand</source>
         <translation>Su richiesta.</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="149"/>
+        <location filename="networkui.cpp" line="147"/>
         <source>Unknown</source>
         <translation>Sconosciuto</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="305"/>
-        <location filename="networkui.cpp" line="824"/>
-        <location filename="networkui.cpp" line="956"/>
+        <location filename="networkui.cpp" line="304"/>
+        <location filename="networkui.cpp" line="899"/>
+        <location filename="networkui.cpp" line="1035"/>
         <source>Internet</source>
         <translation>Gestione Reti</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="317"/>
+        <location filename="networkui.cpp" line="318"/>
         <source>These are the network services you currently have available.</source>
         <translation>Di seguito sono indicate le reti internet attualmente configurate.</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="344"/>
+        <location filename="networkui.cpp" line="350"/>
         <source>New</source>
         <translation>Nuova connessione..</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="348"/>
+        <location filename="networkui.cpp" line="354"/>
         <source>Delete</source>
         <translation>Cancella</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="352"/>
+        <location filename="networkui.cpp" line="359"/>
         <source>Default Gateway</source>
         <translation>Imposta come default</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="357"/>
-        <location filename="networkui.cpp" line="500"/>
+        <location filename="networkui.cpp" line="364"/>
+        <location filename="networkui.cpp" line="514"/>
         <source>Start</source>
         <translation>Abilita connessione..</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="364"/>
+        <location filename="networkui.cpp" line="372"/>
         <source>Properties...</source>
         <translation>Proprietà</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="368"/>
+        <location filename="networkui.cpp" line="376"/>
         <source>Data</source>
         <translation>Connessioni dati (IP)</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="373"/>
+        <location filename="networkui.cpp" line="381"/>
         <source>WAP</source>
         <translation>Connessioni WAP/GPRS</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="379"/>
+        <location filename="networkui.cpp" line="387"/>
         <source>VPN</source>
         <translation>Reti VPN</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="494"/>
+        <location filename="networkui.cpp" line="508"/>
         <source>Stop</source>
         <translation>Disabilita</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="636"/>
+        <location filename="networkui.cpp" line="696"/>
         <source>Network</source>
         <translation>Reti</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="796"/>
+        <location filename="networkui.cpp" line="863"/>
         <source>&lt;qt&gt;Received network settings.  Do you wish to apply them?&lt;/qt&gt;</source>
         <translation>&lt;qt&gt;Ho ricevuto le impostazioni di configurazione per &quot;%1&quot;.  Vuoi che le applichi immediatamente?&lt;/qt&gt;&lt;qt&gt;Ho ricevuto le impostazioni di rete. Vuoi che le applichi immediatamente?&lt;/qt&gt;</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="819"/>
+        <location filename="networkui.cpp" line="889"/>
         <source>&lt;qt&gt;Received network settings for &quot;%1&quot;.  Do you wish to apply them?&lt;/qt&gt;</source>
         <translation>&lt;qt&gt;Ho ricevuto le impostazioni di configurazione per &quot;%1&quot;.  Vuoi che le applichi immediatamente?&lt;/qt&gt;</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="821"/>
+        <location filename="networkui.cpp" line="894"/>
         <source>&lt;qt&gt;Received updated network settings for &quot;%1&quot;.  Do you wish to apply them?&lt;/qt&gt;</source>
         <translation>&lt;qt&gt;Ho ricevuto un aggiornamento per le impostazioni di rete: &quot;%1&quot;. Vuoi che le applichi immediatamente?&lt;/qt&gt;</translation>
     </message>
     <message>
-        <location filename="networkui.cpp" line="956"/>
+        <location filename="networkui.cpp" line="1036"/>
         <source>Apply default settings to new Ethernet interface?</source>
         <translation>Applico le impostazioni di default per l&apos;interfaccia Ethernet?</translation>
     </message>

@@ -155,7 +155,6 @@ private:
     QListWidgetItem *currentSelection;
     bool isRestart;
     QNetworkDevice *devSpace;
-    quint16 listSum;
     bool changingPriority;
 };
 #endif
