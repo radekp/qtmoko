@@ -448,7 +448,8 @@ SolutionFile SolutionFile::canonicalPath() const
     SolutionFile ret = (*this);
     QFileInfo file_info = QFileInfo(m_path);
     QString dir = file_info.canonicalPath();
-    if ( !dir.isEmpty() ) {
+    //if ( !dir.isEmpty() ) {
+    if ( !dir.isEmpty() && (dir != ".") ) { // see https://bugreports.qt-project.org/browse/QTBUG-25537
         ret.m_path = dir+"/"+file_info.fileName();
         ret.m_request = solution()->fuzzyRealToSolution(ret.m_path).m_request;
     }
