@@ -3,7 +3,6 @@
 ** This file is part of the Qt Extended Opensource Package.
 **
 ** Copyright (C) 2009 Trolltech ASA.
-** Copyright (C) 2012 Radek Polak
 **
 ** Contact: Qt Extended Information (info@qtextended.org)
 **
@@ -18,26 +17,11 @@
 **
 ****************************************************************************/
 
-#ifndef NEOGPSPLUGIN_H
-#define NEOGPSPLUGIN_H
+#ifndef DIALSTRING_H
+#define DIALSTRING_H
 
-#include <QSocketNotifier>
-#include <QWhereaboutsPlugin>
-#include <QProcess>
-
-class QWhereabouts;
-
-class QTOPIA_PLUGIN_EXPORT NeoGpsPlugin : public QWhereaboutsPlugin
-{
-    Q_OBJECT
-public:
-    explicit NeoGpsPlugin(QObject * parent = 0);
-    ~NeoGpsPlugin();
-
-    virtual QWhereabouts *create(const QString & source);
-
-private:
-    QProcess *reader;
-};
+#include <QString>
+QString GPRSDialString();
+QString GPRSDisconnectString();
 
 #endif

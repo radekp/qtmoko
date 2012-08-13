@@ -20,6 +20,7 @@
 #include "qnmeawhereabouts.h"
 #include "qnmeawhereabouts_p.h"
 
+#include <qled.h>
 #include <QIODevice>
 #include <QBasicTimer>
 #include <QTimerEvent>
@@ -28,7 +29,14 @@
 
 QNmeaRealTimeReader::QNmeaRealTimeReader(QNmeaWhereaboutsPrivate *whereaboutsProxy)
     : QNmeaReader(whereaboutsProxy)
+    , readPos(0)
+    , ledOn(false)
 {
+}
+
+QNmeaRealTimeReader::~QNmeaRealTimeReader()
+{
+    qLedSetPower(qLedAttrBrightness(), "0");
 }
 
 void QNmeaRealTimeReader::sourceReadyRead()
@@ -36,12 +44,38 @@ void QNmeaRealTimeReader::sourceReadyRead()
     QWhereaboutsUpdate update;
     QWhereaboutsUpdate::PositionFixStatus fixStatus = QWhereaboutsUpdate::FixStatusUnknown;
     int numSatellites;
+    
+    for(;;)
+    {
+        quint64 res = m_proxy->m_source->readLine(readBuf + readPos, sizeof(readBuf) - readPos);
+     
+        if(res <= 0)
+            return;
 
-    char buf[1024];
-    m_proxy->m_source->readLine(buf, sizeof(buf));
-    update = QWhereaboutsUpdate::fromNmea(QByteArray(buf), &fixStatus, &numSatellites);
-    if (!update.isNull())
+        readPos += res;
+        if(readBuf[readPos - 1] != '\n')
+            return;
+
+        QByteArray line(readBuf, readPos);
+        update = QWhereaboutsUpdate::fromNmea(line, &fixStatus, &numSatellites);
+        readPos = 0;
+        if (update.isNull())
+            continue;
+        
         m_proxy->notifyNewUpdate(&update, fixStatus, numSatellites);
+
+        // Blink with led until some satellites are shown to user
+        if(numSatellites >= 0) {        // -1 means that no satellite info was in this nmea
+            if(ledOn) {
+                qLedSetPower(qLedAttrBrightness(), "0");
+                ledOn = false;
+            }
+            else if(fixStatus != QWhereaboutsUpdate::FixAcquired) {
+                qLedSetPower(qLedAttrBrightness(), qLedMaxBrightness());
+                ledOn = true;
+            }
+        }
+    }
 }
 
 
@@ -546,7 +580,7 @@ void QNmeaWhereabouts::requestUpdate()
 */
 void QNmeaWhereabouts::newDataAvailable()
 {
-    if (d->m_source && !d->m_source->atEnd())
+    if (d->m_source)
         d->readyRead();
 }
 

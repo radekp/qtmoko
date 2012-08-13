@@ -3,7 +3,6 @@
 ** This file is part of the Qt Extended Opensource Package.
 **
 ** Copyright (C) 2009 Trolltech ASA.
-** Copyright (C) 2012 Radek Polak
 **
 ** Contact: Qt Extended Information (info@qtextended.org)
 **
@@ -18,26 +17,29 @@
 **
 ****************************************************************************/
 
-#ifndef NEOGPSPLUGIN_H
-#define NEOGPSPLUGIN_H
+#ifndef DIALUPPLUGIN_H
+#define DIALUPPLUGIN_H
 
-#include <QSocketNotifier>
-#include <QWhereaboutsPlugin>
-#include <QProcess>
+#include <qtopianetworkinterface.h>
+#include <qtopiaglobal.h>
 
-class QWhereabouts;
+#include <QByteArray>
+#include <QList>
+#include <QPointer>
 
-class QTOPIA_PLUGIN_EXPORT NeoGpsPlugin : public QWhereaboutsPlugin
+#include "hsointerface.h"
+
+class QTOPIA_PLUGIN_EXPORT Option3gPlugin : public QtopiaNetworkPlugin
 {
-    Q_OBJECT
 public:
-    explicit NeoGpsPlugin(QObject * parent = 0);
-    ~NeoGpsPlugin();
+    Option3gPlugin();
+    virtual ~Option3gPlugin();
 
-    virtual QWhereabouts *create(const QString & source);
-
+    virtual QPointer<QtopiaNetworkInterface> network( const QString& confFile);
+    virtual QtopiaNetwork::Type type() const;
+    virtual QByteArray customID() const;
 private:
-    QProcess *reader;
+    QList<QPointer<QtopiaNetworkInterface> > instances;
 };
 
 #endif
