@@ -3,7 +3,6 @@
 ** This file is part of the Qt Extended Opensource Package.
 **
 ** Copyright (C) 2009 Trolltech ASA.
-** Copyright (C) 2012 Radek Polak
 **
 ** Contact: Qt Extended Information (info@qtextended.org)
 **
@@ -17,27 +16,35 @@
 **
 **
 ****************************************************************************/
+#include "dialstring.h"
 
-#ifndef NEOGPSPLUGIN_H
-#define NEOGPSPLUGIN_H
+/*
+   DialUp::dialString() returns the dialstring for the internal
+   modem. The dial string initializes the modem for any kind of
+   dialup connection. It is likely that this string needs to be
+   modified in order to get a connection running.
 
-#include <QSocketNotifier>
-#include <QWhereaboutsPlugin>
-#include <QProcess>
+   The returned string must provide a QString parameter slot for
+   the APN.
+ */
 
-class QWhereabouts;
 
-class QTOPIA_PLUGIN_EXPORT NeoGpsPlugin : public QWhereaboutsPlugin
+QString GPRSDialString()
 {
-    Q_OBJECT
-public:
-    explicit NeoGpsPlugin(QObject * parent = 0);
-    ~NeoGpsPlugin();
+    QString dialstring;
+//Generic -> tested with Wavecom FASTRACK and Ericsson T39m
+    dialstring = "AT+CGDCONT=1,\"IP\",\"%1\" OK "
+           "AT+CGATT=1 OK "
+           "ATD*99***1#";
+    return dialstring;
+}
 
-    virtual QWhereabouts *create(const QString & source);
+QString GPRSDisconnectString()
+{
+    QString result;
+    result = "\"\" \\d+++\\d\\c OK\nAT+CGATT=0 OK";
 
-private:
-    QProcess *reader;
-};
+    return result;
 
-#endif
+}
+

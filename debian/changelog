@@ -1,3 +1,14 @@
+qtmoko (47-1) unstable; urgency=low
+
+  * fixed GPS on gta04
+  * implemented 3G network plugin for gta04
+  * new LED api
+  * using power led for indicating low battery
+  * fixed undimming in qmplayer
+  * implemented fullscreen in NeronGPS
+  
+ -- Radek Polak <psonek2@seznam.cz>  Mon, 13 Aug 2012 23:40:00 +0100
+
 qtmoko (46-1) unstable; urgency=low
 
   * checking for new SMS after resume (Neil Jerram)

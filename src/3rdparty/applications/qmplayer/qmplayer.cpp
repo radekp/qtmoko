@@ -1773,12 +1773,15 @@ void QMplayerFullscreenPlay::mouseMoveEvent(QMouseEvent * e)
     lastX = e->x();
     lastY = e->y();
 
-    if(deltaY < -radius)
-        hide();
-    else if(deltaY > radius)
+    if(deltaY > radius || deltaY < -radius)
     {
         if(dim == 0 || dim == 1)
         {
+            if(deltaY < -radius) {       // slide up
+                dim = 1;                 // undim
+                hide();                  // leave fullscreen
+            }
+
 #ifdef QTOPIA
             QtopiaServiceRequest e1("QtopiaPowerManager", "setBacklight(int)");
             e1 << (dim ? -1 : 0);
@@ -1786,7 +1789,6 @@ void QMplayerFullscreenPlay::mouseMoveEvent(QMouseEvent * e)
 #endif
             dim = (dim > 0 ? -2 : 2);
         }
-
     }
     else if(deltaX > radius && !adjustingVolume)
         adjustVolume();

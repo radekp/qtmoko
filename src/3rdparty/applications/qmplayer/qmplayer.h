@@ -86,7 +86,7 @@ private:
     int downY;
     int lastX;
     int lastY;
-    int dim;
+    int dim;                    // 1 backlight off, 0 backlight on, -2 backlight on (just undimmed by sliding), 2 screen off (just dimmed by sliding)
     bool adjustingVolume;
 };
 

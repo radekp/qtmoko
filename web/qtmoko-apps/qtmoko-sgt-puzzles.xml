@@ -1,0 +1,9 @@
+<package
+      name="qtmoko-sgt-puzzles"
+      version="45-1"
+      title="Sgt puzzles"
+      summary="Simon Tatham's Portable Puzzle Collection"
+      category="games"
+      >  
+</package>
+  
