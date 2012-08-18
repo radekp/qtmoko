@@ -59,11 +59,7 @@ void QNmeaRealTimeReader::sourceReadyRead()
         QByteArray line(readBuf, readPos);
         update = QWhereaboutsUpdate::fromNmea(line, &fixStatus, &numSatellites);
         readPos = 0;
-        if (update.isNull())
-            continue;
         
-        m_proxy->notifyNewUpdate(&update, fixStatus, numSatellites);
-
         // Blink with led until some satellites are shown to user
         if(numSatellites >= 0) {        // -1 means that no satellite info was in this nmea
             if(ledOn) {
@@ -75,6 +71,11 @@ void QNmeaRealTimeReader::sourceReadyRead()
                 ledOn = true;
             }
         }
+
+        if (update.isNull())
+            continue;
+        
+        m_proxy->notifyNewUpdate(&update, fixStatus, numSatellites);
     }
 }
 
