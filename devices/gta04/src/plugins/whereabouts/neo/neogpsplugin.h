@@ -3,6 +3,7 @@
 ** This file is part of the Qt Extended Opensource Package.
 **
 ** Copyright (C) 2009 Trolltech ASA.
+** Copyright (C) 2012 Radek Polak
 **
 ** Contact: Qt Extended Information (info@qtextended.org)
 **
@@ -22,6 +23,7 @@
 
 #include <QSocketNotifier>
 #include <QWhereaboutsPlugin>
+#include <QProcess>
 
 class QWhereabouts;
 
@@ -29,18 +31,13 @@ class QTOPIA_PLUGIN_EXPORT NeoGpsPlugin : public QWhereaboutsPlugin
 {
     Q_OBJECT
 public:
-    explicit NeoGpsPlugin(QObject *parent = 0);
+    explicit NeoGpsPlugin(QObject * parent = 0);
     ~NeoGpsPlugin();
 
-    virtual QWhereabouts *create(const QString &source);
+    virtual QWhereabouts *create(const QString & source);
 
 private:
-    int hasData;                // 1, we have data from serial port, 0 serial does not produce any data, -1 means that 3s timeout not finished yet
-    QSocketNotifier *notifier;
-
-private slots:
-    void newDataAvailable();
-    void hasDataTimeout();
+    QProcess *reader;
 };
 
 #endif

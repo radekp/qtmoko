@@ -3,6 +3,7 @@
 ** This file is part of the Qt Extended Opensource Package.
 **
 ** Copyright (C) 2009 Trolltech ASA.
+** Copyright (C) 2012 Radek Polak
 **
 ** Contact: Qt Extended Information (info@qtextended.org)
 **
@@ -29,13 +30,11 @@
 #include <QMessageBox>
 #include <qtopialog.h>
 
-#define NMEA_GPS_DEVICE "/dev/ttyO1"
 /*
- This plugin only works for Neo neo Freerunner
+ This plugin only works for Goldelico's GTA04
 */
-NeoGpsPlugin::NeoGpsPlugin(QObject *parent)
-    : QWhereaboutsPlugin(parent)
-    , hasData(-1)
+NeoGpsPlugin::NeoGpsPlugin(QObject * parent)
+:  QWhereaboutsPlugin(parent)
 {
     qLog(Hardware) << __PRETTY_FUNCTION__;
     system("/opt/qtmoko/bin/gps-poweron.sh");
@@ -43,65 +42,40 @@ NeoGpsPlugin::NeoGpsPlugin(QObject *parent)
 
 NeoGpsPlugin::~NeoGpsPlugin()
 {
-    if(hasData)
-        system("/opt/qtmoko/bin/gps-poweroff.sh");
+    if(reader) {
+        reader->terminate();
+        if(!reader->waitForFinished(1000))
+            reader->kill();
+    }
+    
+    system("/opt/qtmoko/bin/gps-poweroff.sh");
 }
 
-QWhereabouts *NeoGpsPlugin::create(const QString &source)
+QWhereabouts *NeoGpsPlugin::create(const QString &)
 {
     qLog(Hardware) << __PRETTY_FUNCTION__;
-    QString path = source;
-    if (path.isEmpty()) {
-#ifdef NMEA_GPS_DEVICE
-        path = NMEA_GPS_DEVICE;
-#endif
-        QSettings cfg("Trolltech",  "Whereabouts");
-        cfg.beginGroup("Hardware");
-        path = cfg.value("Device", path).toString();
-    }
 
-    QFile *sourceFile = new QFile(path, this);
-    if (!sourceFile->open(QIODevice::ReadOnly)) {
-        QMessageBox::warning( 0,tr("Mappingdemo"),tr("Cannot open GPS device at %1").arg(path),
-            QMessageBox::Ok,  QMessageBox::Ok);
-        qWarning() << "Cannot open GPS device at" << path;
-        delete sourceFile;
+    reader = new QProcess(this);
+    reader->start("cat", QStringList() << "/dev/ttyO1", QIODevice::ReadWrite);
+
+    if (!reader->waitForStarted()) {
+        qWarning() << "couldnt start cat /dev/ttyO1: " + reader->errorString();
+        QMessageBox::warning(0, tr("GPS"),
+                             tr("Cannot open GPS device at /dev/ttyO1"),
+                             QMessageBox::Ok, QMessageBox::Ok);
+        delete reader;
+        reader = 0;
         return 0;
     }
 
-    QNmeaWhereabouts *whereabouts = new QNmeaWhereabouts(QNmeaWhereabouts::RealTimeMode, this);
-    whereabouts->setSourceDevice(sourceFile);
+    QNmeaWhereabouts *whereabouts =
+        new QNmeaWhereabouts(QNmeaWhereabouts::RealTimeMode, this);
+    whereabouts->setSourceDevice(reader);
 
-    // QFile does not emit readyRead(), so we must call
-    // newDataAvailable() when necessary
-    notifier = new QSocketNotifier(sourceFile->handle(), QSocketNotifier::Read, this);
-    connect(notifier, SIGNAL(activated(int)),
-              whereabouts, SLOT(newDataAvailable()));
+    if (!reader->waitForReadyRead(3000))
+        system("/opt/qtmoko/bin/gps-poweron.sh");
 
-    // Check after 3s if we had any data on the port
-    connect(notifier, SIGNAL(activated(int)),
-              this, SLOT(newDataAvailable()));
-
-    QTimer::singleShot(3000, this, SLOT(hasDataTimeout()));
-              
     return whereabouts;
-}
-
-void NeoGpsPlugin::newDataAvailable()
-{
-    hasData = 1;    
-    disconnect(notifier, SIGNAL(activated(int)),
-               this, SLOT(newDataAvailable()));
-}
-
-void NeoGpsPlugin::hasDataTimeout()
-{
-    if(hasData == 1)
-        return;
-
-    hasData = 0;
-    system("/opt/qtmoko/bin/gps-poweron.sh");
-    QTimer::singleShot(3000, this, SLOT(hasDataTimeout()));
 }
 
 QTOPIA_EXPORT_PLUGIN(NeoGpsPlugin)

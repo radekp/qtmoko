@@ -43,6 +43,12 @@ NeoGpsPlugin::NeoGpsPlugin(QObject *parent)
 
 NeoGpsPlugin::~NeoGpsPlugin()
 {
+    if(reader) {
+        reader->terminate();
+        if(!reader->waitForFinished(1000))
+            reader->kill();
+    }
+    
     system("/opt/qtmoko/bin/gps-poweroff.sh");
 }
 
@@ -59,23 +65,22 @@ QWhereabouts *NeoGpsPlugin::create(const QString &source)
         path = cfg.value("Device", path).toString();
     }
 
-    QFile *sourceFile = new QFile(path, this);
-    if (!sourceFile->open(QIODevice::ReadOnly)) {
-        QMessageBox::warning( 0,tr("Mappingdemo"),tr("Cannot open GPS device at %1").arg(path),
-            QMessageBox::Ok,  QMessageBox::Ok);
-        qWarning() << "Cannot open GPS device at" << path;
-        delete sourceFile;
+    reader = new QProcess(this);
+    reader->start("cat", QStringList() << "/dev/ttySAC1", QIODevice::ReadWrite);
+
+    if (!reader->waitForStarted()) {
+        qWarning() << "couldnt start cat /dev/ttySAC1: " + reader->errorString();
+        QMessageBox::warning(0, tr("GPS"),
+                             tr("Cannot open GPS device at /dev/ttySAC1"),
+                             QMessageBox::Ok, QMessageBox::Ok);
+        delete reader;
+        reader = 0;
         return 0;
     }
 
-    QNmeaWhereabouts *whereabouts = new QNmeaWhereabouts(QNmeaWhereabouts::RealTimeMode, this);
-    whereabouts->setSourceDevice(sourceFile);
-
-    // QFile does not emit readyRead(), so we must call
-    // newDataAvailable() when necessary
-    QSocketNotifier *notifier = new QSocketNotifier(sourceFile->handle(), QSocketNotifier::Read, this);
-    connect(notifier, SIGNAL(activated(int)),
-              whereabouts, SLOT(newDataAvailable()));
+    QNmeaWhereabouts *whereabouts =
+        new QNmeaWhereabouts(QNmeaWhereabouts::RealTimeMode, this);
+    whereabouts->setSourceDevice(reader);
 
     return whereabouts;
 }

@@ -17,25 +17,24 @@
 **
 ****************************************************************************/
 
-#ifndef NEOGPSPLUGIN_H
-#define NEOGPSPLUGIN_H
+#ifndef NETWORK_H
+#define NETWORK_H
 
-#include <QProcess>
-#include <QWhereaboutsPlugin>
+#include <QWidget>
+#include <qtopianetworkinterface.h>
 
-class QWhereabouts;
-
-class QTOPIA_PLUGIN_EXPORT NeoGpsPlugin : public QWhereaboutsPlugin
+class DialingPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit NeoGpsPlugin(QObject *parent = 0);
-    ~NeoGpsPlugin();
+    DialingPage( const QtopiaNetworkProperties cfg, QWidget* parent = 0, Qt::WFlags flags = 0 );
+    virtual ~DialingPage();
 
-    virtual QWhereabouts *create(const QString &source);
+    QtopiaNetworkProperties properties();
+private slots:
 
 private:
-    QProcess *reader;
+    void init();
+    void readConfig( const QtopiaNetworkProperties& prop);
 };
-
 #endif

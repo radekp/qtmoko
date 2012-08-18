@@ -50,6 +50,7 @@ private:
      QValueSpaceObject vsoNeoHardware;
      QtopiaIpcAdaptor *adaptor;
      QTcpSocket *ueventSocket;
+     QValueSpaceObject batteryVso;
 
      void findHardwareVersion();
      QtopiaIpcAdaptor *audioMgr;

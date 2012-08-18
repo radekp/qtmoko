@@ -46,6 +46,7 @@ public:
     virtual bool wake();
 private:
     QProcess resumeScript;
+    QValueSpaceObject batteryVso;
 };
 
 QTOPIA_DEMAND_TASK(NeoSuspend, NeoSuspend);
@@ -53,7 +54,21 @@ QTOPIA_TASK_PROVIDES(NeoSuspend, SystemSuspendHandler);
 
 NeoSuspend::NeoSuspend()
     : resumeScript(this)
+    , batteryVso("/UI/Battery", this)
 {
+}
+
+static QByteArray readFile(const char *path)
+{
+    QFile f(path);
+    if (!f.open(QIODevice::ReadOnly)) {
+        qLog(PowerManagement) << "file open failed" << path << ":" <<
+            f.errorString();
+        return QByteArray();
+    }
+    QByteArray content = f.readAll();
+    f.close();
+    return content;
 }
 
 bool NeoSuspend::canSuspend() const
@@ -90,6 +105,11 @@ bool NeoSuspend::suspend()
 
 bool NeoSuspend::wake()
 {
+    QString currentNowStr =
+        readFile("/sys/class/power_supply/battery/current_now");
+    int currentNow = currentNowStr.toInt() / 1000;
+    batteryVso.setAttribute("current_now_in_suspend", QString::number(currentNow));
+    
 #ifdef Q_WS_QWS
     QWSServer::instance()->refresh();
 #endif

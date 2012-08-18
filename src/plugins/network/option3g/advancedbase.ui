@@ -1,0 +1,213 @@
+<ui version="4.0" >
+ <class>AdvancedBase</class>
+ <widget class="QWidget" name="AdvancedBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>227</width>
+    <height>502</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>5</number>
+   </property>
+   <property name="spacing" >
+    <number>4</number>
+   </property>
+   <item>
+    <widget class="QCheckBox" name="routing" >
+     <property name="text" >
+      <string>Auto Routing</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="external_box" >
+     <property name="text" >
+      <string>External serial device:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="device" />
+   </item>
+   <item>
+    <widget class="QLabel" name="atdial_label" >
+     <property name="text" >
+      <string>AT dial command:</string>
+     </property>
+     <property name="buddy" >
+      <cstring>atdial</cstring>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="atdial" >
+     <property name="editable" >
+      <bool>true</bool>
+     </property>
+     <item>
+      <property name="text" >
+       <string>ATDT</string>
+      </property>
+     </item>
+     <item>
+      <property name="text" >
+       <string>ATDP</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>2</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="speed_label" >
+       <property name="text" >
+        <string>Speed:</string>
+       </property>
+       <property name="buddy" >
+        <cstring>speed</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="speed" >
+       <property name="editable" >
+        <bool>false</bool>
+       </property>
+       <property name="currentIndex" >
+        <number>5</number>
+       </property>
+       <item>
+        <property name="text" >
+         <string>4800</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>9600</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>19200</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>38400</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>57600</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>115200</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>2</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="flow_label" >
+       <property name="text" >
+        <string>Flow ctrl:</string>
+       </property>
+       <property name="buddy" >
+        <cstring>flow</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="flow" >
+       <property name="text" >
+        <string>Hardware</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>2</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="connectDelay_label" >
+       <property name="text" >
+        <string>Wait time:</string>
+       </property>
+       <property name="buddy" >
+        <cstring>connectDelay</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="connectDelay" >
+       <property name="suffix" >
+        <string comment="seconds" >s</string>
+       </property>
+       <property name="maximum" >
+        <number>180</number>
+       </property>
+       <property name="minimum" >
+        <number>1</number>
+       </property>
+       <property name="value" >
+        <number>6</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="silence" >
+     <property name="text" >
+      <string>Silent dial tone</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>2</width>
+       <height>151</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

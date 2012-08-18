@@ -17,25 +17,29 @@
 **
 ****************************************************************************/
 
-#ifndef NEOGPSPLUGIN_H
-#define NEOGPSPLUGIN_H
+#ifndef DIALUPPLUGIN_H
+#define DIALUPPLUGIN_H
 
-#include <QProcess>
-#include <QWhereaboutsPlugin>
+#include <qtopianetworkinterface.h>
+#include <qtopiaglobal.h>
 
-class QWhereabouts;
+#include <QByteArray>
+#include <QList>
+#include <QPointer>
 
-class QTOPIA_PLUGIN_EXPORT NeoGpsPlugin : public QWhereaboutsPlugin
+#include "hsointerface.h"
+
+class QTOPIA_PLUGIN_EXPORT Option3gPlugin : public QtopiaNetworkPlugin
 {
-    Q_OBJECT
 public:
-    explicit NeoGpsPlugin(QObject *parent = 0);
-    ~NeoGpsPlugin();
+    Option3gPlugin();
+    virtual ~Option3gPlugin();
 
-    virtual QWhereabouts *create(const QString &source);
-
+    virtual QPointer<QtopiaNetworkInterface> network( const QString& confFile);
+    virtual QtopiaNetwork::Type type() const;
+    virtual QByteArray customID() const;
 private:
-    QProcess *reader;
+    QList<QPointer<QtopiaNetworkInterface> > instances;
 };
 
 #endif

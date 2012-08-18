@@ -1,0 +1,123 @@
+<ui version="4.0" >
+ <class>DialingBase</class>
+ <widget class="QWidget" name="DialingBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>284</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <property name="spacing" >
+    <number>5</number>
+   </property>
+   <property name="margin" >
+    <number>4</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label" >
+       <property name="text" >
+        <string>Timeout:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="timeout" >
+       <property name="specialValueText" >
+        <string comment="No timeout" >None</string>
+       </property>
+       <property name="suffix" >
+        <string comment="short for seconds" >s</string>
+       </property>
+       <property name="maximum" >
+        <number>3600</number>
+       </property>
+       <property name="singleStep" >
+        <number>30</number>
+       </property>
+       <property name="value" >
+        <number>120</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="usepeerdns" >
+     <property name="text" >
+      <string>Auto name server</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="dns_box" >
+     <property name="title" >
+      <string/>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <property name="margin" >
+       <number>8</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="dns1_label" >
+        <property name="text" >
+         <string>First DNS:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>dns1</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="dns1" />
+      </item>
+      <item>
+       <widget class="QLabel" name="dns2_label" >
+        <property name="text" >
+         <string>Second DNS:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>dns2</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="dns2" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>4</width>
+       <height>201</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

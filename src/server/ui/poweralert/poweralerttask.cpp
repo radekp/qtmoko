@@ -21,6 +21,7 @@
 #include "qabstractmessagebox.h"
 #include "alertservicetask.h"
 
+#include <qled.h>
 #include <QPowerStatus>
 #include <QSettings>
 
@@ -90,28 +91,32 @@ void PowerAlertDialogTask::powerChanged()
     if ( !powerstatus )
         return;
 
-    // Set Orange Diode on battery chargeing
-    QFile f("/sys/class/leds/gta02:orange:power/brightness");
-    if(f.open(QFile::WriteOnly)) {
-        f.write(powerstatus->batteryCharging() ? "255" : "0", 1);
-        f.close();
-    }
-
     QString str;
-    if(!powerstatus->batteryCharging()) {
-        QSettings cfg("Trolltech", "HardwareAccessories");
+    
+    // Set Orange Diode on battery chargeing
+    if(powerstatus->batteryCharging()) {
+        qLedSetPower(qLedAttrBrightness(), qLedMaxBrightness());
+    }
+    else {
         switch(powerstatus->batteryStatus()) {
             case QPowerStatus::VeryLow:
+            {
+                QSettings cfg("Trolltech", "HardwareAccessories");
                 str = tr( "Battery is running very low." );
                 timer.setInterval(cfg.value("PowerAlertDialog/DisplayPeriod", 300).toInt() * 1000,
                                   QtopiaTimer::PauseWhenInactive);
                 break;
+            }
             case QPowerStatus::Critical:
+            {
+                QSettings cfg("Trolltech", "HardwareAccessories");
                 str = tr( "Battery level is critical!\n"
                           "Please recharge now!" );
                 timer.setInterval(cfg.value("PowerAlertDialog/CriticalDisplayPeriod", 60).toInt() * 1000);
                 break;
+            }
             default:
+                qLedIndicatorLowPowerOff();
                 break;
         }
     }
@@ -125,8 +130,9 @@ void PowerAlertDialogTask::powerChanged()
     if(!str.isEmpty()) {
         box->setText("<qt>" + str + "</qt>");
 
-        Qtopia::soundAlarm();
-
+        //Qtopia::soundAlarm();
+        qLedIndicatorLowPowerOn();
+        
         timer.start();
         QtopiaApplication::showDialog( box );
     } else {
