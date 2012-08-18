@@ -122,6 +122,19 @@ int pos=0;
   return(buf);
 }
 
+static QByteArray readFile(const char *path)
+{
+    QFile f(path);
+    if (!f.open(QIODevice::ReadOnly)) {
+        qLog(PowerManagement) << "file open failed" << path << ":" <<
+            f.errorString();
+        return QByteArray();
+    }
+    QByteArray content = f.readAll();
+    f.close();
+    return content;
+}
+
 void NeoHardware::uevent()
 {
 #define UEVENT_BUFFER_SIZE 1024
@@ -154,6 +167,11 @@ char *value;
     value=findAttribute(buffer,readCount,"SWITCH_STATE=");
     qDebug()<<"headset change event, switch_state="<<value;
   }
+  
+    QString currentNowStr =
+        readFile("/sys/class/power_supply/battery/current_now");
+    int currentNow = currentNowStr.toInt() / 1000;
+    batteryVso.setAttribute("current_now", QString::number(currentNow));
 }
 
 void NeoHardware::findHardwareVersion()
@@ -228,26 +246,8 @@ void NeoHardware::shutdownRequested()
     QtopiaServerApplication::instance()->shutdown(QtopiaServerApplication::ShutdownSystem);
 }
 
-static QByteArray readFile(const char *path)
-{
-    QFile f(path);
-    if (!f.open(QIODevice::ReadOnly)) {
-        qLog(PowerManagement) << "file open failed" << path << ":" <<
-            f.errorString();
-        return QByteArray();
-    }
-    QByteArray content = f.readAll();
-    f.close();
-    return content;
-}
-
 bool NeoHardware::getCableStatus()
 {
-    QString currentNowStr =
-        readFile("/sys/class/power_supply/battery/current_now");
-    int currentNow = currentNowStr.toInt() / 1000;
-    batteryVso.setAttribute("current_now", QString::number(currentNow));
-    
     // These code from NeoBattery::isCharging()
     // Seems better than the origin method
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
