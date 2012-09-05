@@ -37,6 +37,7 @@
 
 #include <alsa/asoundlib.h>
 #include <QTimer>
+#include <QSocketNotifier>
 
 class NeoModemService;
 
@@ -70,16 +71,18 @@ public:
 
     void initialize();
     bool supportsAtCced();
-    QString decodeOperatorName(QString name);
 
 private:
     NeoCallProvider *neoCallProvider;
+    QFile inputEvent;
+    QSocketNotifier *inputNotifier;
     
 private slots:
     void sigq(const QString & msg);
     void reset();
     void suspend();
     void wake();
+    void handleInputEvent();
 };
 
 class NeoVibrateAccessory : public QVibrateAccessoryProvider

@@ -1,4 +1,4 @@
-/****************************************************************************
+/******************************************************+**********************
 **
 ** This file is part of the Qt Extended Opensource Package.
 **
@@ -40,8 +40,6 @@
     \sa QPhoneBook
     \ingroup telephony::modem
 */
-
-#define DEFAULT_CODEC "UCS2"
 
 // Fetch 10 entries at a time every half a second when in slow update mode.
 #define SLOW_UPDATE_TIMEOUT     500
@@ -161,13 +159,6 @@ QModemPhoneBook::QModemPhoneBook( QModemService *service )
     d->slowTimer->setSingleShot( true );
     QObject::connect( d->slowTimer, SIGNAL(timeout()),
                       this, SLOT(slowTimeout()) );
-
-    // Default to the "GSM" codec, and then query the actual codec.
-    //d->stringCodec = QAtUtils::codec( "GSM" );
-    //requestCharset();
-
-    d->stringCodec = QAtUtils::codec( DEFAULT_CODEC );
-    setCharset();
 }
 
 /*!
@@ -475,7 +466,7 @@ void QModemPhoneBook::sendQuery( QModemPhoneBookCache *cache )
     // Update the current storage name in the phone device.
     cache->selectOk = false;
     updateStorageName( cache->store, this, SLOT(selectDone(bool,QAtResult)) );
-
+    
     // Query the extents of the phone book, so we know what range to use.
     d->service->secondaryAtChat()->chat
         ( "AT+CPBR=?", this, SLOT(queryDone(bool,QAtResult)),
@@ -812,6 +803,7 @@ void QModemPhoneBook::readDone( bool ok, const QAtResult& result )
         } else {
             // Don't send it immediately: wait a bit to give other
             // parts of the system access to the AT handlers too.
+            setGsmCharset();
             d->pendingCommand = command;
             d->pendingStore = store;
             d->slowTimer->start( SLOW_UPDATE_TIMEOUT );
@@ -820,8 +812,8 @@ void QModemPhoneBook::readDone( bool ok, const QAtResult& result )
     } else {
 
         // The fetch has completed.
+        setGsmCharset();
         readFinished( cache );
-
     }
 }
 
@@ -933,6 +925,7 @@ void QModemPhoneBook::queryDone( bool ok, const QAtResult& result )
     QString command;
     command = "AT+CPBR=" + QString::number( first ) +
               "," + QString::number(last);
+    setUcs2Charset();
     d->service->secondaryAtChat()->chat
         ( command, this, SLOT(readDone(bool,QAtResult)),
           new QStoreUserData( store ) );
@@ -941,6 +934,7 @@ void QModemPhoneBook::queryDone( bool ok, const QAtResult& result )
 void QModemPhoneBook::slowTimeout()
 {
     if ( !d->pendingCommand.isEmpty() ) {
+        setUcs2Charset();
         d->service->secondaryAtChat()->chat
             ( d->pendingCommand, this, SLOT(readDone(bool,QAtResult)),
               new QStoreUserData( d->pendingStore ) );
@@ -970,10 +964,16 @@ void QModemPhoneBook::requestCharset()
         ( "AT+CSCS?", this, SLOT(cscsDone(bool,QAtResult)) );
 }
 
-void QModemPhoneBook::setCharset()
+void QModemPhoneBook::setUcs2Charset()
 {
-    d->service->secondaryAtChat()->chat
-        ( "AT+CSCS=\"" DEFAULT_CODEC "\"", this, SLOT(cscsSetDone(bool,QAtResult)) );
+    d->stringCodec = QAtUtils::codec( "UCS2" );    
+    d->service->secondaryAtChat()->chat( "AT+CSCS=\"UCS2\"" );
+}
+
+void QModemPhoneBook::setGsmCharset()
+{
+    d->stringCodec = QAtUtils::codec( "GSM" );
+    d->service->secondaryAtChat()->chat( "AT+CSCS=\"GSM\"" );
 }
 
 void QModemPhoneBook::requestStorages()

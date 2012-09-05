@@ -19,6 +19,7 @@
 
 #include "messagecontrol.h"
 #include "qabstractmessagebox.h"
+#include <qled.h>
 #include <qtopiapowermanager.h>
 #ifdef QTOPIA_CELL
 #include <qcommservicemanager.h>
@@ -218,6 +219,8 @@ void MessageControl::messageCountChanged()
     if (totalCount) {
         // Turn off screen saver so the new message notification will be visible
         QtopiaPowerManager::setActive(false);
+    } else {
+        qLedIndicatorNewSmsOff();       // no unread messages - stop blinking with SMS led
     }
 }
 

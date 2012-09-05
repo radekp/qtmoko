@@ -1,3 +1,35 @@
+qtmoko (48-1) unstable; urgency=low
+
+  * working alarm
+  * working USSD on gta04 (Stefan Rupp)
+  * handling of long USSD (Stefan Rupp)
+  * fixed sound in calls on A3 (Neil Jerram)
+  * better sound volume on A3 (Neil Jerram)
+  * make gsm location working (Neil Jerram)
+  * using /dev/input/incoming for leds signaling of SMS/call on gta04
+  * race free suspend on gta04
+  * updated mokofaen theme (Joif)
+  * custom tones for alarm - either ogg or wav
+  * added some alarm tones from android
+  * removed bundled atd
+  * not holding /dev/rtc0 anymore and hwclock now works
+  * alarm now vibrates after 60s to avoid getting shocked in the morning
+  * fixed bluetooth so that it now works again
+  * turing off bluetooth after startup to save power
+  * headset jack detection on gta04
+  * changes for 3.5 kernel on gta04
+  * turning of gps antena on gta04 during startup to save power
+  * computing average suspend current from charge_now
+  * removed init of bmp085 - 3.5 kernel handles this now
+  * added qReadFile and qWriteFile api
+  * using qReadFile and qWriteFile where possible
+  * RTC clock info in NeoControl
+  * QtMaze now vibrates even on gta04
+  * merged master and master_gta04 branches, master_gta04 is now obsolete
+  * debian now uses multipackage
+  
+ -- Radek Polak <psonek2@seznam.cz>  Wed, 05 Sep 2012 15:40:00 +0100
+
 qtmoko (47-1) unstable; urgency=low
 
   * fixed GPS on gta04

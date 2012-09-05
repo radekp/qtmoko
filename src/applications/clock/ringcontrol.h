@@ -41,6 +41,7 @@ public:
 
     void setSoundTimer( int off );
     void setVibrateTimers( int on, int off );
+    void setVibrateStartDelay( int secs );
 
     bool isActive();
 

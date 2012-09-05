@@ -37,8 +37,12 @@ QTOPIABASE_EXPORT const char *qLedAttrDelayOn();
 QTOPIABASE_EXPORT const char *qLedAttrDelayOff();
 QTOPIABASE_EXPORT const char *qLedMaxBrightness();
 
+QTOPIABASE_EXPORT bool qLedSetSms(const char *attr, const char *value);
 QTOPIABASE_EXPORT bool qLedSetCall(const char *attr, const char *value);
 QTOPIABASE_EXPORT bool qLedSetPower(const char *attr, const char *value);
+
+QTOPIABASE_EXPORT void qLedIndicatorNewSmsOn();
+QTOPIABASE_EXPORT void qLedIndicatorNewSmsOff();
 
 QTOPIABASE_EXPORT void qLedIndicatorMissedCallsOn();
 QTOPIABASE_EXPORT void qLedIndicatorMissedCallsOff();

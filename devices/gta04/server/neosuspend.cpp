@@ -48,9 +48,12 @@ public:
     virtual bool wake();
 private:
      QProcess resumeScript;
-     QValueSpaceObject batteryVso;
-     QDateTime suspendTime;
+    QValueSpaceObject batteryVso;
+    QDateTime suspendTime;
+    int chargeNowBeforeSuspend;
 };
+
+QByteArray wakeupCount;
 
 QTOPIA_DEMAND_TASK(NeoSuspend, NeoSuspend);
 QTOPIA_TASK_PROVIDES(NeoSuspend, SystemSuspendHandler);
@@ -63,6 +66,8 @@ NeoSuspend::NeoSuspend()
 
 bool NeoSuspend::canSuspend() const
 {
+    wakeupCount = Qtopia::readFile("/sys/power/wakeup_count");
+
 /*    QPowerSource src( QLatin1String("DefaultBattery") );
     return !src.charging();
 */
@@ -71,11 +76,18 @@ bool NeoSuspend::canSuspend() const
 
     if (!ok) {
         qLog(PowerManagement) <<
-            "Cant suspend, resume script is running, state=" << resumeScript.
-            state();
+            "Cant suspend, resume script is running, state=" <<
+            resumeScript.state();
     }
 
     return ok;
+}
+
+static int readChargeNow()
+{
+    QString chargeNowStr =
+        qReadFile("/sys/class/power_supply/bq27000-battery/charge_now");
+    return chargeNowStr.toInt();
 }
 
 bool NeoSuspend::suspend()
@@ -83,64 +95,43 @@ bool NeoSuspend::suspend()
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
 
     QProcess::execute("before-suspend.sh");
-
+    chargeNowBeforeSuspend = readChargeNow();
     suspendTime = QDateTime::currentDateTime();
-    
-    QFile powerStateFile("/sys/power/state");
-    if (!powerStateFile.
-        open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Truncate)) {
-        qWarning() << "File not opened";
-    } else {
-        QTextStream out(&powerStateFile);
-        out << "mem";
-        powerStateFile.close();
+
+    // Check if wakeup sources havent changed. If yes, then the write will fail
+    // For more info see:
+    // http://lists.goldelico.com/pipermail/gta04-owner/2012-July/002587.html
+    if (Qtopia::
+        writeFile("/sys/power/wakeup_count", wakeupCount.constData(),
+                  wakeupCount.count(), false, 0, 1)) {
+        qLog(PowerManagement) <<
+            "suspend aborted because by kernel wakeup sources";
+        return false;
     }
+
+    Qtopia::writeFile("/sys/power/state", "mem", 3, false);
     return true;
-}
-
-static void writeFile(const char * path, const char * content)
-{
-    QFile f(path);
-    if(!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        return;
-    }
-    f.write(content);
-    f.close();
-}
-
-static QByteArray readFile(const char *path)
-{
-    QFile f(path);
-    if (!f.open(QIODevice::ReadOnly)) {
-        qLog(PowerManagement) << "file open failed" << path << ":" <<
-            f.errorString();
-        return QByteArray();
-    }
-    QByteArray content = f.readAll();
-    f.close();
-    return content;
 }
 
 bool NeoSuspend::wake()
 {
+    // Average current in suspend computed from charge_now and suspend time
+    QDateTime now = QDateTime::currentDateTime();
+    int chargeNow = readChargeNow();
+    int secs = suspendTime.secsTo(now);
+    if (secs == 0)
+        secs++;
+    int avgCurrent = ((chargeNowBeforeSuspend - chargeNow) * 36) / (10 * secs); // (first_number - last_number) * 3600 / (last_timestamp - first_timestamp), but we want it in mA so 1000x less
+    batteryVso.setAttribute("avg_current_in_suspend",
+                            QString::number(avgCurrent));
+
     // Read and update current_now. It should contain the current in suspend
     QString currentNowStr =
-        readFile("/sys/class/power_supply/bq27000-battery/current_now");
+        qReadFile("/sys/class/power_supply/bq27000-battery/current_now");
     int currentNow = currentNowStr.toInt() / 1000;
-    batteryVso.setAttribute("current_now_in_suspend", QString::number(currentNow));
-    
-    // Check if resume was too fast. If yes, it might be GPS which wakes the
-    // device up and prevents suspend. As a workaround we try to turn the gps
-    // off. For more info see:
-    // http://lists.goldelico.com/pipermail/gta04-owner/2012-April/002184.html
-    QDateTime now = QDateTime::currentDateTime();
-    int secs = suspendTime.secsTo(now);
-    if(secs < 10) {
-        qLog(PowerManagement) << "Resume was too fast, trying to turn off gps";
-        writeFile("/sys/devices/virtual/gpio/gpio145/value", "0");
-        writeFile("/sys/devices/virtual/gpio/gpio145/value", "1");
-    }
-    
+    batteryVso.setAttribute("current_now_in_suspend",
+                            QString::number(currentNow));
+
 #ifdef Q_WS_QWS
     QWSServer::instance()->refresh();
 #endif

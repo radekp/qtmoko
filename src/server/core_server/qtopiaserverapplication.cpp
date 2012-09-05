@@ -1833,6 +1833,8 @@ QWidget *wrapValueSpace( QWidget* widget, const QMetaObject* them )
         QLatin1String("/System/ServerWidgets/")+ them->className(), widget );
     obj->setAttribute( QByteArray(), widget->metaObject()->className() );
 
+    QApplication::processEvents();
+    
     return widget;
 }
 

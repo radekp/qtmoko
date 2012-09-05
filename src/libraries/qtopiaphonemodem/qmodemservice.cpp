@@ -726,11 +726,6 @@ bool QModemService::supportsAtCced()
     return true;
 }
 
-QString QModemService::decodeOperatorName(QString name)
-{
-    return name;
-}
-
 void QModemService::phoneVsChanged()
 {
     int num = phoneVs.value("MissedCalls").toInt();

@@ -122,19 +122,6 @@ int pos=0;
   return(buf);
 }
 
-static QByteArray readFile(const char *path)
-{
-    QFile f(path);
-    if (!f.open(QIODevice::ReadOnly)) {
-        qLog(PowerManagement) << "file open failed" << path << ":" <<
-            f.errorString();
-        return QByteArray();
-    }
-    QByteArray content = f.readAll();
-    f.close();
-    return content;
-}
-
 void NeoHardware::uevent()
 {
 #define UEVENT_BUFFER_SIZE 1024
@@ -169,7 +156,7 @@ char *value;
   }
   
     QString currentNowStr =
-        readFile("/sys/class/power_supply/battery/current_now");
+        qReadFile("/sys/class/power_supply/battery/current_now");
     int currentNow = currentNowStr.toInt() / 1000;
     batteryVso.setAttribute("current_now", QString::number(currentNow));
 }

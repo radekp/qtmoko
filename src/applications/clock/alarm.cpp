@@ -31,6 +31,7 @@
 #include <QDateTimeEdit>
 #include <QSoftMenuBar>
 #include <QKeyEvent>
+#include <QDocumentSelectorDialog>
 
 #ifdef Q_WS_X11
 #include <qcopchannel_x11.h>
@@ -132,6 +133,13 @@ Alarm::Alarm( QWidget * parent, Qt::WFlags f )
     int m = cConfig.value( "Minute", 0 ).toInt();
     int h = cConfig.value( "Hour", 7 ).toInt();
     snooze = cConfig.value( "Snooze", 0 ).toInt();
+    
+    cConfig.endGroup();
+    cConfig.beginGroup( "Ringtone" );
+    toneButton->setText(cConfig.value("Name", "alarm.wav").toString());
+    QVariant fileName = cConfig.value("FileName");
+    if(fileName.isValid())
+        alarmt->setSound(fileName.toString());
 
     if (ampm)
         alarmTimeEdit->setDisplayFormat("h:mm ap");
@@ -143,6 +151,7 @@ Alarm::Alarm( QWidget * parent, Qt::WFlags f )
 
     connect( alarmTimeEdit, SIGNAL(editingFinished()), this, SLOT(applyDailyAlarm())) ;
     connect(snoozeTimeSpinner, SIGNAL(valueChanged(int)), this, SLOT(applySnooze(int)));
+    connect(toneButton, SIGNAL(clicked()), this, SLOT(selectTone()));
 
     alarmDaysEdit->installEventFilter(this);
 
@@ -171,12 +180,11 @@ void Alarm::triggerAlarm(const QDateTime &when, int type)
     if ( type == magic_daily ) {
         // Make sure the screen comes on
         QtopiaApplication::setPowerConstraint(QtopiaApplication::DisableLightOff);
-        // but goes off again in the right number of seconds
-        QtopiaApplication::setPowerConstraint(QtopiaApplication::Enable);
         QString ts = QTimeString::localHM(theTime);
         QString msg = ts + "\n" + tr( "(Daily Alarm)" );
-        alarmt->setRepeat(20);
-        alarmt->start();
+        alarmt->setVibrateStartDelay(60);
+        alarmt->setRepeat(120);
+        QTimer::singleShot(5000, alarmt, SLOT(start()));
         if ( !alarmDlg ) {
             alarmDlg = new AlarmDialog(snooze, this);
             connect(alarmDlg, SIGNAL(snooze()), this, SLOT(setSnooze()));
@@ -221,6 +229,7 @@ void Alarm::triggerAlarm(const QDateTime &when, int type)
             alarmDlg->showMaximized();
             alarmDlg->exec();
             alarmt->stop();
+            QtopiaApplication::setPowerConstraint(QtopiaApplication::Enable);
         }
     }
 }
@@ -425,6 +434,38 @@ void Alarm::setAlarm(QDateTime when, bool addAlarm)
         Qtopia::addAlarm(when, "QPE/Application/clock",
                          "alarm(QDateTime,int)", magic_daily);
     }
+}
+
+void Alarm::selectTone()
+{
+    QString dlgcaption = tr("Select Ringtone");
+
+    QDocumentSelectorDialog *dlg = new QDocumentSelectorDialog(this);
+    dlg->setModal(true);
+    dlg->setWindowTitle(dlgcaption);
+    dlg->setWindowState( dlg->windowState() | Qt::WindowMaximized );
+    dlg->setSelectPermission( QDrmRights::Play );
+    dlg->setMandatoryPermissions( QDrmRights::Play | QDrmRights::Automated );
+
+    QContentFilter audiofilter(QContent::Document);
+    audiofilter &= QContentFilter( QContentFilter::MimeType, QLatin1String( "audio/x-wav" ) );
+    audiofilter |= QContentFilter( QContentFilter::MimeType, QLatin1String( "audio/ogg" ) );
+
+    dlg->setFilter( audiofilter );
+    dlg->disableOptions( QDocumentSelector::ContextMenu );
+
+    if (!QtopiaApplication::execDialog(dlg))
+        return;
+
+    QContent content = dlg->selectedDocument();
+    toneButton->setText(content.name());
+    alarmt->setSound(content.fileName());
+    
+    QSettings config("Trolltech","Clock");
+    config.beginGroup( "Ringtone" );
+    config.setValue( "Name", content.name() );
+    config.setValue( "FileName", content.fileName() );
+    config.sync();
 }
 
 #include "alarm.moc"

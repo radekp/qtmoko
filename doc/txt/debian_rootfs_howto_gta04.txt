@@ -133,8 +133,8 @@ Step 4.1 - stable device nodes for UMTS
   We will use udev to create stable symlinks for us:
 
 cd /media/card/etc/udev/rules.d
-wget https://raw.github.com/radekp/linux-2.6/v3.3-gta04-qtmoko-v45/GTA04/udev-rules/hso.rules
-wget https://raw.github.com/radekp/linux-2.6/v3.3-gta04-qtmoko-v45/GTA04/udev-rules/input.rules
+wget https://raw.github.com/radekp/linux-2.6/v3.5-gta04-qtmoko-v48/GTA04/udev-rules/hso.rules
+wget https://raw.github.com/radekp/linux-2.6/v3.5-gta04-qtmoko-v48/GTA04/udev-rules/input.rules
 
 Step 4.2 - charging udev rules
 ==============================
@@ -328,11 +328,11 @@ Step 9.1 - Linux kernel cross compiling - not using anymore for releases
 
 * If you want to cross compile kernel and make uboot image on PC:
 
-make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm gta04_qtmoko_defconfig
-make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm uImage
-make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm modules
-make CROSS_COMPILE=/opt/toolchains/arm920t-eabi/bin/arm-linux- ARCH=arm modules_install INSTALL_MOD_PATH=GTA04
-find  GTA04/lib/modules -name *.ko -exec /opt/toolchains/arm920t-eabi/bin/arm-linux-strip -R .not -R .comment --strip-unneeded {} \;
+make CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- ARCH=arm gta04_qtmoko_defconfig
+make CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- ARCH=arm uImage
+make CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- ARCH=arm modules
+make CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- ARCH=arm modules_install INSTALL_MOD_PATH=GTA04
+find  GTA04/lib/modules -name *.ko -exec /usr/bin/arm-linux-gnueabi-strip -R .not -R .comment --strip-unneeded {} \;
 
 Step 9.2 - Setup bluetooth uarts
 ================================
@@ -340,7 +340,7 @@ Step 9.2 - Setup bluetooth uarts
 * Bluetooth is on /dev/ttyO0 serial port and we need to run hciattach to have
   bluetooth working. For more info see http://projects.goldelico.com/p/gta04-kernel/page/Wireless/
 
-echo "-s 3000000 /dev/ttyO0 any 3000000 flow" > /media/card/etc/bluetooth/uart
+echo "-s 3000000 /dev/ttyO0 any 3000000" > /media/card/etc/bluetooth/uart
 
 
 Step 9.3 - Install libts from lindi

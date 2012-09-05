@@ -14,7 +14,7 @@ if [ ! "$(pidof udevd)" ]; then
 fi
 
 # Saves power in suspend
-rfkill block bluetooth &
+rfkill block gps &
 
 # Power on modem on GTA04A4 and higher
 modem-poweron.sh
@@ -28,11 +28,7 @@ echo 0 > /sys/class/leds/gta04\:green\:power/brightness
 stty -F /dev/tty1 -echo
 mkdir -p /var/cache/apt/archives/partial
 
-atd /var/spool/at
-
 touch /tmp/restart-qtopia
 while [ -e /tmp/restart-qtopia ]; do
     qpe
 done
-
-killall -q atd

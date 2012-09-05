@@ -15,7 +15,7 @@
       expr:@/UI/Pressure/mb . "mb "
     </text>
     <text name="current_now" size="5" bold="yes" rect="2%,0,48%x12pt" align="left,vcenter" color="#ffffff" outline="#000000" transient="yes" >
-      expr:@/UI/Battery/current_now . "/". @/UI/Battery/current_now_in_suspend . "mA"
+      expr:@/UI/Battery/current_now . "/" . @/UI/Battery/avg_current_in_suspend . "/" . @/UI/Battery/current_now_in_suspend . "mA"
     </text>
     </rect>
     <layout rect="0,20%,0x45pt" align="hcenter">

@@ -81,7 +81,8 @@ private slots:
     void fdModifyDone( bool ok, const QAtResult& result );
     void selectDone( bool ok, const QAtResult& result );
     void requestCharset();
-    void setCharset();
+    void setGsmCharset();
+    void setUcs2Charset();
     void cpbsDone( bool ok, const QAtResult& result );
     void requestStorages();
 

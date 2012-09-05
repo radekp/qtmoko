@@ -78,24 +78,12 @@ static int openNetlink()
     return fd;
 }
 
-static QByteArray readFile(const char *path)
-{
-    QFile f(path);
-    if (!f.open(QIODevice::ReadOnly)) {
-        qLog(PowerManagement) << "file open failed" << path << ":" <<
-            f.errorString();
-        return QByteArray();
-    }
-    QByteArray content = f.readAll();
-    f.close();
-    return content;
-}
-
 NeoHardware::NeoHardware()
 :
 ac(QPowerSource::Wall, "PrimaryAC", this)
     , battery(QPowerSource::Battery, "NeoBattery", this)
     , batteryVso("/UI/Battery", this)
+    , vsoPortableHandsfree("/Hardware/Accessories/PortableHandsfree")
     , ueventSocket(this)
     , timer(this)
 {
@@ -114,6 +102,12 @@ ac(QPowerSource::Wall, "PrimaryAC", this)
     timer.start(30 * 1000);
     
     QTimer::singleShot(1, this, SLOT(updateStatus()));
+    
+    adaptor = new QtopiaIpcAdaptor("QPE/NeoHardware");
+    audioMgr = new QtopiaIpcAdaptor("QPE/AudioStateManager", this);
+
+    QtopiaIpcAdaptor::connect(adaptor, MESSAGE(headphonesInserted(bool)),
+                              this, SLOT(headphonesInserted(bool)));
 }
 
 NeoHardware::~NeoHardware()
@@ -122,7 +116,7 @@ NeoHardware::~NeoHardware()
 
 void NeoHardware::updateStatus()
 {
-    QByteArray twlVbus = readFile("/sys/bus/platform/devices/twl4030_usb/vbus");
+    QByteArray twlVbus = qReadFile("/sys/bus/platform/devices/twl4030_usb/vbus");
     if (twlVbus.contains("on")) {
         ac.setAvailability(QPowerSource::Available);
     } else {
@@ -130,9 +124,9 @@ void NeoHardware::updateStatus()
     }
 
     QString chargingStr =
-        readFile("/sys/class/power_supply/bq27000-battery/status");
+        qReadFile("/sys/class/power_supply/bq27000-battery/status");
     QString capacityStr =
-        readFile("/sys/class/power_supply/bq27000-battery/capacity");
+        qReadFile("/sys/class/power_supply/bq27000-battery/capacity");
     int capacity = capacityStr.toInt();
 
     battery.setCharging(chargingStr.contains("Charging"));
@@ -143,13 +137,13 @@ void NeoHardware::updateStatus()
 
     if (chargingStr.contains("Discharging")) {
         QString time =
-            readFile
+            qReadFile
             ("/sys/class/power_supply/bq27000-battery/time_to_empty_now");
         battery.setTimeRemaining(time.toInt() / 60);
     }
     
     QString currentNowStr =
-        readFile("/sys/class/power_supply/bq27000-battery/current_now");
+        qReadFile("/sys/class/power_supply/bq27000-battery/current_now");
     int currentNow = currentNowStr.toInt() / 1000;
     batteryVso.setAttribute("current_now", QString::number(currentNow));
 }
@@ -174,4 +168,18 @@ void NeoHardware::shutdownRequested()
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
     QtopiaServerApplication::instance()->
         shutdown(QtopiaServerApplication::ShutdownSystem);
+}
+
+void NeoHardware::headphonesInserted(bool b)
+{
+    qLog(Hardware)<< __PRETTY_FUNCTION__ << b;
+    vsoPortableHandsfree.setAttribute("Present", b);
+    vsoPortableHandsfree.sync();
+    if (b) {
+        QByteArray mode("Headphone");
+        audioMgr->send("setProfile(QByteArray)", mode);
+    } else {
+        QByteArray mode("MediaSpeaker");
+        audioMgr->send("setProfile(QByteArray)", mode);
+    }
 }

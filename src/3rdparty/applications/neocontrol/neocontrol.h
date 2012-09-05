@@ -22,7 +22,9 @@
 #include <QTimer>
 #include <QSettings>
 #include <QCheckBox>
+#include <QDateTime>
 #ifdef QTOPIA
+#include <Qtopia>
 #include <QtopiaApplication>
 #endif
 #ifdef Q_WS_WIN
@@ -43,6 +45,7 @@ private:
     enum Screen
     {
         ScreenInit,
+        ScreenRtc,
         ScreenMixer,
         ScreenModem,
         ScreenSysfs,
@@ -79,6 +82,7 @@ private slots:
     void backClicked();
     void nextClicked();
     void saveClicked();
+    void updateRtc();
     void updateMixer();
     void updateModem();
     void updateSysfs();

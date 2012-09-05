@@ -33,6 +33,7 @@
 #include <linux/input.h>
 #include <alsa/asoundlib.h>
 
+#include <qled.h>
 #include <qmodemcallvolume.h>
 #include <qmodemsiminfo.h>
 #include <qmodemcellbroadcast.h>
@@ -147,6 +148,8 @@ NeoModemService::NeoModemService
     (const QString & service, QSerialIODeviceMultiplexer * mux,
      QObject * parent)
 :  QModemService(service, mux, parent)
+    , inputEvent("/dev/input/incoming")
+    , inputNotifier(0)
 {
     qDebug() << "Gta04ModemService::constructor";
 
@@ -155,13 +158,29 @@ NeoModemService::NeoModemService
     primaryAtChat()->registerNotificationType
         ("_OSIGQ:", this, SLOT(sigq(QString)));
 
+    chat("AT+CSCS=\"GSM\"");    // GSM encoding
     chat("AT_OSQI=1");          // unsolicited reporting of antenna signal strength, e.g. "_OSIGQ: 3,0"
     chat("AT_OPCMENABLE=1");    // enable the PCM interface for voice calls
     chat("AT_OPSYS=0,2");       // disable UMTS, use only GSM
+
+    // Modem input device - reports keys when modem generates interrupt (e.g.
+    // on incoming call or sms).
+    if(inputEvent.open(QIODevice::ReadOnly)) {
+        inputNotifier = new QSocketNotifier(inputEvent.handle(), QSocketNotifier::Read, this);
+        connect(inputNotifier, SIGNAL(activated(int)), this, SLOT(handleInputEvent()));
+    }
+    else {
+        qWarning() << "Gta04ModemService: failed to open " << inputEvent.fileName() << ": " << inputEvent.errorString();
+    }
 }
 
 NeoModemService::~NeoModemService()
 {
+    if(inputNotifier) {
+        delete inputNotifier;
+        inputNotifier = 0;
+    }
+    inputEvent.close();
 }
 
 void NeoModemService::initialize()
@@ -223,25 +242,32 @@ void NeoModemService::wake()
     wakeDone();
 }
 
+void NeoModemService::handleInputEvent()
+{
+    qLog(Modem) << "NeoModemService::handleInputEvent()";
+    
+    // Read all input data from the file
+    char buf[sizeof(input_event) * 32];
+    struct input_event *ev = (struct input_event *) buf;
+    int n = read(inputEvent.handle(), buf, sizeof(buf));
+    
+    while(n >= (int)(sizeof(input_event))) {
+        if(ev->type == EV_KEY && ev->code == KEY_UNKNOWN) {
+            // Set fast blinking on missed calls led
+            qLedSetCall(qLedAttrBrightness(), qLedMaxBrightness());
+            qLedSetCall(qLedAttrTrigger(), "timer");
+            qLedSetCall(qLedAttrDelayOff(), "1024");
+            qLedSetCall(qLedAttrDelayOn(), "32");
+            break;
+        }
+        ev++;
+        n -= sizeof(input_event);
+    }
+}
+
 bool NeoModemService::supportsAtCced()
 {
     return false;
-}
-
-// Each char of output operator name is 4 chars in input name. The 4 chars is
-// integer string of unicode value. E.g.
-// 0056006f006400610066006f006e006500200043005a -> Vodafone CZ
-QString NeoModemService::decodeOperatorName(QString name)
-{
-    QString str;
-    str.resize(name.size() / 4);
-    for (int i = 0; i < str.size(); i++) {
-        QString numStr = name.mid(i * 4, 4);
-        bool ok;
-        int num = numStr.toInt(&ok, 16);
-        str[i] = QChar(num);
-    }
-    return str;
 }
 
 // Open GTA04 vibrate device

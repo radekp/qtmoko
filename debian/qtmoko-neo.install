@@ -1,0 +1,2 @@
+debian/tmp-neo/opt/qtmoko opt
+devices/neo/alsa_scenarios/* opt/qtmoko/etc/alsa-scenarios

@@ -121,9 +121,12 @@ BtPowerService::BtPowerService(const QByteArray &serverPath,
 
     // ensure the service is down if plane mode is on
     m_data->m_stateBeforePlaneModeOn = m_data->m_prevState;
-    if (m_data->m_phoneProfileMgr->planeMode()) {
-        bringDown();
-    }
+//    if (m_data->m_phoneProfileMgr->planeMode()) {
+//        bringDown();
+//    }
+    
+    // Always start with bluetooth turned off so that we save power
+    bringDown();
 }
 
 /*!

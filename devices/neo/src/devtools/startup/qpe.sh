@@ -16,8 +16,6 @@ rm -rf /var/run/ppp
 mkdir /var/run/ppp
 mkdir -p /var/cache/apt/archives/partial
 
-atd /var/spool/at
-
 touch /tmp/restart-qtopia
 while [ -e /tmp/restart-qtopia ]; do
     qpe
@@ -30,5 +28,3 @@ while [ -e /tmp/restart-qtopia ]; do
         #qcop service send Launcher "execute(QString)" "calibrate"
     fi
 done
-
-killall -q atd

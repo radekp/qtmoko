@@ -30,7 +30,7 @@ Step 1
 
 * We will be installing new image to /media/card:
 
-cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,ppp,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,timeout,libpng12-0,libjpeg62,libmng1,libtiff4,libxtst6,sqlite3,ntpdate squeeze /media/card/ http://cdn.debian.net/debian/
+cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,ppp,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,timeout,libpng12-0,libjpeg8,libxtst6,sqlite3,ntpdate squeeze /media/card/ http://cdn.debian.net/debian/
 
 Step 2
 ======
@@ -303,7 +303,7 @@ Step 8 - install QtMoko
 
 * I use qemu armel host for building qtmoko package. It should be as simple as
 
-git checkout v45
+git checkout v47
 dpkg-buildpackage
 
 * Note that you may need to install some dependencies before building:
@@ -323,10 +323,10 @@ git submodule update --init
 * Install it
 
 chroot /media/card/
-wget http://qtmoko.sourceforge.net/debian/qtmoko-neo_45-1_armel.deb
-dpkg -i qtmoko-neo_45-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/qtmoko-neo_47-1_armel.deb
+dpkg -i qtmoko-neo_47-1_armel.deb
 update-rc.d qtmoko-neo defaults
-rm qtmoko-neo_45-1_armel.deb
+rm qtmoko-neo_47-1_armel.deb
 exit
 killall qpe.sh  # recent versions start qtmoko after install, so kill it
 
@@ -340,7 +340,7 @@ http://github.com/radekp/linux-2.6/
 
 * Checkout branch for your qtmoko version:
 
-git checkout v2.6.34-gta02-qtmoko-v45
+git checkout v2.6.34-gta02-qtmoko-v47
 
 * Create package in buildhost:
 
@@ -353,9 +353,9 @@ dpkg-buildpackage
 * Install kernel image:
 
 chroot /media/card
-wget http://qtmoko.sourceforge.net/debian/linux-image-2.6.34-qtmoko-gta02_v45-1_armel.deb
-dpkg -i linux-image-2.6.34-qtmoko-gta02_45-1_armel.deb
-rm linux-image-2.6.34-qtmoko-gta02_45-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/linux-image-2.6.34-qtmoko-gta02_47-1_armel.deb
+dpkg -i linux-image-2.6.34-qtmoko-gta02_47-1_armel.deb
+rm linux-image-2.6.34-qtmoko-gta02_47-1_armel.deb
 exit
 
 * Create boot args and symlink for qi:
@@ -398,7 +398,7 @@ Step 10 - release tarball
 =========================
 
 cd /media/card
-tar -czvf ../qtmoko-debian-gta02-v45.tar.gz .
+tar -czvf ../qtmoko-debian-gta02-v47.tar.gz .
 
 Step 11 - make ubifs images
 ===========================
@@ -449,7 +449,7 @@ vol_flags=autoresize
 __END__
 
 mkfs.ubifs -r /media/card -o qtmoko-debian.ubifs -x zlib -m 2048 -e 126976 -c 2047
-ubinize -o qtmoko-debian-gta02-v45.ubi -m 2048 -p 128KiB -s 2048 -O 2048 ubinize.cfg
+ubinize -o qtmoko-debian-gta02-v47.ubi -m 2048 -p 128KiB -s 2048 -O 2048 ubinize.cfg
 rm qtmoko-debian.ubifs
 
 Step 12 - jffs2 image (not using anymore)
