@@ -1235,11 +1235,11 @@ QBluetoothReply<bool> QBluetoothLocalDevice::discoverable() const
  */
 bool QBluetoothLocalDevice::setConnectable()
 {
+    return
 #ifdef QT_QWS_GTA04
-    return QProcess::execute("rfkill", QStringList() << "unblock" << "bluetooth") == 0;
-#else
-    return m_data->setPropertyAsync("Powered", true, SLOT(asyncReply(QDBusMessage)));
+    (QProcess::execute("rfkill", QStringList() << "unblock" << "bluetooth") == 0) &&
 #endif
+    m_data->setPropertyAsync("Powered", true, SLOT(asyncReply(QDBusMessage)));
 }
 
 /*!
@@ -1265,11 +1265,11 @@ QBluetoothReply<bool> QBluetoothLocalDevice::connectable() const
  */
 bool QBluetoothLocalDevice::turnOff()
 {
- #ifdef QT_QWS_GTA04
-    return QProcess::execute("rfkill", QStringList() << "block" << "bluetooth") == 0;
-#else
-    return m_data->setPropertyAsync("Powered", false, SLOT(asyncReply(QDBusMessage)));
+    return
+#ifdef QT_QWS_GTA04
+    (QProcess::execute("rfkill", QStringList() << "block" << "bluetooth") == 0) &&
 #endif
+    m_data->setPropertyAsync("Powered", false, SLOT(asyncReply(QDBusMessage)));
 }
 
 /*!

@@ -168,7 +168,7 @@ NeoKbdHandler::NeoKbdHandler()
     }
 
     jackHandler = new FicLinuxInputEventHandler(this);
-    ok = jackHandler->openByName("neo1973gta02 Headset Jack");
+    ok = jackHandler->openByName("gta04 Headset Jack");
 
     if (ok) {
         connect(jackHandler, SIGNAL(inputEvent(struct input_event&)),

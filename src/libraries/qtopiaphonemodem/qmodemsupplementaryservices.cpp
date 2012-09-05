@@ -46,6 +46,8 @@ QModemSupplementaryServices::QModemSupplementaryServices
         ( QModemService *service )
     : QSupplementaryServices( service->service(), service, QCommInterface::Server )
 {
+
+    _cusdData = "";
     this->service = service;
     connect( service, SIGNAL(resetModem()), this, SLOT(resetModem()) );
     service->primaryAtChat()->registerNotificationType
@@ -76,9 +78,11 @@ void QModemSupplementaryServices::cancelUnstructuredSession()
     \reimp
 */
 void QModemSupplementaryServices::sendUnstructuredData( const QString& data )
-{
+ {
+    // struppi: ,15" means "GSM encoding, Language unspecified, that's
+    // basically the only one that works at all for me
     service->primaryAtChat()->chat
-        ( "AT+CUSD=1,\"" + QAtUtils::quote( data ) + "\"",
+        ( "AT+CUSD=1,\"" + QAtUtils::quote( data ) + "\",15",
           this, SLOT(cusdDone(bool,QAtResult)) );
 }
 
@@ -138,7 +142,46 @@ void QModemSupplementaryServices::cusd( const QString& msg )
     uint posn = 6;
     uint mflag = QAtUtils::parseNumber( msg, posn );
     QString value = QAtUtils::nextString( msg, posn );
-    uint dcs = QAtUtils::parseNumber( msg, posn );
-    value = QAtUtils::decodeString( value, dcs );
-    emit unstructuredNotification( (UnstructuredAction)mflag, value );
+
+    /* Some Providers send rather lengthy USSD responses
+     * that spread across multiple lines in the AT syntax.
+     * Check if that is one of them.
+     */
+    if (posn < msg.length()-1) {
+        /* looks like this one comes in a single line. */
+        uint dcs = QAtUtils::parseNumber( msg, posn );
+        value = QAtUtils::decodeString( value, dcs );
+        emit unstructuredNotification( (UnstructuredAction)mflag, value );
+    }
+    else {
+        /* looks like this one comes in multiple lines. get all of them */
+        _cusdData = msg;
+        _cusdMFlag = mflag;
+        service->primaryAtChat()->requestNextLine(this, SLOT(cusdData(QString)));
+    }
 }
+
+
+/*
+ Some providers do sometimes send lengthy responses to AT+CUSD requests.
+ Those responses span across multiple lines. In case one of these
+ lengthy messages is detected, this function gets invoked via
+ QModemSupplementaryServices::cusd() to collect the remaining lines in
+ the response.
+*/
+void QModemSupplementaryServices::cusdData( const QString& msg )
+{
+    uint posn = 6;
+    _cusdData.append(msg);
+    QString data = QAtUtils::nextString( _cusdData, posn );
+    if (posn < _cusdData.length()-1) {
+        uint dcs = QAtUtils::parseNumber( _cusdData, posn );
+        data = QAtUtils::decodeString( data, dcs );
+        _cusdData = "";
+        emit unstructuredNotification( (UnstructuredAction)_cusdMFlag, data );
+    }
+    else {
+        service->primaryAtChat()->requestNextLine(this, SLOT(cusdData(QString)));
+    }
+}
+

@@ -41,9 +41,11 @@ public:
     int noiseOff;
     int vibrateOn;
     int vibrateOff;
+    int vibrateStartDelay;
     bool active;
     int toRepeat;
     int atRepeat;
+    QString soundFile;
 };
 
 };
@@ -64,6 +66,7 @@ RingControl::RingControl( QObject *parent )
     d->noiseOff = 2000;
     d->vibrateOn = 500;
     d->vibrateOff = 2000;
+    d->vibrateStartDelay = 0;
     d->active = false;
     d->toRepeat = 0;
     d->atRepeat = 0;
@@ -87,6 +90,7 @@ void RingControl::setSound( const QString &file )
     d->alertSound = new QSound( file, this );
     d->alertSoundControl = new QSoundControl( d->alertSound, this );
     d->alertSoundControl->setPriority( QSoundControl::RingTone );
+    d->soundFile = file;
 }
 
 void RingControl::enableVibrate( bool vibrate )
@@ -108,6 +112,11 @@ void RingControl::setVibrateTimers( int on, int off )
     d->vibrateOff = off;
 }
 
+void RingControl::setVibrateStartDelay( int secs )
+{
+    d->vibrateStartDelay = secs * 1000;
+}
+
 void RingControl::start()
 {
     d->active = true;
@@ -127,6 +136,7 @@ void RingControl::stop()
         stopTimer( d->startNoiseTimer );
         stopTimer( d->stopNoiseTimer );
         stopNoise();
+        setSound(d->soundFile);
     }
 
     stopTimer( d->startVibrateTimer );
@@ -172,16 +182,24 @@ void RingControl::stopNoise()
 
 void RingControl::startVibrate()
 {
-    QVibrateAccessory vib;
-    vib.setVibrateNow( true);
+    if(d->vibrateStartDelay > 0) {
+        d->vibrateStartDelay -= d->vibrateOn + d->vibrateOff;
+    }
+    else {
+        QVibrateAccessory vib;
+        vib.setVibrateNow( true);
+    }
     // we stop vibrating before we stop making noise
     startTimer( d->stopVibrateTimer, d->vibrateOn );
 }
 
 void RingControl::stopVibrate()
 {
-    QVibrateAccessory vib;
-    vib.setVibrateNow( false);
+    if(d->vibrateStartDelay <= 0) {
+        QVibrateAccessory vib;
+        vib.setVibrateNow( false);
+    }
+
     // start vibrating in 2 seconds
     startTimer( d->startVibrateTimer, d->vibrateOff );
 }

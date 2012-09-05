@@ -73,7 +73,7 @@ QWhereabouts *NeoGpsPlugin::create(const QString &)
     whereabouts->setSourceDevice(reader);
 
     if (!reader->waitForReadyRead(3000))
-        system("/opt/qtmoko/bin/gps-poweron.sh");
+        system("/opt/qtmoko/bin/gps-toggle.sh");
 
     return whereabouts;
 }

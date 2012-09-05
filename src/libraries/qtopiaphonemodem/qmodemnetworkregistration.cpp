@@ -356,7 +356,7 @@ void QModemNetworkRegistration::copsDone( bool, const QAtResult& result )
         name = QString::number( parser.readNumeric() );
         id = "2" + name;
     } else {
-        name = d->service->decodeOperatorName(parser.readString());
+        name = parser.readString();
         if ( d->operatorId != -1 )
             id = "2" + QString::number( d->operatorId );
         else

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Comment[]=Openmoko Neo control tool
+Exec=neocontrol
+Type=Application
+Name[]=NeoControl
+Icon=neocontrol/neocontrol
+[Translation]
+File=QtopiaApplications
+Context=neocontrol

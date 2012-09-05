@@ -1720,6 +1720,10 @@ void QMplayerFullscreenPlay::paintEvent(QPaintEvent *)
 
     QPainter p(this);
 
+#ifdef QT_QWS_NEO
+    p.scale(0.5, 0.5);
+#endif
+
     // Circle for unlocking area
     QPoint center = this->rect().center();
     p.drawEllipse(center, radius, radius);

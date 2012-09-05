@@ -4,10 +4,17 @@
   <image rect="0,0,0x0" src="contextbar_.png" scale="yes" color="#c5ffab" alpha="255" active="expr:@/Communications/Calls/ActiveCalls > 0"/>
   <layout rect="0,5%,0,0">
 	<image expanding="yes" name="button0" rect="0,0,0x0" align="vcenter" interactive="yes"/>
+	<image expanding="yes" rect="0,0,0x0" align="vcenter" interactive="no"/>
 	<image expanding="yes" name="button1" rect="0,0,0x0" align="vcenter" interactive="yes"/>
   </layout>
   <layout rect="0,5%,0,0">
 	<text expanding="yes" name="tbutton0" color="Text" rect="0,2,0x0" size="6" bold="yes" align="vcenter,hcenter" interactive="yes" />
+	<text expanding="yes" color="Text" rect="0,2,0x0" size="6" bold="yes" align="vcenter,hcenter"/>
 	<text expanding="yes" name="tbutton1" color="Text" rect="0,2,0x0" size="6" bold="yes" align="vcenter,hcenter" interactive="yes" />
   </layout>
+
+  <exclusive rect="34%,5%,32%x90%">
+    <inputmethods-plugin transient="yes" active="expr:@/UI/IMVisible"/>
+  </exclusive>
+
 </page>

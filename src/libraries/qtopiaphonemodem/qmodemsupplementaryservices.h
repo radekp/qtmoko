@@ -45,9 +45,12 @@ private slots:
     void cssi( const QString& msg );
     void cssu( const QString& msg );
     void cusd( const QString& msg );
+    void cusdData(const QString& msg);
 
 private:
     QModemService *service;
+    QString _cusdData;
+    uint _cusdMFlag;
 };
 
 #endif

@@ -21,6 +21,7 @@
 
 #include <QDir>
 #include <QDebug>
+#include <Qtopia>
 #include <QProcess>
 #include <QAudioState>
 #include <QAudioStateInfo>
@@ -111,21 +112,7 @@ static bool restoreDefaultState()
 static bool writeToFile(const char *filename, const char *val, int len)
 {
     qLog(AudioState) << "echo " << val << " > " << filename;
-
-    QFile f(filename);
-    if (!f.open(QIODevice::WriteOnly)) {
-        qWarning() << "failed to open " << filename << ", error is: " <<
-            f.errorString();
-        return false;
-    }
-    int written = f.write(val, len);
-    f.close();
-    if (written == len) {
-        return true;
-    }
-    qWarning() << "failed to write to " << filename << ", error is: " <<
-        f.errorString();
-    return false;
+    return (bool) Qtopia::writeFile(filename, val, len);
 }
 
 QProcess *voicePs = NULL;
@@ -421,10 +408,10 @@ QAudioState(parent), m_isPhone(isPhone)
 {
     if (m_isPhone) {
         m_info.setDomain("Phone");
-        m_info.setProfile("PhoneHeadset");
+        m_info.setProfile("Headset");
     } else {
         m_info.setDomain("Media");
-        m_info.setProfile("MediaHeadset");
+        m_info.setProfile("Headset");
     }
 
     m_info.setDisplayName(tr("Headphones"));

@@ -66,22 +66,26 @@
                 <image name="contact" rect="-17pt,0,17ptx21pt" scale="yes" src="expr:@Photo"/>
             </template>
 	</list>
+
+
     <rect name="menu-box" rect="0,0,0x380" active="yes" interactive="yes" transient="yes">
-      <image rect="0,0,480x91" name="show_keypad" src="buttonscall.png" onclick="src=buttonscallp.png" interactive="yes" scale="yes">
-        <text bold="yes" color="#000000" size="9" align="hcenter,vcenter">Show Keypad</text>
+      <image rect="10,0,220x170" name="show_keypad" src="buttonscall.png" onclick="src=buttonscallp.png" interactive="yes" scale="yes">
+        <text bold="yes" outline="#FFFFFF" color="#000000" size="9" align="hcenter,vcenter">Keypad</text>
       </image>
-      <exclusive rect="0,91,480x91">
+
+      <exclusive rect="240,0,220x170">
         <image name="hold" src="buttonscall.png" onclick="src=buttonscallp.png" interactive="yes" scale="yes">
           <text bold="yes" outline="#FFFFFF" color="#000000" size="9" align="hcenter,vcenter">Hold</text>
         </image>
         <image name="resume" src="buttonscall.png" onclick="src=buttonscallp.png" interactive="yes" scale="yes">
-          <text bold="yes" outline="#000000" color="#FFFFFF" size="9" align="hcenter,vcenter">Resume</text>
+          <text bold="yes" outline="#FFFFFF" color="#000000" size="9" align="hcenter,vcenter">Resume</text>
         </image>
         <image name="sendbusy" src="buttonscall.png" onclick="src=buttonscallp.png" interactive="yes" scale="yes">
-          <text bold="yes" outline="#000000" color="#FFFFFF" size="9" align="hcenter,vcenter">Send Busy</text>
+          <text bold="yes" outline="#FFFFFF" color="#000000" size="9" align="hcenter,vcenter">Send Busy</text>
         </image>
       </exclusive>
-      <exclusive rect="0,182,480x150">
+
+      <exclusive rect="130,190,220x190">
         <image name="endcall" src="buttonendcall.png" onclick="src=buttonendcallp.png" interactive="yes" scale="yes">
           <!-- <text rect="120,0,0,0" bold="yes" outline="#000000" color="#cf2525" size="9" align="hcenter,vcenter">End Call</text> -->
         </image>
@@ -90,6 +94,7 @@
         </image>
       </exclusive>
     </rect>
+
     <rect name="keypad-box" rect="0,0,0x380" interactive="yes" transient="yes" active="no">
 	    <layout name="keypad" rect="0,0,0x0" orientation="vertical" spacing="0" separator="1">
 		<layout name="horizontal" rect="0,0,480x72" orientation="horizontal" spacing="-1" align="hcenter">

@@ -108,6 +108,7 @@ private slots:
                    const QPinOptions&);
     void currentOperatorChanged();
     void registrationStateChanged();
+    void locationChanged();
     void autoRegisterTimeout();
     void planeModeChanged(bool);
     void queryCallForwarding();

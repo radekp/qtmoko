@@ -4,25 +4,38 @@
   <image rect="0,0,0x100%" src="titlebar_.png" transient="yes" scale="vertical" tile="yes" alpha="255" color="#c5ffab" active="expr:@/Communications/Calls/ActiveCalls > 0"/>
 
 
-<rect rect="-77,5,72x30">
+<rect rect="-75,5,72x30">
 <text outline="#000000" color="#FFFFFF" bold="yes" align="hcenter,vcenter" size="6" active="expr:@/UI/HomeScreen/ShowTime">
 expr:@/UI/DisplayTime/Time
 </text>
 </rect>
 
-  <level rect="-127,5,48x30" name="battery" src="battery.png" count="6" min="0" max="100" scale="yes" delay="1000" loop="0" active="expr:@/Hardware/Accessories/QPowerSource/DefaultBattery/Charging == false" replacecolor="no">
+  <level rect="-126,5,48x30" name="battery" src="battery.png" count="6" min="0" max="100" scale="yes" delay="1000" loop="0" active="expr:@/Hardware/Accessories/QPowerSource/DefaultBattery/Charging == false" replacecolor="no">
     expr:@/Hardware/Accessories/QPowerSource/DefaultBattery/Charge
   </level>
-  <level rect="-127,5,48x30" name="batteryc" src="batteryc.png" count="6" min="0" max="100" scale="yes" delay="1000" loop="0" active="expr:@/Hardware/Accessories/QPowerSource/DefaultBattery/Charging == true" replacecolor="no">
+  <level rect="-126,5,48x30" name="batteryc" src="batteryc.png" count="6" min="0" max="100" scale="yes" delay="1000" loop="0" active="expr:@/Hardware/Accessories/QPowerSource/DefaultBattery/Charging == true" replacecolor="no">
     expr:@/Hardware/Accessories/QPowerSource/DefaultBattery/Charge
   </level>
 
-  <level rect="-164,5,32x30" name="signal" src="signal.png" scale="yes" count="5" min="0" max="100" active="expr:@/Hardware/Accessories/QSignalSource/DefaultSignal/SignalStrength" replacecolor="no">
+  <level rect="-161,5,32x30" name="signal" src="signal.png" scale="yes" count="5" min="0" max="100" active="expr:@/Hardware/Accessories/QSignalSource/DefaultSignal/SignalStrength" replacecolor="no">
     expr:@/Hardware/Accessories/QSignalSource/DefaultSignal/SignalStrength
   </level>
 
+  <exclusive rect="-193,5,26x30">
+     <status name="wifi" imageon="wifi.png" on="expr:@/Network/Interfaces/Wifi/State == 2" active="expr:@/Network/Interfaces/Wifi/State == 2" onclick="message=QPE/Application/qterminal,setDocument(QString),/opt/qtmoko/bin/ping.sh" />
+  </exclusive>
 
-	<rect rect="5,10,0x0">
+  <exclusive rect="-235,5,36x30">
+     <status name="gps" imageon="gps-on.svg" on="expr:@/Gps/State == 2" active="expr:@/Gps/State == 2"/>
+     <status name="gps" imageon="gps-fix.svg" on="expr:@/Gps/State == 3" active="expr:@/Gps/State == 3"/>
+  </exclusive>
+
+  <exclusive rect="-256,5,15x30">
+     <text outline="#000000" color="#FFFFFF" bold="yes" align="right,vcenter" size="6" >expr:@/Gps/NumSatellites</text>
+  </exclusive>
+
+
+	<rect rect="3,10,0x0">
 		<rect rect="0,0,200x70%">
 			<status name="presence" rect="0,0,20x0" imageon="presence-online.svg" interactive="yes" on="expr:@/Telephony/Status/VoIP/Presence/Local/Presence == 2" onclick="message=Presence,editPresence()"/>
 			<status name="presence" rect="0,0,20x0" imageon="presence-away.svg" interactive="yes" on="expr:@/Telephony/Status/VoIP/Presence/Local/Presence == 3" onclick="message=Presence,editPresence()"/>
@@ -65,13 +78,18 @@ expr:@/UI/DisplayTime/Time
 			<status name="alarm" rect="175,0,20x0" imageon="alarmbell.svg" on="expr:@/UI/DailyAlarm" interactive="yes"/>
 		</rect>
 
-	<exclusive rect="209,0,95x20">
+	<!--
+	<exclusive rect="181,0,65x20">
 		<inputmethods-plugin transient="yes" active="expr:@/UI/IMVisible"/>
 	</exclusive>
+	-->
 
 	</rect>
-<!--  <text rect="10%,44%,-10%,-3%" name="caption" outline="#000000" bold="yes" color="#FFFFFF" align="hcenter,vcenter" transient="yes" elided="right">
+
+  <!--	
+  <text rect="10%,44%,-10%,-3%" name="caption" outline="#000000" bold="yes" color="#FFFFFF" align="hcenter,vcenter" transient="yes" elided="right">
     expr:@/UI/ActiveWindow/Caption
-  </text>-->
+  </text>
+  -->
 
 </page>

@@ -51,6 +51,7 @@ private slots:
 
     void applySnooze(int);
     void setSnooze();
+    void selectTone();
 
 protected:
     QDateTime nextAlarm( int h, int m );

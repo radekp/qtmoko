@@ -76,9 +76,19 @@ const char *qLedFunctionCalls()
     return "aux";
 }
 
+const char *qLedFunctionSms()
+{
+    return "aux";
+}
+
 const char *qLedColorPower()
 {
     return "red";
+}
+
+const char *qLedColorSms()
+{
+    return "green";
 }
 
 const char *qLedColorCalls()
@@ -123,6 +133,11 @@ const char *qLedFunctionPower()
     return "power";
 }
 
+const char *qLedFunctionSms()
+{
+    return "aux";
+}
+
 const char *qLedFunctionCalls()
 {
     return "aux";
@@ -131,6 +146,11 @@ const char *qLedFunctionCalls()
 const char *qLedColorPower()
 {
     return "orange";
+}
+
+const char *qLedColorSms()
+{
+    return "red";
 }
 
 const char *qLedColorCalls()
@@ -175,12 +195,22 @@ const char *qLedFunctionPower()
     return NULL;
 }
 
+const char *qLedFunctionSms()
+{
+    return NULL;
+}
+
 const char *qLedFunctionCalls()
 {
     return NULL;
 }
 
 const char *qLedColorPower()
+{
+    return NULL;
+}
+
+const char *qLedColorSms()
 {
     return NULL;
 }
@@ -217,16 +247,51 @@ const char *qLedMaxBrightness()
 
 #endif
 
+/*!
+  Set attribute on led that reports new SMS.
+*/
+bool qLedSetSms(const char *attr, const char *value)
+{
+    return setLed(qLedDevice(), qLedColorSms(), qLedFunctionSms(), attr,
+                  value);
+}
+
+/*!
+  Set attribute on led that reports missed calls.
+*/
 bool qLedSetCall(const char *attr, const char *value)
 {
     return setLed(qLedDevice(), qLedColorCalls(), qLedFunctionCalls(), attr,
                   value);
 }
 
+/*!
+  Set attribute on led that reports power state.
+*/
 bool qLedSetPower(const char *attr, const char *value)
 {
     return setLed(qLedDevice(), qLedColorPower(), qLedFunctionPower(), attr,
                   value);
+}
+
+/*!
+  Start indicating new SMS on SMS led.
+*/
+void qLedIndicatorNewSmsOn()
+{
+    qLedSetSms(qLedAttrBrightness(), qLedMaxBrightness());
+    qLedSetSms(qLedAttrTrigger(), "timer");
+    qLedSetSms(qLedAttrDelayOff(), "1024");
+    qLedSetSms(qLedAttrDelayOn(), "1024");
+}
+
+/*!
+  Stop indicating new SMS calls on SMS led.
+*/
+void qLedIndicatorNewSmsOff()
+{
+    qLedSetSms(qLedAttrBrightness(), "0");
+    qLedSetSms(qLedAttrTrigger(), "none");
 }
 
 /*!

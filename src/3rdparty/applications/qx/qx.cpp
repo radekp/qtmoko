@@ -340,14 +340,20 @@ static bool saveConf(QX * parent, const char * srcFilename, const char * dstDir,
 bool QX::checkX()
 {
     if(QFile::exists("/usr/bin/Xorg") ||
-       QFile::exists("/usr/bin/Xglamo"))
+       QFile::exists("/usr/bin/Xglamo") ||
+       QFile::exists("/usr/bin/Xfbdev")
+    )
     {
         return true;
     }
     int val = QMessageBox::question(this, tr("X server not found"),
                                     tr("You don't have X server. Choose X server to install:"),
                                     tr("Xorg"),
+#ifdef QT_QWS_NEO
                                     tr("Xglamo"),
+#else
+                                    tr("Xfbdev"),
+#endif                                    
                                     tr("Cancel"), 0, 2);
 
     if(val == 2)
@@ -359,20 +365,36 @@ bool QX::checkX()
         QStringList args;
         args << "-u";
         args << "-i";
+#ifdef QT_QWS_NEO
         args << "xserver-xorg-video-glamo";
+#else
+        args << "xserver-xorg-video-fbdev";  
+#endif        
         args << "xserver-xorg-input-tslib";
         args << "xinput";
         args << "xterm";
         QProcess::execute("raptor", args);
 
+#ifdef QT_QWS_NEO
         return saveConf(this, ":/xorg-glamo.conf", "/etc/X11", "xorg.conf") &&
+#else
+        return saveConf(this, ":/xorg.conf", "/etc/X11", "xorg.conf") &&
+#endif
                 saveConf(this, ":/xterm.desktop", "/usr/share/applications", "xterm.desktop");
     }
 
+#ifdef QT_QWS_NEO    
     QProcess::execute("raptor", QStringList() << "-u" << "-i" << "xfonts-base" << "xterm" << "x11-xserver-utils");
     QProcess::execute("raptor", QStringList() << "-i" << "http://qtmoko.sourceforge.net/download/Xglamo.deb");
+#else
+    QProcess::execute("raptor", QStringList() << "-u" << "-i" << "xfonts-base" << "xterm" << "x11-xserver-utils" << "xserver-xfbdev");
+#endif
 
+#ifdef QT_QWS_NEO
     return saveConf(this, ":/xglamo.conf", "/etc/X11", "xorg.conf") &&
+#else
+    return saveConf(this, ":/xfbdev.conf", "/etc/X11", "xorg.conf") &&
+#endif
             saveConf(this, ":/xterm.desktop", "/usr/share/applications", "xterm.desktop");
 }
 
@@ -415,7 +437,11 @@ void QX::runApp(QString filename, QString applabel, bool rotate)
             args.append("-hide-cursor");
             args.append("-dpi");
             args.append("128");
+#ifdef QT_QWS_NEO
             xprocess->start("/usr/bin/Xglamo", args);
+#else
+            xprocess->start("/usr/bin/Xfbdev", args);
+#endif
         }
         if(!xprocess->waitForStarted())
         {
@@ -484,10 +510,12 @@ void QX::runApp(QString filename, QString applabel, bool rotate)
         return;
     }
 
+#ifdef QT_QWS_NEO    
     if(xorg)
     {
         QTimer::singleShot(1000, this, SLOT(fixTs()));
     }
+#endif    
 }
 
 void QX::processWmEvents()

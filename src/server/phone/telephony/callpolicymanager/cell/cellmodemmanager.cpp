@@ -205,6 +205,8 @@ CellModemManager::CellModemManager(QObject *parent)
                      this, SLOT(registrationStateChanged()));
     QObject::connect(d->m_netReg, SIGNAL(currentOperatorChanged()),
                      this, SLOT(currentOperatorChanged()));
+    QObject::connect(d->m_netReg, SIGNAL(locationChanged()),
+                     this, SLOT(locationChanged()));
 
     // Rename signal for QAbstractCallPolicyManager.
     QObject::connect(this, SIGNAL(registrationStateChanged(QTelephony::RegistrationState)),
@@ -338,6 +340,16 @@ void CellModemManager::registrationStateChanged()
     }
 
     doAutoRegister();
+}
+
+void CellModemManager::locationChanged()
+{
+  QString cell_location;
+  QTextStream(&cell_location)
+    << d->m_netReg->locationAreaCode()
+    << "/"
+    << d->m_netReg->cellId();
+  setCellLocation(cell_location);
 }
 
 void CellModemManager::rfLevelChanged()

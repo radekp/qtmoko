@@ -29,19 +29,7 @@ LDFLAGS=$(shell dpkg-buildflags --get LDFLAGS) $(CROSS_LDFLAGS)
 CONFIGURE := $(CURDIR)/configure
 LANGUAGES := $(shell ls i18n/ | xargs echo | sed 's/ /,/g')
 
-# Device defaults to neo, but can be set from the calling environment as well:
-# QTMOKO_DEVICE=<device> dpkg-buildpackage
-QTMOKO_DEVICE ?= gta04
-ifeq (neo,$(QTMOKO_DEVICE))
-  QTMOKO_DEVICE_SHORTDESC := Neo FreeRunner
-else ifeq (gta04,$(QTMOKO_DEVICE))
-  QTMOKO_DEVICE_SHORTDESC := GTA04
-else
-  QTMOKO_DEVICE_SHORTDESC := $(QTMOKO_DEVICE)
-endif
-
 TOOLCHAIN := linux-native-g++
-QMAKE_CONF := devices/$(QTMOKO_DEVICE)/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 
 %:
 	dh $@
@@ -53,64 +41,77 @@ override_dh_auto_configure:
 
 	# Fix wrong filename for libjscore.a
 	# http://qt-project.org/forums/viewthread/12732
-	mkdir -p $(PWD)/../build/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/
-	ln -s $(PWD)/../build/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/jscore. $(PWD)/../build/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a
-	
-	# debhelper files
-	cp debian/qtmoko.install.in debian/qtmoko-$(QTMOKO_DEVICE).install
-	[ ! -f debian/qtmoko-$(QTMOKO_DEVICE).install.in ] || \
-		cat debian/qtmoko-$(QTMOKO_DEVICE).install.in >>debian/qtmoko-$(QTMOKO_DEVICE).install
-	cp debian/qtmoko.links.in debian/qtmoko-$(QTMOKO_DEVICE).links
-	cp debian/qtmoko.init.in debian/qtmoko-$(QTMOKO_DEVICE).init
+	mkdir -p $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/
+	mkdir -p $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/
+	ln -s $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/jscore. $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a
+	ln -s $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/jscore. $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a
 
 	# Patch the qmake.conf file with proper toolchain configuration
-	cp -a $(QMAKE_CONF) $(QMAKE_CONF).orig
-	sed -i 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_CXX[ \t]*=\).*$$:\1 '"$(CXX):" $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_LINK[ \t]*=\).*$$:\1 '"$(CXX):" $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_LINK_SHLIB[ \t]*=\).*$$:\1 '"$(CXX):" $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_CFLAGS[ \t]*=\).*$$:\1 '"$(CFLAGS):" $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_CFLAGS_RELEASE[ \t]*=\).*$$:\1 :' $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_CFLAGS_DEBUG[ \t]*=\).*$$:\1 :' $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" $(QMAKE_CONF)
-	sed -i 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(LDFLAGS):" $(QMAKE_CONF)
+	sed -i 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_CXX[ \t]*=\).*$$:\1 '"$(CXX):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_LINK[ \t]*=\).*$$:\1 '"$(CXX):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_LINK_SHLIB[ \t]*=\).*$$:\1 '"$(CXX):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_CFLAGS[ \t]*=\).*$$:\1 '"$(CFLAGS):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_CFLAGS_RELEASE[ \t]*=\).*$$:\1 :' devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_CFLAGS_DEBUG[ \t]*=\).*$$:\1 :' devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(LDFLAGS):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+
+	# Patch the qmake.conf file with proper toolchain configuration
+	sed -i 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_CXX[ \t]*=\).*$$:\1 '"$(CXX):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_LINK[ \t]*=\).*$$:\1 '"$(CXX):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_LINK_SHLIB[ \t]*=\).*$$:\1 '"$(CXX):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_CFLAGS[ \t]*=\).*$$:\1 '"$(CFLAGS):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_CFLAGS_RELEASE[ \t]*=\).*$$:\1 :' devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_CFLAGS_DEBUG[ \t]*=\).*$$:\1 :' devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+	sed -i 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(LDFLAGS):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 
 	# Qt Extended configuration step
-	mkdir -p ../build
-	cd ../build && "$(CONFIGURE)" -device $(QTMOKO_DEVICE) -system-qt -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include
+	mkdir -p ../build-neo
+	cd ../build-neo && "$(CONFIGURE)" -device neo -system-qt -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include
+
+	mkdir -p ../build-gta04
+	cd ../build-gta04 && "$(CONFIGURE)" -device gta04 -system-qt -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include
 
 override_dh_auto_build:
-	$(MAKE) -C ../build
+	$(MAKE) -C ../build-neo
+	$(MAKE) -C ../build-gta04
 
 override_dh_auto_clean:
-	[ ! -f $(QMAKE_CONF).orig ] || mv $(QMAKE_CONF).orig $(QMAKE_CONF)
-	rm -fr ../build
+	rm -fr ../build-gta04
+	rm -fr ../build-neo
 	rm -f sdk/LICENSE.QtopiaGPL
-	# debian/control
-	sed 's/@QTMOKO_DEVICE@/$(QTMOKO_DEVICE)/g;s/@QTMOKO_DEVICE_SHORTDESC@/$(QTMOKO_DEVICE_SHORTDESC)/g' debian/control.in >debian/control
-	# debhelper files
-	rm -f debian/qtmoko-*.install
-	rm -f debian/qtmoko-*.links
-	rm -f debian/qtmoko-*.init
 
 override_dh_auto_install:
-	$(MAKE) -C ../build install
-	mkdir -p debian/tmp/opt/qtmoko
-	cp -al ../build/image/* debian/tmp/opt/qtmoko/
+	$(MAKE) -C ../build-neo install
+	mkdir -p debian/tmp-neo/opt/qtmoko
+	cp -r ../build-neo/image/* debian/tmp-neo/opt/qtmoko
+
+	$(MAKE) -C ../build-gta04 install
+	mkdir -p debian/tmp-gta04/opt/qtmoko
+	cp -r ../build-gta04/image/* debian/tmp-gta04/opt/qtmoko
 
 	# remove patented stuff - can be installed via package later
-	rm -f debian/tmp/opt/qtmoko/plugins/codecs/libmadplugin.so
-	rm -f debian/tmp/opt/qtmoko/lib/libmad.so.0
+	rm -f debian/tmp-neo/opt/qtmoko/plugins/codecs/libmadplugin.so
+	rm -f debian/tmp-neo/opt/qtmoko/lib/libmad.so.0
+	rm -f debian/tmp-gta04/opt/qtmoko/plugins/codecs/libmadplugin.so
+	rm -f debian/tmp-gta04/opt/qtmoko/lib/libmad.so.0
 
 	# symlink to ttfont installed together with X
-	rm -rf debian/tmp/opt/qtmoko/lib/fonts
+	rm -rf debian/tmp-neo/opt/qtmoko/lib/fonts
+	rm -rf debian/tmp-gta04/opt/qtmoko/lib/fonts
 
 	# Install missing dependency for qt_plugins/script/libqtscriptdbus.so
-	install -m"a+r,u+w" ../build/qtopiacore/target/lib/libQtScript.so.4.7.4 debian/tmp/opt/qtmoko/lib/
+	install -m"a+r,u+w" ../build-neo/qtopiacore/target/lib/libQtScript.so.4.7.4 debian/tmp-neo/opt/qtmoko/lib
+	install -m"a+r,u+w" ../build-gta04/qtopiacore/target/lib/libQtScript.so.4.7.4 debian/tmp-gta04/opt/qtmoko/lib	
 	
 	# Install libQtDeclarative so that dh_shlibdeps does not complain
-	install -m"a+r,u+w" ../build/qtopiacore/target/lib/libQtDeclarative* debian/tmp/opt/qtmoko/lib/
+	install -m"a+r,u+w" ../build-neo/qtopiacore/target/lib/libQtDeclarative* debian/tmp-neo/opt/qtmoko/lib/
+	install -m"a+r,u+w" ../build-gta04/qtopiacore/target/lib/libQtDeclarative* debian/tmp-gta04/opt/qtmoko/lib/
 
 override_dh_makeshlibs:
 	dh_makeshlibs -n

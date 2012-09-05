@@ -29,10 +29,12 @@
 #include <sys/select.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <QVibrateAccessory>
 
 #include "vibro.h"
 
-FILE* fvibro=NULL;
+QVibrateAccessory vib;
+
 pthread_t vibro_timer;
 int timer_set=0;
 
@@ -40,55 +42,30 @@ int timer_set=0;
 
 int init_vibro()
 {
-    /* 2.6.34 */
-    fvibro = fopen("/sys/class/leds/gta02::vibrator/brightness", "w");
-    if (fvibro != NULL) return 0;
-
-    fvibro = fopen("/sys/class/leds/neo1973:vibrator/brightness", "w");
-    if (fvibro != NULL) return 0;
-
-    fvibro = fopen("/sys/devices/platform/neo1973-vibrator.0/leds/neo1973:vibrator/brightness", "w");
-    if (fvibro != NULL) return 0;
-
-    fprintf(stderr, "Vibro: can't init.\n");
-    return 1;
+    QVibrateAccessory vib;
 }
 
 void* callback(void *data)
 {
     timer_set = 1;
     usleep(VIBRATION_TIME*1000);
-    if (fvibro)
-    {
-        fprintf(fvibro, "%d", 0);
-        fflush(fvibro);
-    }
+    vib.setVibrateNow(false);
     timer_set = 0;
     return NULL;
 }
 
 int set_vibro(BYTE level)
 {
-    if (fvibro) 
+    if (!timer_set)
     {
-        if (!timer_set)
-        {
-            fprintf(fvibro, "%d", level);
-            fflush(fvibro);
-            pthread_create( &vibro_timer, NULL, callback, NULL);
-        }
+        vib.setVibrateNow(true);
+        pthread_create( &vibro_timer, NULL, callback, NULL);
     }
     return 0;
 }
 
 int close_vibro()
 {
-    if (fvibro)
-    {
-        fprintf(fvibro, "%d", 0);
-        fflush(fvibro);
-        if (timer_set) pthread_join(vibro_timer, NULL);
-        fclose(fvibro);
-    }
+    if (timer_set) pthread_join(vibro_timer, NULL);
     return 0;
 }
