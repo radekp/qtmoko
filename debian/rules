@@ -41,19 +41,10 @@ override_dh_testdir:
 	git submodule update
 	scripts/git-clean.sh
 	git apply devices/gta04/patches/restart-when-modem-stops-working.patch
+
+	# Make mokofaen default theme for debian package
 	sed -i 's/finxi/mokofaen/g' devices/neo/src/server/core_server/etc/default/Trolltech/qpe.conf
 	sed -i 's/finxi/mokofaen/g' devices/gta04/src/server/core_server/etc/default/Trolltech/qpe.conf
-
-override_dh_auto_configure:
-	# Add built qt to LD path to avoid libQtSql.so.4 missing error
-	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(PWD)/../build/qtopiacore/host/lib/
-
-	# Fix wrong filename for libjscore.a
-	# http://qt-project.org/forums/viewthread/12732
-	mkdir -p $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/
-	mkdir -p $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/
-	ln -s $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/jscore. $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a
-	ln -s $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/jscore. $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a
 
 	# Patch the qmake.conf file with proper toolchain configuration
 	sed -i 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
@@ -67,7 +58,6 @@ override_dh_auto_configure:
 	sed -i 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 	sed -i 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(LDFLAGS):" devices/neo/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 
-	# Patch the qmake.conf file with proper toolchain configuration
 	sed -i 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 	sed -i 's:^\(QMAKE_CXX[ \t]*=\).*$$:\1 '"$(CXX):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 	sed -i 's:^\(QMAKE_LINK[ \t]*=\).*$$:\1 '"$(CXX):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
@@ -78,6 +68,17 @@ override_dh_auto_configure:
 	sed -i 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 	sed -i 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 	sed -i 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(LDFLAGS):" devices/gta04/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+
+override_dh_auto_configure:
+	# Add built qt to LD path to avoid libQtSql.so.4 missing error
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(PWD)/../build/qtopiacore/host/lib/
+
+	# Fix wrong filename for libjscore.a
+	# http://qt-project.org/forums/viewthread/12732
+	mkdir -p $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/
+	mkdir -p $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/
+	ln -s $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/jscore. $(PWD)/../build-neo/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a
+	ln -s $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/jscore. $(PWD)/../build-gta04/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a
 
 	# Qt Extended configuration step
 	mkdir -p ../build-neo
