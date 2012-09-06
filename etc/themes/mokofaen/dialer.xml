@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <page xmlns="http://www.trolltech.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.trolltech.com themedview.xsd" name="dialer" base="themes/mokofaen" keypad="no">
 
-<dialer-lineedit-plugin name="dialernumber" rect="0,0,0x64" bold="no" colorGroup="Background=#000000;Base=#000000;Text=#FFFFFF" bgcolor="Text" size="13"/>
-<image rect="0,0,480x64" name="dialnum_bkgr" src="dialernumber.svg" interactive="no" scale="yes" />
+<dialer-lineedit-plugin name="dialernumber" rect="0,0,0x40" bold="no" colorGroup="Background=#000000;Base=#000000;Text=#FFFFFF" bgcolor="Text" size="11"/>
+<dialer-lineedit-plugin name="dialercontact" rect="0,40,0x24" bold="no" colorGroup="Background=#000000;Base=#000000;Text=#FFFFFF" bgcolor="Text" size="6"/>
+
 
 
     <layout name="vertical" rect="0,64,0,0" orientation="vertical" spacing="-1" align="vcenter">
@@ -10,21 +11,20 @@
 	<!-- ROW 1-->
 	<layout name="horizontal" rect="0,0,0x92" orientation="horizontal" spacing="0" align="hcenter">
 	<group>
-	<image rect="0,0,0,100%" src="buttonbkg.png" scale="vertical" tile="yes" />
 	<rect rect="0,0,480x92">
 		<group rect="0,0,160x92" name="one" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),1">
 			<image rect="0,0,0,0" name="one_bg" src="button.png" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-			<text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">1</text>
+			<text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">1</text>
 	    	</group>
 	    	<group rect="160,0,160x92" name="two" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),2">
 			<image rect="0,0,0,0" name="two_bg" src="button.png" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-	  		<text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">2</text>
-	  		<text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">ABC</text>
+	  		<text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">2</text>
+	  		<text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">ABC</text>
 	    	</group>
 	    	<group rect="320,0,160x92" name="three" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),3">
 	  		<image rect="0,0,0,0" name="three_bg" src="button.png" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-	  		<text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">3</text>
-	  		<text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">DEF</text>
+	  		<text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">3</text>
+	  		<text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">DEF</text>
 	    	</group>
 	</rect>
 	</group>
@@ -34,22 +34,21 @@
 	<!-- ROW 2-->
 	<layout rect="0,0,0x92" orientation="horizontal" spacing="-1" align="hcenter" >
 	<group>
-	<image rect="0,0,0,100%" src="buttonbkg.png" scale="vertical" tile="yes" />
 	<rect rect="0,0,480x92">
 	        <group rect="0,0,160x92" name="four" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),4">
         		<image rect="0,0,0,0" name="four_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-        		<text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">4</text>
-        		<text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">GHI</text>
+        		<text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">4</text>
+        		<text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">GHI</text>
 		</group>
 	    	<group rect="160,0,160x92" name="five" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),5">
         	  	<image rect="0,0,0,0" name="five_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-		        <text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">5</text>
-        		<text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">JKL</text>
+		        <text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">5</text>
+        		<text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">JKL</text>
 		</group>
 	    	<group rect="320,0,160x92" name="six" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),6">
 			<image rect="0,0,0,0" name="six_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-		        <text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">6</text>
-		        <text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">MNO</text>
+		        <text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">6</text>
+		        <text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">MNO</text>
 	    	</group>
 
 	</rect>
@@ -60,22 +59,21 @@
 	<!-- ROW 3-->
 	<layout rect="0,0,0x92" orientation="horizontal" spacing="-1" align="hcenter" >
 	<group>
-	<image rect="0,0,0,100%" src="buttonbkg.png" scale="vertical" tile="yes" />
 	<rect rect="0,0,480x92">
 	    	<group rect="0,0,160x92" name="seven" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),7">
 			<image rect="0,0,0,0" name="seven_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-		        <text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">7</text>
-		        <text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">PQRS</text>
+		        <text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">7</text>
+		        <text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">PQRS</text>
 		</group>
 		<group rect="160,0,160x92" name="eight" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),8">
 			<image rect="0,0,0,0" name="eight_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-		        <text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">8</text>
-		        <text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">TUV</text>
+		        <text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">8</text>
+		        <text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">TUV</text>
 		</group>
 	    	<group rect="320,0,160x92" name="nine" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),9">
 			<image rect="0,0,0,0" name="nine_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-		        <text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">9</text>
-		        <text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">WXYZ</text>
+		        <text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">9</text>
+		        <text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">WXYZ</text>
 		</group>
 		<!--
 		<group rect="390,0,90x92" name="callhistory" interactive="yes" onclick="message=Qtopia/Phone/TouchscreenDialer,showCallHistory()">
@@ -89,20 +87,19 @@
 	<!-- ROW 4-->
 	<layout rect="0,0,0x92" orientation="horizontal" spacing="-1" align="hcenter" >
 	<group>
-	<image rect="0,0,0,100%" src="buttonbkg.png" scale="vertical" tile="yes" />
 	<rect rect="0,0,480x92">
 	    	<group rect="0,0,160x92" name="star" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),*">
 			<image rect="0,0,0,0" name="star_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-		        <text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">*</text>
-		        <text rect="25,-30,-25,-10" bold="no" color="#000000" size="5" align="hcenter,vcenter">+</text>
+		        <text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">*</text>
+		        <text rect="75,43,70x45" bold="no" color="#4d4d4d" size="5" align="hcenter,vcenter">+</text>
 		</group>
 		<group rect="160,0,160x92" name="zero" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),0">
 			<image rect="0,0,0,0" name="zero_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-		        <text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">0</text>
+		        <text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">0</text>
 		</group>
 		<group rect="320,0,160x92" name="hash" interactive="yes" onclick="message=VirtualKeyboard,keyPress(int),#">
 			<image rect="0,0,0,0" name="hash_bg" src="button.svg" onclick="src=buttonp.svg" interactive="yes" scale="yes" />
-		        <text rect="45,8,-45,-37" bold="yes" color="#000000" size="8" align="hcenter,vcenter">#</text>
+		        <text rect="15,18,45x70" bold="yes" color="#000000" size="16" align="hcenter,vcenter">#</text>
 		</group>
 		<!--
 		<group rect="390,0,90x92" name="messages" interactive="yes" onclick="message=Qtopia/Phone/TouchscreenDialer,sms()">
@@ -116,7 +113,6 @@
 	<!-- ROW 5-->
 	<layout rect="0,0,0x92" orientation="horizontal" spacing="-1" align="hcenter" >
 	<group>
-	<image rect="0,0,0,100%" src="buttonbkg.png" scale="vertical" tile="yes" />
 	<rect rect="0,0,480x92">
 	    	<group rect="0,0,100x92" name="selectcontact" interactive="yes" onclick="message=Qtopia/Phone/TouchscreenDialer,selectContact()">
 	  		<image rect="0,0,0,0" name="contact_bg" src="generic-personal-contact.png" onclick="src=generic-personal-contact_p.png" interactive="yes" scale="yes" />

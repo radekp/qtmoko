@@ -34,8 +34,17 @@ TOOLCHAIN := linux-native-g++
 %:
 	dh $@
 
-override_dh_auto_configure:
+override_dh_testdir:
+	dh_testdir
+	git checkout -f
+	git submodule init
+	git submodule update
+	scripts/git-clean.sh
+	git apply devices/gta04/patches/restart-when-modem-stops-working.patch
+	sed -i 's/finxi/mokofaen/g' devices/neo/src/server/core_server/etc/default/Trolltech/qpe.conf
+	sed -i 's/finxi/mokofaen/g' devices/gta04/src/server/core_server/etc/default/Trolltech/qpe.conf
 
+override_dh_auto_configure:
 	# Add built qt to LD path to avoid libQtSql.so.4 missing error
 	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(PWD)/../build/qtopiacore/host/lib/
 

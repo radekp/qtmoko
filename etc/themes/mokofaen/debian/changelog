@@ -1,3 +1,10 @@
+qtmoko-theme-mokofaen (3-1) unstable; urgency=low
+
+  * Updated to v2.1 from Joif
+  * Using avg_current_in_suspend
+
+ -- Radek Polak <psonek2@seznam.cz>  Wed, 14 Dec 2011 13:37:56 +0100
+
 qtmoko-theme-mokofaen (1-1) unstable; urgency=low
 
   * Initial release

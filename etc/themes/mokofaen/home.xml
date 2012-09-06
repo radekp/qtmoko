@@ -4,37 +4,48 @@
     <plugin name="background-plugin"/>
     <plugin name="homescreen-image-plugin"/>
   </group>
-  <!--<rect rect="0,13%,50x12">
-    <text name="location" size="5" bold="yes" rect="0,0,50%x12pt" align="left,vcenter" color="#ffffff" outline="#000000" transient="yes" active="expr:@/UI/HomeScreen/ShowLocation">
-      expr:@/Telephony/Status/OperatorName
-    </text>
-    </rect>-->
+
 
 
 <!-- CLOCK -->
-   <layout rect="-200,50,180x190" orientation="vertical" align="hcenter">
-   	<group rect="0,0,180x190">
-     	<image rect="0,0,180x190" src="clock.png"/>
-	<rect rect="0,0,180x190" orientation="vertical" spacing="0">
+   <layout rect="-200,50,180x277" orientation="vertical" align="hcenter">
+   	<group rect="0,0,180x277">
+     	<image rect="0,0,180x277" src="clock.png"/>
+	<rect rect="0,0,180x277" orientation="vertical" spacing="0">
 		<rect name="date" rect="0,7,180x35">
 				<text color="#FFFFFF" bold="no" align="hcenter,vcenter" size="8" active="expr:@/UI/HomeScreen/ShowTime">
 				expr:@/UI/DisplayTime/BriefDate
 				</text>
 		</rect>
-		<rect name="time" rect="0,40,180x76">
-				<text color="#000000" bold="no" align="hcenter,vcenter" size="16" active="expr:@/UI/HomeScreen/ShowTime">
+		<rect name="time" rect="0,40,169x76">
+				<text color="#000000" bold="no" align="right,vcenter" size="16" active="expr:@/UI/HomeScreen/ShowTime">
 				expr:@/UI/DisplayTime/Time
 				</text>
 		</rect>
-		<rect name="oper_name" rect="0,113,180x35">
-				<text name="caption" size="5" bold="yes" outline="#000000" color="#FFFFFF" align="hcenter,vcenter" transient="yes" active="expr:!@/UI/ActiveWindow/Caption">
-				expr:@/Telephony/Status/OperatorName
-				</text>
-		</rect>
-		<rect name="profile" rect="0,148,180x35">
+		<rect name="profile" rect="0,118,180x25">
 	    			<text size="5" bold="yes" align="hcenter,vcenter" color="#ffffff" outline="#000000" transient="yes" active="expr:@/UI/HomeScreen/ShowProfile &amp;&amp; !@/UI/Profile/Default">
 	      			expr:@/UI/Profile/Name . " "
 	    			</text>
+		</rect>
+		<rect name="oper_name" rect="45,149,135x25">
+				<text name="caption" size="5" bold="yes" outline="#000000" color="#FFFFFF" align="left,vcenter" transient="yes" active="expr:!@/UI/ActiveWindow/Caption">
+				expr:@/Telephony/Status/OperatorName
+				</text>
+		</rect>
+		<rect rect="45,179,135x25"> 
+   				<text name="location" size="5" bold="yes" align="left,vcenter" color="#ffffff" outline="#000000" transient="yes" active="expr:@/UI/HomeScreen/ShowLocation">
+      				expr:@/Telephony/Status/CellLocation
+    				</text>
+  		</rect>
+		<rect rect="45,209,135x25">
+    				<text name="current_now" size="5" bold="yes" align="left,vcenter" color="#ffffff" outline="#000000" transient="yes" >
+      				expr:@/UI/Battery/current_now . "/". @/UI/Battery/avg_current_in_suspend . "mA"
+    				</text>
+		</rect>
+		<rect rect="45,239,135x25">
+    				<text name="pressure" size="5" bold="yes" align="left,vcenter" color="#ffffff" outline="#000000" transient="yes" active="expr:@/UI/HomeScreen/ShowPressure">
+      				expr:@/UI/Pressure/mb . "mb "
+    				</text>
 		</rect>
 	</rect>
 	</group>
@@ -42,8 +53,9 @@
 <!-- CLOCK END -->
 
 
+
 <!-- CALLS & MESSAGES -->
-    <layout rect="126,40%,0x45pt" orientation="horizontal">
+    <layout rect="126,55%,0x45pt" orientation="horizontal">
 	<rect name="calls" rect="0,28pt,0x0" transient="yes" active="expr:@/Communications/Calls/MissedCalls == 1" interactive="yes">
 		<layout align="hcenter">
 			<rect rect="0,0,137x95">
@@ -93,7 +105,7 @@
     </rect>
 
 
-<!-- NEW VIEW -->
+<!-- HOMEBAR -->
 <layout rect="0,0,106,100%" orientation="vertical" align="vcenter">
 	<rect rect="0,0,106x400">
 	<group>
@@ -107,13 +119,13 @@
 	</group>
 	</rect>
 </layout>
-<!-- NEW VIEW END-->
+<!-- HOMEBAR END-->
 
 
 <!-- PIN BOX -->
 	<layout name="pinbox" rect="0,0,0,0" orientation="vertical" align="hcenter,vcenter" transient="yes" active="no" keypad="no">
-		<rect rect="0,0,0x0" brush="#666666">
-			<rect name="pinbox" rect="0,37,480x115" brush="#666666">
+		<rect rect="0,0,0x0" brush="#000000">
+			<rect name="pinbox" rect="0,37,480x115" brush="#000000">
 				<text name="pinbox" rect="0,0,0x0" size="7" color="Text" align="hcenter,vcenter"/>
 			</rect>
 			<layout name="vertical" rect="0,152,480x410" orientation="vertical" spacing="-1" align="vcenter">
