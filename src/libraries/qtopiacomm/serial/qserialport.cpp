@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <errno.h>
+#include <time.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/stat.h>
@@ -58,6 +59,7 @@ public:
         this->keepOpen = true;
         this->notifier = 0;
         this->timer  = 0;
+        this->zeroReadSecs = 0;
     }
     ~QSerialPortPrivate()
     {
@@ -80,6 +82,7 @@ public:
     bool    keepOpen;
     QSocketNotifier *notifier;
     QTimer *timer;
+    time_t  zeroReadSecs;
 };
 
 /*!
@@ -449,6 +452,29 @@ qint64 QSerialPort::readData( char *data, qint64 maxlen )
         // that return zero when they should be returning EWOULDBLOCK.
         qLog(Modem) << "QSerialPort::readData: other end closed the connection" ;
         close();
+    }
+    if(result == 0) {
+        if(d->device != "/dev/ttyHS_Application") {
+            return 0;
+        }
+        struct timespec tp;
+        if (!clock_gettime(CLOCK_MONOTONIC, &tp) == 0)
+            return 0;
+
+        if(d->zeroReadSecs == 0) {
+            d->zeroReadSecs = tp.tv_sec;
+            return 0;
+        }
+        if(tp.tv_sec - d->zeroReadSecs < 30) {
+            return 0;
+        }
+        qWarning() << "QSerialPort::readData: received 0 bytes in last 30 secs, restarting qtmoko";
+        QProcess *p = new QProcess();
+        p->start("qterminal", QStringList() << "-c" << "fix-modem-reenumerate.sh");
+        d->zeroReadSecs = 0;
+        return 0;
+    } else {
+        d->zeroReadSecs = 0;
     }
     return result;
 #else

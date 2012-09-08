@@ -40,7 +40,7 @@ private:
 public:
     void chat( const QString& command );
     void chat( const QString& command, QObject *target, const char *slot,
-               QAtResult::UserData *data = 0 );
+               QAtResult::UserData *data = 0, bool noResponse = false );
     void chatPDU( const QString& command, const QByteArray& pdu,
                   QObject *target, const char *slot,
                   QAtResult::UserData *data = 0 );
