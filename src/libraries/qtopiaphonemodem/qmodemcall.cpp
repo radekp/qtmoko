@@ -497,7 +497,13 @@ void QModemCall::tone( const QString& tones )
     if ( state() == QPhoneCall::Connected && tones.length() > 0 ) {
         provider()->atchat()->chat( formatTones( tones, provider()->vtsType() ),
                               this, SLOT(vtsRequestDone(bool,QAtResult)),
-                              new QToneUserData( tones ) );
+                              new QToneUserData( tones )
+#ifdef QT_QWS_GTA04
+	// The GTA04 modem doesn't provide any response to AT+VTS, so
+	// don't wait for a response.
+			      , true
+#endif
+			      );
     }
 }
 

@@ -44,7 +44,8 @@ class QAtChatCommand : public QObject
     friend class QAtChat;
     friend class QAtChatPrivate;
 public:
-    QAtChatCommand( const QString& command, QAtResult::UserData *data );
+    QAtChatCommand( const QString& command, QAtResult::UserData *data,
+		    bool noResponse = false );
     QAtChatCommand( const QString& command, const QByteArray& pdu,
                     QAtResult::UserData *data );
     ~QAtChatCommand();

@@ -92,6 +92,7 @@ public:
     bool primed;
     bool forcedAbort;
     QAtChatCommand *next;
+    bool noResponse;
 };
 
 class QAtChatPrivate
@@ -205,9 +206,11 @@ static QByteArray fromHex( const QString& hex )
     return bytes;
 }
 
-QAtChatCommand::QAtChatCommand( const QString& command, QAtResult::UserData *data )
+QAtChatCommand::QAtChatCommand( const QString& command, QAtResult::UserData *data,
+				bool noResponse )
 {
     d = new QAtChatCommandPrivate( command, data );
+    d->noResponse = noResponse;
 }
 
 QAtChatCommand::QAtChatCommand( const QString& command, const QByteArray& pdu,
@@ -318,9 +321,9 @@ void QAtChat::chat( const QString& command )
     \sa QAtResult, QAtResultParser
 */
 void QAtChat::chat( const QString& command, QObject *target, const char *slot,
-                    QAtResult::UserData *data )
+                    QAtResult::UserData *data, bool noResponse )
 {
-    QAtChatCommand *cmd = new QAtChatCommand( command, data );
+    QAtChatCommand *cmd = new QAtChatCommand( command, data, noResponse );
     if ( target && slot )
         connect( cmd, SIGNAL(done(bool,QAtResult)), target, slot );
     queue( cmd );
@@ -981,6 +984,13 @@ void QAtChat::prime()
     // Reset the retry on non-echo timer, to detect the command echo.
     if ( d->retryOnNonEcho != -1 ) {
         d->retryTimer->start( d->retryOnNonEcho );
+    }
+
+    // If we shouldn't expect any response to this command, call
+    // done() immediately with an "OK" result.
+    if (cmd->d->noResponse) {
+        cmd->d->result.setResult( "OK" );
+	done();
     }
 }
 
