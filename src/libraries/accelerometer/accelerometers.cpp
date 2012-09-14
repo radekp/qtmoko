@@ -53,7 +53,17 @@
 #include "accelerometers.h"
 
 pthread_t thread;
-int finished=0;
+
+struct thread_data_t
+{
+  int finished;
+  useconds_t interval_us;
+  accelerometer_cb_t callback;
+  void *closure;
+};
+
+struct thread_data_t global_thread_data = { 0, 0, NULL, NULL };
+
 double acx=0,acy=0,acz=0;
 
 #ifdef QT_QWS_GTA04
@@ -154,6 +164,7 @@ int accelerometer_moo_gta04(AccelHandle *accel)
 	size_t rval;
 	fd_set fds;
 	struct timeval t;
+	int got_measurement = 0;
 
 	FD_ZERO(&fds);
 	FD_SET(accel->fd, &fds);
@@ -202,6 +213,7 @@ int accelerometer_moo_gta04(AccelHandle *accel)
 			accel->x = accel->lx;
 			accel->y = accel->ly;
 			accel->z = accel->lz;
+			got_measurement = 1;
 		}
 	}
 
@@ -222,7 +234,7 @@ int accelerometer_moo_gta04(AccelHandle *accel)
         if (acy<-1) acy=-1; if (acy>1) acy=1;
         //if (acz<-1) acz=-1; if (acz>1) acz=1;
 	
-	return 0;
+	return got_measurement;
 }
 
 int accelerometer_moo(AccelHandle *accel)
@@ -244,12 +256,24 @@ int accelerometer_moo(AccelHandle *accel)
 void* accel_work(void *data)
 {
 	AccelHandle *accel;
-        int *finished = (int*)data;
+	thread_data_t *my_thread_data = (thread_data_t *)data;
 
 	accel = accelerometer_open();
-	while ( !(*finished) ) {
-                accelerometer_moo(accel);
-                usleep(GET_DATA_INTERVAL);
+	while ( !(my_thread_data->finished) ) {
+
+		/* Call accelerometer_moo() until we have an
+		   acceleration measurement. */
+		while (!accelerometer_moo(accel))
+		  ;
+
+		/* If the library user specified a callback, call
+		   it. */
+		if (my_thread_data->callback)
+		  (*my_thread_data->callback)(my_thread_data->closure,
+					      acx, acy, acz);
+
+		/* Sleep before taking another measurement. */
+                usleep(my_thread_data->interval_us);
         }
 
 	accelerometer_shutdown(accel);
@@ -271,7 +295,7 @@ int pc_mode=0;
 /* The accelerometer work thread */
 void* accel_work(void *data)
 {
-        int *finished = (int*)data;
+	thread_data_t *my_thread_data = (thread_data_t *)data;
 
         int fd;
         if ((fd = open(JS_DEVICE_NEO, O_RDONLY)) < 0)
@@ -298,7 +322,7 @@ void* accel_work(void *data)
         axis = (int*)calloc(axes, sizeof(int));
         //button = (char*)calloc(buttons, sizeof(char));
 
-        while ( !(*finished) )
+        while ( !(my_thread_data->finished) )
         {
                 size_t rval;
                 fd_set fds;
@@ -346,7 +370,13 @@ void* accel_work(void *data)
                         /* No data */
                 }
 
-                usleep(GET_DATA_INTERVAL);
+		/* If the library user specified a callback, call
+		   it. */
+		if (my_thread_data->callback)
+		  (*my_thread_data->callback)(my_thread_data->closure,
+					      acx, acy, acz);
+
+                usleep(my_thread_data->interval_us);
         }
 
         close(fd);
@@ -356,15 +386,24 @@ void* accel_work(void *data)
 
 #endif
 
-void accelerometer_start()
+void accelerometer_start(int interval_ms,
+			 accelerometer_cb_t callback,
+			 void *closure)
 {
-	finished = 0;
-        pthread_create( &thread, NULL, accel_work, (void*)(&finished));
+	global_thread_data.finished = 0;
+	global_thread_data.interval_us = 1000 * interval_ms;
+	if (global_thread_data.interval_us < GET_DATA_INTERVAL)
+	{
+	  global_thread_data.interval_us = GET_DATA_INTERVAL;
+	}
+	global_thread_data.callback = callback;
+	global_thread_data.closure = closure;
+        pthread_create( &thread, NULL, accel_work, &global_thread_data);
 }
 
 void accelerometer_stop()
 {
-	finished = 1;
+	global_thread_data.finished = 1;
 	pthread_join(thread, NULL);
 }
 

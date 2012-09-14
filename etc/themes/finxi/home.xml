@@ -5,9 +5,6 @@
     <plugin name="homescreen-image-plugin"/>
   </group>
   <rect rect="0,13%,0x12pt">
-    <text name="location" size="5" bold="yes" rect="0,0,50%x12pt" align="left,vcenter" color="#ffffff" outline="#000000" transient="yes" active="expr:@/UI/HomeScreen/ShowLocation">
-      expr:" " . @/Telephony/Status/CellLocation
-    </text>
     <text name="profile" size="5" bold="yes" rect="50%,0,48%x12pt" align="right,vcenter" color="#ffffff" outline="#000000" transient="yes" active="expr:@/UI/HomeScreen/ShowProfile &amp;&amp; !@/UI/Profile/Default">
       expr:@/UI/Profile/Name . " "
     </text>
@@ -17,7 +14,12 @@
     <text name="current_now" size="5" bold="yes" rect="2%,0,48%x12pt" align="left,vcenter" color="#ffffff" outline="#000000" transient="yes" >
       expr:@/UI/Battery/current_now . "/" . @/UI/Battery/avg_current_in_suspend . "/" . @/UI/Battery/current_now_in_suspend . "mA"
     </text>
-    </rect>
+  </rect>
+  <rect rect="0,18%,0x12pt">
+    <text name="location" size="5" bold="yes" rect="0%,0,50%x12pt" align="left,vcenter" color="#ffffff" outline="#000000" transient="yes" active="expr:@/UI/HomeScreen/ShowLocation">
+      expr:" " . @/Telephony/Status/CellLocation
+    </text>
+  </rect>  
     <layout rect="0,20%,0x45pt" align="hcenter">
 	  <rect name="calls" rect="0,0,0x0" transient="yes" active="expr:@/Communications/Calls/MissedCalls > 0" interactive="yes">
         <layout align="hcenter">

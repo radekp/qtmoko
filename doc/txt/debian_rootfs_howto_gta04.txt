@@ -262,7 +262,7 @@ Step 8 - install QtMoko
 
 * I use qemu armel host for building qtmoko package. It should be as simple as
 
-git checkout v48_gta04
+git checkout v48
 dpkg-buildpackage
 
 * Note that you may need to install some dependencies before building:
@@ -287,8 +287,21 @@ dpkg -i qtmoko-gta04_48-1_armel.deb
 update-rc.d qtmoko-gta04 defaults
 rm qtmoko-gta04_48-1_armel.deb
 exit
-killall qpe.sh  # recent versions start qtmoko after install, so kill it
+killall qpe.sh                  # recent versions start qtmoko after install, so kill it
+rm -rf /media/card/home/root/*  # remove all stuff created by qpe
 
+
+Step 8.1 - install mokofaen theme
+=================================
+
+* Mokofaen is now default theme for qtmoko - but it's not part of qtmoko deb
+  package, so that user can uninstall it to save space. So install mokofaen:
+
+chroot /media/card/
+wget http://qtmoko.sourceforge.net/apps/qtmoko-theme-mokofaen_3-1_all.deb
+dpkg -i qtmoko-theme-mokofaen_3-1_all.deb
+rm qtmoko-theme-mokofaen_3-1_all.deb
+exit
 
 Step 8.1 - mokofaen theme
 =========================
@@ -311,7 +324,7 @@ http://github.com/radekp/linux-2.6/
 
 * Checkout branch for your qtmoko version:
 
-git checkout v3.2-gta04-qtmoko-v48
+git checkout v3.5-gta04-qtmoko-v48
 
 * Create package in buildhost:
 

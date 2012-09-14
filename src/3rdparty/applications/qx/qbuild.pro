@@ -4,6 +4,7 @@ TARGET=qx
 CONFIG+=qtopia
 LIBS+=-lX11 -lXtst
 DEFINES+=QTOPIA
+MODULES*=accelerometer
 
 # I18n info
 STRING_LANGUAGE=en_US

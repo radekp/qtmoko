@@ -11,8 +11,6 @@
 
 #include <QTimer>
 
-#define EVENT_PATH "/dev/input/event3"
-
 #ifdef QTOPIA
 
 /**
@@ -42,7 +40,6 @@ signals:
 	void maybe_rotate(int deg);
 	int neighbour(int value, int target, int neighbour);
 	int define_position(void);
-	int read_packet();
 	bool packet_reader();
 	
 	QTimer *timer;
@@ -62,10 +59,8 @@ signals:
 	int down;
 	int last_pos;
 	int current_pos;
-	int event3;
 	int debug;
 	int initial_rotation;
-	ushort skip_zero;
 };
 
 #else // QTOPIA

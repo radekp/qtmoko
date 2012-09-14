@@ -26,7 +26,11 @@
 
 #include <qtopiaglobal.h>
 
-QTOPIA_EXPORT void accelerometer_start();
+typedef void (*accelerometer_cb_t)(void *, double, double, double);
+
+QTOPIA_EXPORT void accelerometer_start(int interval_ms,
+				       accelerometer_cb_t callback,
+				       void *closure);
 QTOPIA_EXPORT void accelerometer_stop();
 
 /* On the GTA04, the values returned by the following are in units of

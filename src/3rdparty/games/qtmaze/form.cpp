@@ -854,7 +854,7 @@ Form::Form(QWidget *parent, Qt::WFlags f)
     info1_lbl->setText( "<font color=\"#e0bc70\" size=\"" FONT_SIZE "\">Touch the screen to continue</font>" );
 
     InitState();
-    accelerometer_start();
+    accelerometer_start(0, NULL, NULL);
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(timerAction()));
