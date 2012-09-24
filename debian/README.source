@@ -35,23 +35,23 @@ aptsources=Debian
 tarballname=pdebuild-cross.tgz
 
 [Toolchains]
-packages=g++-4.3-arm-linux-gnueabi
+packages=g++-4.4-arm-linux-gnueabi linux-libc-dev-armel-cross
 reinstall=binutils-multiarch
 source=http://www.emdebian.org/debian
 keyring=emdebian-archive-keyring
-suite=testing
+suite=squeeze
 omitdebsrc=true
 
 [Backports]
-packages=xapt
+packages=dpkg-dev xapt
 source=http://backports.debian.org/debian-backports
 keyring=debian-archive-keyring
 suite=squeeze-backports
 omitdebsrc=true
 
 [Debian]
-packages=dpkg-dev binutils-multiarch build-essential makedev libdpkg-perl
-source=http://cdn.debian.net/debian
+packages=dpkg-dev binutils-multiarch build-essential makedev
+source=http://ftp.fr.debian.org/debian
 keyring=debian-archive-keyring
 suite=squeeze
 omitdebsrc=true
@@ -87,16 +87,19 @@ AUTO_DEBSIGN=no
 # ---%<--end-----
 
 Create the pbuilder chroot:
-
 $ sudo pdebuild-cross-create
+
+Fix the chroot sources.list architecture (maybe a multistrap bug):
+$ sudo pbuilder --login --save-after-login --basetgz /home/pdebuild-cross/pdebuild-cross.tgz
+# sed -i 's/\[.*\] //' /etc/apt/sources.list.d/multistrap-debian.list
+# exit
 $ sudo pdebuild-cross-update
 
 Build:
-
 $ pdebuild-cross -aarmel
 
 On my amd64 box the whole build takes about five hours.
 
  -- Yann Dirson <dirson@debian.org>, Sun, 29 Apr 2012 18:25:22 +0200
 
- -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 11 Dec 2011 13:54:05 +0100
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 23 Sep 2012 10:50:43 +0200

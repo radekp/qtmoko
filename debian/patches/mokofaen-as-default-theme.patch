@@ -1,0 +1,62 @@
+Index: qtmoko/devices/neo/src/server/core_server/etc/default/Trolltech/qpe.conf
+===================================================================
+--- qtmoko.orig/devices/neo/src/server/core_server/etc/default/Trolltech/qpe.conf	2012-09-17 09:39:56.361272314 +0200
++++ qtmoko/devices/neo/src/server/core_server/etc/default/Trolltech/qpe.conf	2012-09-17 09:41:17.889670879 +0200
+@@ -7,7 +7,7 @@
+ AlternateBase_alpha=150
+ Background=#000001
+ Background_alpha=150
+-BackgroundImage=background
++BackgroundImage=herbe_mouillee
+ Base=#000001
+ Base_alpha=75
+ Button=#777777
+@@ -15,7 +15,7 @@
+ ButtonText=#FFFFFF
+ ButtonText_disabled=#FFFFFF
+ ButtonText_disabled_alpha=128
+-DecorationTheme=finxi/decorationrc
++DecorationTheme=mokofaen/decorationrc
+ Foreground=#FFFFFF
+ Foreground_disabled=#FFFFFF
+ Foreground_disabled_alpha=128
+@@ -30,7 +30,7 @@
+ Text=#FFFFFF
+ Text_disabled=#FFFFFF
+ Text_disabled_alpha=128
+-Theme=finxi.conf
++Theme=mokofaen.conf
+ 
+                     
+ [Style]             
+Index: qtmoko/devices/gta04/src/server/core_server/etc/default/Trolltech/qpe.conf
+===================================================================
+--- qtmoko.orig/devices/gta04/src/server/core_server/etc/default/Trolltech/qpe.conf	2012-09-17 09:40:15.205364434 +0200
++++ qtmoko/devices/gta04/src/server/core_server/etc/default/Trolltech/qpe.conf	2012-09-17 09:41:25.637708760 +0200
+@@ -7,7 +7,7 @@
+ AlternateBase_alpha=150
+ Background=#000001
+ Background_alpha=150
+-BackgroundImage=background
++BackgroundImage=herbe_mouillee
+ Base=#000001
+ Base_alpha=75
+ Button=#777777
+@@ -15,7 +15,7 @@
+ ButtonText=#FFFFFF
+ ButtonText_disabled=#FFFFFF
+ ButtonText_disabled_alpha=128
+-DecorationTheme=finxi/decorationrc
++DecorationTheme=mokofaen/decorationrc
+ Foreground=#FFFFFF
+ Foreground_disabled=#FFFFFF
+ Foreground_disabled_alpha=128
+@@ -30,7 +30,7 @@
+ Text=#FFFFFF
+ Text_disabled=#FFFFFF
+ Text_disabled_alpha=128
+-Theme=finxi.conf
++Theme=mokofaen.conf
+ 
+                     
+ [Style]             
