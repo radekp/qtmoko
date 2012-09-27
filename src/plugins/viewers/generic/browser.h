@@ -31,6 +31,7 @@
 class QWidget;
 class QMailMessage;
 class QMailMessagePart;
+class QMailMessagePartContainer;
 
 class Browser: public QTextBrowser
 {
@@ -67,6 +68,7 @@ private:
 
     QString renderPart(const QMailMessagePart& part);
     QString renderAttachment(const QMailMessagePart& part);
+    void renderMultipart(const QMailMessagePartContainer *mail, QString& bodyText);
 
     QString describeMailSize(uint bytes) const;
     QString formatText(const QString& txt) const;

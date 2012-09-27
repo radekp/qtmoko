@@ -60,9 +60,6 @@
 #ifndef QT_NO_BIG_CODECS
 #  define QT_NO_BIG_CODECS
 #endif
-#ifndef QT_NO_CODECS
-#  define QT_NO_CODECS
-#endif
 
 // ItemViews
 #ifndef QT_NO_DIRMODEL

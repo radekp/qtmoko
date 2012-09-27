@@ -220,7 +220,7 @@ state.gta04 {
 		comment.item.1 'HiFi high priority'
 		iface MIXER
 		name 'AVADC Clock Priority'
-		value 'Voice high priority'
+		value 'HiFi high priority'
 	}
 	control.21 {
 		comment.access 'read write'

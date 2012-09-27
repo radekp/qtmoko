@@ -406,6 +406,94 @@ QString Browser::renderAttachment(const QMailMessagePart& part)
 
 typedef QPair<QString, QString> TextPair;
 
+void Browser::renderMultipart(const QMailMessagePartContainer *mail, QString& bodyText)
+{
+    if ( mail->multipartType() == QMailMessagePartContainer::MultipartAlternative ) {
+
+	int partIndex = -1;
+
+	// Find the best alternative for rendering
+	for ( uint i = 0; i < mail->partCount(); i++ ) {
+	    const QMailMessagePart &part = mail->partAt( i );
+
+	    // Parst are ordered simplest to most complex
+	    if ((part.contentType().type().toLower() == "text") ||
+		(part.contentType().type().toLower() == "image")) {
+		// These parts are displayable
+		partIndex = i;
+	    }
+	}
+
+	if (partIndex != -1)
+	    bodyText += renderPart(mail->partAt(partIndex));
+	else
+	    bodyText += "\n<" + tr("No displayable part") + ">\n";
+
+    } else if ( mail->multipartType() == QMailMessagePartContainer::MultipartSigned) {
+		
+	// A multipart/signed message is expected to contain two
+	// parts, a body part and a signature, and the signature
+	// should be verified against the whole of the body part.  For
+	// now, though, we don't do that verification; we just loop
+	// through and render the parts - just as we do for
+	// multipart/mixed, except without allowing for any further
+	// multipart levels.
+	for ( uint i = 0; i < mail->partCount(); i++) {
+	    const QMailMessagePart &part = mail->partAt( i );
+
+	    QMailMessageContentDisposition disposition = part.contentDisposition();
+	    if (!disposition.isNull() && disposition.type() == QMailMessageContentDisposition::Attachment)
+		bodyText += renderAttachment(part);
+	    else
+		bodyText += renderPart(part);
+	}
+
+    } else if ( mail->multipartType() == QMailMessagePartContainer::MultipartRelated ) {
+
+	uint startIndex = 0;
+
+	// If not specified, the first part is the start
+	QByteArray startCID = mail->contentType().parameter("start");
+	if (!startCID.isEmpty()) {
+	    for ( uint i = 1; i < mail->partCount(); i++ ) 
+		if (mail->partAt(i).contentID() == startCID) {
+		    startIndex = i;
+		    break;
+		}
+	}
+
+	// Add any other parts as resources
+	for ( uint i = 0; i < mail->partCount(); i++ ) {
+	    if (i != startIndex)
+		setPartResource(mail->partAt(i));
+	}
+
+	// Render the start part
+	bodyText += renderPart(mail->partAt(startIndex));
+
+    } else {
+
+	// According to RFC 2046, any unrecognised type should be treated as 'mixed'
+	if (mail->multipartType() != QMailMessagePartContainer::MultipartMixed)
+	    qWarning() << "Unimplemented multipart type:" << mail->contentType().toString();
+
+	// Render each part successively according to its disposition
+	for ( uint i = 0; i < mail->partCount(); i++ ) {
+	    const QMailMessagePart& part = mail->partAt(i);
+
+	    if (part.partCount() > 0) {
+		renderMultipart(&part, bodyText);
+	    } else {
+		QMailMessageContentDisposition disposition = part.contentDisposition();
+		if (!disposition.isNull() && disposition.type() == QMailMessageContentDisposition::Attachment)
+		    bodyText += renderAttachment(part);
+		else
+		    bodyText += renderPart(part);
+	    }
+	}
+    }
+}
+
 void Browser::displayHtml(const QMailMessage* mail)
 {
     QString subjectText, bodyText;
@@ -482,62 +570,7 @@ void Browser::displayHtml(const QMailMessage* mail)
                 }
             }
         } else if (mail->partCount() > 0) {
-            if ( mail->multipartType() == QMailMessagePartContainer::MultipartAlternative ) {
-                int partIndex = -1;
-
-                // Find the best alternative for rendering
-                for ( uint i = 0; i < mail->partCount(); i++ ) {
-                    const QMailMessagePart &part = mail->partAt( i );
-
-                    // Parst are ordered simplest to most complex
-                    if ((part.contentType().type().toLower() == "text") ||
-                        (part.contentType().type().toLower() == "image")) {
-                        // These parts are displayable
-                        partIndex = i;
-                    }
-                }
-
-                if (partIndex != -1)
-                    bodyText += renderPart(mail->partAt(partIndex));
-                else
-                    bodyText += "\n<" + tr("No displayable part") + ">\n";
-            } else if ( mail->multipartType() == QMailMessagePartContainer::MultipartRelated ) {
-                uint startIndex = 0;
-
-                // If not specified, the first part is the start
-                QByteArray startCID = mail->contentType().parameter("start");
-                if (!startCID.isEmpty()) {
-                    for ( uint i = 1; i < mail->partCount(); i++ ) 
-                        if (mail->partAt(i).contentID() == startCID) {
-                            startIndex = i;
-                            break;
-                        }
-                }
-
-                // Add any other parts as resources
-                for ( uint i = 0; i < mail->partCount(); i++ ) {
-                    if (i != startIndex)
-                        setPartResource(mail->partAt(i));
-                }
-
-                // Render the start part
-                bodyText += renderPart(mail->partAt(startIndex));
-            } else {
-                // According to RFC 2046, any unrecognised type should be treated as 'mixed'
-                if (mail->multipartType() != QMailMessagePartContainer::MultipartMixed)
-                    qWarning() << "Unimplemented multipart type:" << mail->contentType().toString();
-
-                // Render each part successively according to its disposition
-                for ( uint i = 0; i < mail->partCount(); i++ ) {
-                    const QMailMessagePart& part = mail->partAt(i);
-
-                    QMailMessageContentDisposition disposition = part.contentDisposition();
-                    if (!disposition.isNull() && disposition.type() == QMailMessageContentDisposition::Attachment)
-                        bodyText += renderAttachment(part);
-                    else
-                        bodyText += renderPart(part);
-                }
-            }
+	    renderMultipart(mail, bodyText);
         } else if (mail->messageType() == QMailMessage::System) {
             // Assume this is appropriately formatted
             bodyText = mail->body().data();

@@ -49,12 +49,14 @@ private:
     void ProcessGameState();
     int testbump(double x,double y,   double mm_vx,double mm_vy);
     int edgebump(int tx,int ty,   double x,double y,   double mm_vx,double mm_vy);
-    void tout();
+    void tout(double ax, double ay);
     void apply_temp_phys_res();
     void post_temp_phys_res(double x, double y, double mm_vx, double mm_vy);
     void post_phys_res(double x, double y, double mm_vx, double mm_vy);
     void BumpVibrate(double speed);
     void setButtonsPics();
+    void acc_timerAction(double acx, double acy);
+    static void accel_callback(void *closure, double acx, double acy, double acz);
 
 public:
     Form( QWidget *parent = 0, Qt::WFlags f = 0 );
@@ -62,7 +64,6 @@ public:
 
 private slots:
     void timerAction();
-    void acc_timerAction();
     bool eventFilter(QObject *target, QEvent *event);
     void ScreenTouchedPause();
     void ScreenTouchedContinue();

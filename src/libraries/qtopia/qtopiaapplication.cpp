@@ -81,7 +81,6 @@
 #include <QResizeEvent>
 #include <QLibrary>
 #include <QPluginLoader>
-#include <private/qlocale_p.h>
 #include <QDateTimeEdit>
 #ifdef Q_WS_QWS
 #include <qwsdisplay_qws.h>

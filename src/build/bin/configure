@@ -3090,9 +3090,9 @@ if ( opt("qtopia_ui") && !opt("qte_config") ) {
             $args .= " -no-gfx-qvfb -no-mouse-qvfb -no-kbd-qvfb";
         }
     }
-    if ( opt("gif") ) {
-        $args .= " -qt-gif";
-    }
+    #if ( opt("gif") ) {
+    #    $args .= " -qt-gif";
+    #}
     if ( opt("verbose") ) {
         $args .= " -verbose";
     }
@@ -4965,9 +4965,9 @@ sub setup_dqt_config
     } else {
         $args .= " -debug";
     }
-    if ( opt("gif") ) {
-        $args .= " -qt-gif";
-    }
+    #if ( opt("gif") ) {
+    #    $args .= " -qt-gif";
+    #}
     if ( opt("verbose") ) {
         $args .= " -verbose";
     }

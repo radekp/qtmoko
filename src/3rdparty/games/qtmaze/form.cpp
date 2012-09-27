@@ -195,14 +195,9 @@ void Form::apply_temp_phys_res()
     post_phys_res(tmp_px,tmp_py, tmp_vx,tmp_vy);
 }
 
-void Form::tout()
+void Form::tout(double ax, double ay)
 {
-    //printf("[acc] %.4f %.4f %.4f\n", getacx(), getacy(), getacz());
-
     new_game_state = GAME_STATE_NORMAL;
-
-    double ax = getacx();
-    double ay = getacy();
 
     double mid_px=px, mid_py=py;
     double mid_vx=vx, mid_vy=vy;
@@ -537,13 +532,13 @@ void Form::MoveBall(double x, double y)
     ballshadow_lbl->move(lpx+shadow_shift, lpy+shadow_shift);
 }
 
-void Form::acc_timerAction()
+void Form::acc_timerAction(double acx, double acy)
 {
     if (!fullscreen) return;
 
     if (game_state == GAME_STATE_NORMAL)
     {
-        tout();
+        tout(acx, acy);
         if (game_state != GAME_STATE_NORMAL)
         {
             int bshift = (qt_game_config.hole_r - qt_game_config.ball_r) / 3;
@@ -854,14 +849,10 @@ Form::Form(QWidget *parent, Qt::WFlags f)
     info1_lbl->setText( "<font color=\"#e0bc70\" size=\"" FONT_SIZE "\">Touch the screen to continue</font>" );
 
     InitState();
-    accelerometer_start(0, NULL, NULL);
+    accelerometer_start(PROC_ACC_DATA_INTERVAL, Form::accel_callback, this);
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(timerAction()));
-
-    QTimer *acc_timer = new QTimer(this);
-    connect(acc_timer, SIGNAL(timeout()), this, SLOT(acc_timerAction()));
-    acc_timer->start(PROC_ACC_DATA_INTERVAL);
 
     installEventFilter(this);
     this->levelno_lbl->installEventFilter(this);
@@ -883,4 +874,10 @@ Form::Form(QWidget *parent, Qt::WFlags f)
 Form::~Form()
 {
     // no need to delete child widgets, Qt does it all for us
+}
+
+void Form::accel_callback(void *closure, double acx, double acy, double acz)
+{
+  Form *form = (Form *)closure;
+  form->acc_timerAction(acx, acy);
 }

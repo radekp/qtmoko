@@ -451,7 +451,7 @@ unsigned long nameok(const char *name)
   return that;
 }
 
-void die(char *s)
+void die(const char *s)
 {
 #ifdef DAEMON
   syslog(LOG_ERR, "%s\n", s);

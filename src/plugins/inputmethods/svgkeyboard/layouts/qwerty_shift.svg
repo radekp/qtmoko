@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -32,15 +33,15 @@
    guidetolerance="10"
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
-   inkscape:window-width="1280"
-   inkscape:window-height="1000"
+   inkscape:window-width="1600"
+   inkscape:window-height="846"
    id="namedview295"
    showgrid="true"
    inkscape:zoom="1.3455371"
    inkscape:cx="383.83755"
    inkscape:cy="1768.6561"
    inkscape:window-x="0"
-   inkscape:window-y="24"
+   inkscape:window-y="27"
    inkscape:window-maximized="1"
    inkscape:current-layer="svg2"><inkscape:grid
      type="xygrid"
@@ -71,6 +72,8 @@
      x="7.953249"
      id="tspan3745"
      sodipodi:role="line">TAB</tspan></text>
+
+
 </g><g
    id="key_57_57"
    transform="translate(0,35.504999)"><rect
@@ -91,6 +94,8 @@
      x="54.968658"
      id="tspan3753"
      sodipodi:role="line">W</tspan></text>
+
+
 </g><g
    id="key_45_45"
    transform="translate(0,35.504999)"><rect
@@ -111,6 +116,8 @@
      x="73.813622"
      id="tspan3761"
      sodipodi:role="line">E</tspan></text>
+
+
 </g><g
    id="key_52_52"
    transform="translate(0,35.504999)"><rect
@@ -131,6 +138,8 @@
      x="94.945862"
      id="tspan3765"
      sodipodi:role="line">R</tspan></text>
+
+
 </g><g
    id="key_51_51"
    transform="translate(0,35.504999)"><rect
@@ -151,6 +160,8 @@
      x="34.980053"
      id="tspan3749"
      sodipodi:role="line">Q</tspan></text>
+
+
 </g><g
    id="key_54_54"
    transform="translate(0,35.504999)"><rect
@@ -171,6 +182,8 @@
      x="114.93447"
      id="tspan3769"
      sodipodi:role="line">T</tspan></text>
+
+
 </g><g
    id="key_59_59"
    transform="translate(0,35.504999)"><rect
@@ -191,6 +204,8 @@
      x="134.92307"
      id="tspan3773"
      sodipodi:role="line">Y</tspan></text>
+
+
 </g><g
    id="key_55_55"
    transform="translate(0,35.504999)"><rect
@@ -211,6 +226,8 @@
      x="154.91167"
      id="tspan3777"
      sodipodi:role="line">U</tspan></text>
+
+
 </g><g
    id="key_49_49"
    transform="translate(0,35.504999)"><rect
@@ -231,6 +248,8 @@
      x="174.90027"
      id="tspan3781"
      sodipodi:role="line">I</tspan></text>
+
+
 </g><g
    id="key_4f_4f"
    transform="translate(0,35.504999)"><rect
@@ -251,6 +270,8 @@
      x="194.88887"
      id="tspan3785"
      sodipodi:role="line">O</tspan></text>
+
+
 </g><g
    id="key_50_50"
    transform="translate(0,35.504999)"><rect
@@ -271,6 +292,8 @@
      x="214.87747"
      id="tspan3789"
      sodipodi:role="line">P</tspan></text>
+
+
 </g><g
    id="key_7b_7b"
    transform="translate(0,35.504999)"><rect
@@ -291,6 +314,8 @@
      x="234.86607"
      id="tspan3793"
      sodipodi:role="line">{</tspan></text>
+
+
 </g><g
    id="key_7d_7d"
    transform="translate(0,35.504999)"><rect
@@ -311,6 +336,8 @@
      x="254.85468"
      id="tspan3797"
      sodipodi:role="line">}</tspan></text>
+
+
 </g><g
    id="key_7c_7c"
    transform="translate(0,35.504999)"><g
@@ -332,6 +359,8 @@
      id="tspan3801"
      x="274.84329"
      y="40.022808">|</tspan></text>
+
+
 </g></g><g
    id="key_1000007_0"
    transform="translate(0,35.504999)"><rect
@@ -352,6 +381,8 @@
      x="556.3894"
      id="tspan3805"
      sodipodi:role="line">Del</tspan></text>
+
+
 </g>
 <g
    id="key_1000020_0"><rect
@@ -372,6 +403,8 @@
      x="3.3832202"
      id="tspan3813"
      sodipodi:role="line">SHIFT</tspan></text>
+
+
 </g><g
    id="key_5a_5a"
    transform="translate(0,115.5)"><rect
@@ -392,6 +425,8 @@
      x="54.968658"
      id="tspan3817"
      sodipodi:role="line">Z</tspan></text>
+
+
 </g><g
    id="key_58_58"
    transform="translate(0,115.5)"><rect
@@ -412,6 +447,8 @@
      x="74.95726"
      id="tspan3821"
      sodipodi:role="line">X</tspan></text>
+
+
 </g><g
    id="key_43_43"
    transform="translate(0,115.5)"><rect
@@ -432,6 +469,8 @@
      x="94.945862"
      id="tspan3825"
      sodipodi:role="line">C</tspan></text>
+
+
 </g><g
    id="key_56_56"
    transform="translate(0,115.5)"><rect
@@ -452,6 +491,8 @@
      x="114.93446"
      id="tspan3829"
      sodipodi:role="line">V</tspan></text>
+
+
 </g><g
    id="key_42_42"
    transform="translate(0,115.5)"><rect
@@ -472,6 +513,8 @@
      x="134.92307"
      id="tspan3833"
      sodipodi:role="line">B</tspan></text>
+
+
 </g><g
    id="key_4e_4e"
    transform="translate(0,115.5)"><rect
@@ -492,6 +535,8 @@
      x="154.91167"
      id="tspan3837"
      sodipodi:role="line">N</tspan></text>
+
+
 </g><g
    id="key_4d_4d"
    transform="translate(0,115.5)"><rect
@@ -512,6 +557,8 @@
      x="174.90027"
      id="tspan3841"
      sodipodi:role="line">M</tspan></text>
+
+
 </g><g
    id="key_3c_3c"
    transform="translate(0,115.5)"><rect
@@ -532,6 +579,8 @@
      x="194.88887"
      id="tspan3845"
      sodipodi:role="line">&lt;</tspan></text>
+
+
 </g><g
    id="key_3e_3e"
    transform="translate(0,115.5)"><rect
@@ -552,6 +601,8 @@
      x="214.87747"
      id="tspan3849"
      sodipodi:role="line">&gt;</tspan></text>
+
+
 </g><g
    id="key_3f_3f"
    transform="translate(0,115.5)"><rect
@@ -572,6 +623,8 @@
      x="234.86607"
      id="tspan3853"
      sodipodi:role="line">?</tspan></text>
+
+
 </g><g
    id="key_7e_7e"
    transform="translate(0,115.5)"><rect
@@ -592,6 +645,8 @@
      x="254.85468"
      id="tspan3857"
      sodipodi:role="line">~</tspan></text>
+
+
 </g><g
    id="key_1000006_0"
    transform="translate(0,115.5)"><rect
@@ -612,6 +667,8 @@
      x="302.08289"
      id="tspan3861"
      sodipodi:role="line">Ins</tspan></text>
+
+
 </g>
 <g
    id="key_1000000_1b"><rect
@@ -632,6 +689,8 @@
      x="0.74741673"
      id="tspan2890"
      sodipodi:role="line">Esc</tspan></text>
+
+
 </g><g
    id="key_21_21"
    transform="translate(0,-4.5)"><rect
@@ -652,6 +711,8 @@
      x="24.985754"
      id="tspan2894"
      sodipodi:role="line">!</tspan></text>
+
+
 </g><g
    id="key_40_40"
    transform="translate(0,-4.5)"><rect
@@ -672,6 +733,8 @@
      x="44.974358"
      id="tspan2898"
      sodipodi:role="line">@</tspan></text>
+
+
 </g><g
    id="key_23_23"
    transform="translate(0,-4.5)"><rect
@@ -692,6 +755,8 @@
      x="64.962959"
      id="tspan2902"
      sodipodi:role="line">#</tspan></text>
+
+
 </g><g
    id="key_24_24"
    transform="translate(0,-4.5)"><rect
@@ -712,6 +777,8 @@
      x="84.951561"
      id="tspan2906"
      sodipodi:role="line">$</tspan></text>
+
+
 </g><g
    id="key_25_25"
    transform="translate(0,-4.5)"><rect
@@ -732,6 +799,8 @@
      x="104.94016"
      id="tspan2910"
      sodipodi:role="line">%</tspan></text>
+
+
 </g><g
    id="key_5e_5e"
    transform="translate(0,-4.5)"><rect
@@ -752,6 +821,8 @@
      x="124.92876"
      id="tspan2914"
      sodipodi:role="line">^</tspan></text>
+
+
 </g><g
    id="key_26_26"
    transform="translate(0,-4.5)"><rect
@@ -772,6 +843,8 @@
      x="144.91737"
      id="tspan2918"
      sodipodi:role="line">&amp;</tspan></text>
+
+
 </g><g
    id="key_2a_2a"
    transform="translate(0,-4.5)"><rect
@@ -792,6 +865,8 @@
      x="164.90598"
      id="tspan2922"
      sodipodi:role="line">*</tspan></text>
+
+
 </g><g
    id="key_28_28"
    transform="translate(0,-4.5)"><rect
@@ -812,6 +887,8 @@
      x="184.89458"
      id="tspan2926"
      sodipodi:role="line">(</tspan></text>
+
+
 </g><g
    id="key_29_29"
    transform="translate(0,-4.5)"><rect
@@ -832,6 +909,8 @@
      x="204.88318"
      id="tspan2930"
      sodipodi:role="line">)</tspan></text>
+
+
 </g><g
    id="key_5f_5f"
    transform="translate(0,-4.5)"><rect
@@ -852,6 +931,8 @@
      x="224.87178"
      id="tspan2934"
      sodipodi:role="line">_</tspan></text>
+
+
 </g><g
    id="key_2b_2b"
    transform="translate(0,-4.5)"><rect
@@ -872,6 +953,8 @@
      x="244.86038"
      id="tspan2938"
      sodipodi:role="line">+</tspan></text>
+
+
 </g><g
    id="key_44_44"
    transform="translate(0,75.5)"><rect
@@ -892,6 +975,8 @@
      x="84.951561"
      id="tspan2846"
      sodipodi:role="line">D</tspan></text>
+
+
 </g><g
    id="key_46_46"
    transform="translate(0,75.5)"><rect
@@ -912,6 +997,8 @@
      x="104.94016"
      id="tspan2850"
      sodipodi:role="line">F</tspan></text>
+
+
 </g><g
    id="key_47_47"
    transform="translate(0,75.5)"><rect
@@ -932,6 +1019,8 @@
      x="124.92876"
      id="tspan2854"
      sodipodi:role="line">G</tspan></text>
+
+
 </g><g
    id="key_48_48"
    transform="translate(0,75.5)"><rect
@@ -952,6 +1041,8 @@
      x="144.91737"
      id="tspan2858"
      sodipodi:role="line">H</tspan></text>
+
+
 </g><g
    id="key_4a_4a"
    transform="translate(0,75.5)"><rect
@@ -972,6 +1063,8 @@
      x="164.90598"
      id="tspan2866"
      sodipodi:role="line">J</tspan></text>
+
+
 </g><g
    id="key_41_41"
    transform="translate(0,75.5)"><rect
@@ -992,6 +1085,8 @@
      x="44.974358"
      id="tspan2818"
      sodipodi:role="line">A</tspan></text>
+
+
 </g><g
    id="key_53_53"
    transform="translate(0,75.5)"><rect
@@ -1012,6 +1107,8 @@
      x="64.962959"
      id="tspan2842"
      sodipodi:role="line">S</tspan></text>
+
+
 </g><g
    id="key_4b_4b"
    transform="translate(0,75.5)"><rect
@@ -1032,6 +1129,8 @@
      x="184.89458"
      id="tspan2870"
      sodipodi:role="line">K</tspan></text>
+
+
 </g><g
    id="key_4c_4c"
    transform="translate(0,75.5)"><rect
@@ -1052,6 +1151,8 @@
      x="204.88318"
      id="tspan2874"
      sodipodi:role="line">L</tspan></text>
+
+
 </g><g
    id="key_3a_3a"
    transform="translate(0,75.5)"><rect
@@ -1072,6 +1173,8 @@
      x="224.87178"
      id="tspan2878"
      sodipodi:role="line">:</tspan></text>
+
+
 </g><g
    id="key_22_22"
    transform="translate(0,75.5)"><rect
@@ -1092,6 +1195,8 @@
      x="244.86038"
      id="tspan2882"
      sodipodi:role="line">&quot;</tspan></text>
+
+
 </g><g
    id="key_1000024_0"><rect
    y="100"
@@ -1111,6 +1216,8 @@
      x="5.3636026"
      id="tspan3809"
      sodipodi:role="line">CAP</tspan></text>
+
+
 </g>
 <g
    id="key_100117e_0"><rect
@@ -1130,7 +1237,9 @@
      id="tspan3245"
      y="240.3428"
      x="5.3588719"
-     sodipodi:role="line">QWE</tspan></text>
+     sodipodi:role="line">abc</tspan></text>
+
+
 </g><g
    id="key_1000021_0"
    transform="translate(0,155.5)"><rect
@@ -1151,6 +1260,8 @@
      x="50.831142"
      id="tspan3869"
      sodipodi:role="line">Ctrl</tspan></text>
+
+
 </g><g
    id="key_1000023_0"
    transform="translate(0,155.5)"><rect
@@ -1171,6 +1282,8 @@
      x="92.514801"
      id="tspan3873"
      sodipodi:role="line">Alt</tspan></text>
+
+
 </g><g
    id="key_1000011_0"
    transform="translate(-5,152.12868)"><rect
@@ -1192,6 +1305,8 @@
      x="289.69354"
      id="tspan3965"
      sodipodi:role="line">End</tspan></text>
+
+
 </g><g
    id="key_1000016_0"
    transform="translate(0,155.5)"><rect
@@ -1218,6 +1333,8 @@
      x="176.02174"
      y="129.8008"
      id="tspan5054" /></text>
+
+
 <text
    xml:space="preserve"
    style="font-size:8.76710796px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
@@ -1230,6 +1347,8 @@
      x="176.02174"
      y="127.82512"
      id="tspan5054-8">Up</tspan></text>
+
+
 </g></g><g
    id="key_1000017_0"
    transform="translate(0,155.5)"><rect
@@ -1252,6 +1371,8 @@
      x="199.31851"
      y="113.73132"
      id="tspan5056">Pg</tspan></text>
+
+
 <text
    xml:space="preserve"
    style="font-size:9.31672001px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
@@ -1264,6 +1385,8 @@
      x="199.31851"
      y="122.91884"
      id="tspan5056-7">dn</tspan></text>
+
+
 </g></g><g
    transform="translate(20,155.5)"
    id="key_1000010_0"><rect
@@ -1286,6 +1409,8 @@
      x="199.31851"
      y="113.73132"
      id="tspan5056-1">Ho</tspan></text>
+
+
 <text
    xml:space="preserve"
    style="font-size:9.31672001px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
@@ -1298,6 +1423,8 @@
      x="199.31851"
      y="122.91884"
      id="tspan5056-7-5">me</tspan></text>
+
+
 </g></g><g
    id="key_20_20"><rect
      y="220"
