@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# Workaround for multistrap bug #688628.
+#
+
+set -e
+
+wkdir=
+
+menage() {
+  [ -z "$wkdir" ] || rm -fr "$wkdir"
+}
+
+trap 'menage' EXIT INT ABRT KILL TERM
+
+wkdir=$(mktemp -d)
+cd "$wkdir"
+
+. "/etc/pdebuild-cross/pdebuild-cross.rc"
+
+BASETAR="$(dirname "$BASETGZ")/$(basename "$BASETGZ" .gz)"
+[ -f "$BASETGZ" -a ! -f "$BASETAR" ]
+
+sudo gunzip "$BASETGZ"
+sudo sh -c "tar xaf '$BASETAR' -O ./etc/apt/sources.list.d/multistrap-debian.list >./multistrap-debian.list"
+sudo sed 's/\[.*\] //' ./multistrap-debian.list | sudo sort -u | sudo tee ./multistrap-debian.list.tmp
+sudo mv ./multistrap-debian.list.tmp ./multistrap-debian.list
+sudo tar --delete -af "$BASETAR" ./etc/apt/sources.list.d/multistrap-debian.list
+sudo tar raf "$BASETAR" --transform 's:^./:./etc/apt/sources.list.d/:' ./multistrap-debian.list
+sudo gzip "$BASETAR"
+
+sudo pbuilder --update --basetgz "$BASETGZ"

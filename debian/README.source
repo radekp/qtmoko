@@ -3,103 +3,26 @@ Cross-building QtMoko on Debian
 
 It is possible to cross-build QtMoko on a Debian box using the emdebian
 toolchain. The build is run the Debian way, using pbuilder on a Debian
-wheezy or sid box. Most of the magic is handled by the pdebuild-cross package:
+squeeze, wheezy or sid box. Most of the magic is handled by the pdebuild-cross
+package:
 
 $ sudo apt-get install pdebuild-cross
 
 The cross-build environement and toolchain are set up via the
 multistrap package (pulled in by pdebuild-cross).
 
-multistrap configuration file (eg. /etc/pdebuild-cross/multistrap-qtmoko.conf):
-# ---%<--begin---
-[General]
-arch=
-directory=
-# same as --tidy-up option if set to true
-cleanup=true
-# same as --no-auth option if set to true
-# keyring packages listed in each debootstrap will
-# still be installed.
-noauth=false
-# whether to add the /suite to be explicit about where apt
-# needs to look for packages. Default is false.
-explicitsuite=true
-# extract all downloaded archives (default is true)
-unpack=true
+You'll find succesfully tested configuration files in the directory
+debian/pdebuild-cross.
 
-omitrequired=false
-configscript=
-setupscript=/usr/share/multistrap/setcrossarch.sh
-debootstrap=Debian Toolchains Backports
-aptsources=Debian
-tarballname=pdebuild-cross.tgz
+You'll need to tweak the paths for MULTISTRAPFILE and BASETGZ into pdebuild-cross.rc.
 
-[Toolchains]
-packages=g++-4.4-arm-linux-gnueabi linux-libc-dev-armel-cross
-reinstall=binutils-multiarch
-source=http://www.emdebian.org/debian
-keyring=emdebian-archive-keyring
-suite=squeeze
-omitdebsrc=true
+Here is the workflow:
 
-[Backports]
-packages=dpkg-dev xapt
-source=http://backports.debian.org/debian-backports
-keyring=debian-archive-keyring
-suite=squeeze-backports
-omitdebsrc=true
+1- Create the chroot tarball:
+$ sudo "DIST=<squeeze|wheezy|sid> pdebuild-cross-create"
+$ DIST=<squeeze|wheezy|sid> debian/pdebuild-cross fix-pdebuild-cross-sources-list
 
-[Debian]
-packages=dpkg-dev binutils-multiarch build-essential makedev
-source=http://ftp.fr.debian.org/debian
-keyring=debian-archive-keyring
-suite=squeeze
-omitdebsrc=true
-# ---%<--end-----
+2- Build the qtmoko package
+$ QTMOKO_DEVICES=<gta04|neo|neo gta04> DIST=<squeeze|wheezy|sid> pdebuild-cross
 
-pdebuild-cross configuration file (/etc/pdebuild-cross/pdebuild-cross.rc):
-# ---%<--begin---
-# this is your configuration file for pdebuild-cross.
-# /etc/pdebuild-cross/pdebuild-cross.rc is the one meant for editing.
-#
-# read pbuilderrc (5) and pdebuild-cross (1) for notes on specific options.
-
-# remember to change CROSSARCH, DEBBUILDOPTS and MULTISTRAPFILE to
-# change your target cross-building architecture from armel.
-
-CROSSARCH=armel
-DEBBUILDOPTS="-aarmel"
-MULTISTRAPFILE=/etc/pdebuild-cross/multistrap-qtmoko.conf
-BASETGZ=/var/lib/pdebuild-cross/pdebuild-cross.tgz
-BUILDPLACE=/var/lib/pdebuild-cross/build/
-BUILDRESULT=..
-APTCACHE=/var/lib/pdebuild-cross/aptcache/
-APTCACHEHARDLINK=no
-PBUILDERSATISFYDEPENDSCMD=/usr/sbin/embuilddeps
-PBUILDERSATISFYDEPENDSOPT="-m -a armel"
-USEDEVPTS=yes
-AUTO_DEBSIGN=no
-
-# Only use when testing Xorg apps, not when building
-# also remember to copy ~/.Xauthority into /home/$SUDO_USER/
-# (mkdir /home/$SUDO_USER if necessary).
-#BINDMOUNTS="/tmp"
-# ---%<--end-----
-
-Create the pbuilder chroot:
-$ sudo pdebuild-cross-create
-
-Fix the chroot sources.list architecture (maybe a multistrap bug):
-$ sudo pbuilder --login --save-after-login --basetgz /home/pdebuild-cross/pdebuild-cross.tgz
-# sed -i 's/\[.*\] //' /etc/apt/sources.list.d/multistrap-debian.list
-# exit
-$ sudo pdebuild-cross-update
-
-Build:
-$ pdebuild-cross -aarmel
-
-On my amd64 box the whole build takes about five hours.
-
- -- Yann Dirson <dirson@debian.org>, Sun, 29 Apr 2012 18:25:22 +0200
-
- -- Gilles Filippini <gilles.filippini@free.fr>  Sun, 23 Sep 2012 10:50:43 +0200
+ -- Gilles Filippini <gilles.filippini@free.fr>  Thu, 27 Sep 2012 15:09:52 +0200
