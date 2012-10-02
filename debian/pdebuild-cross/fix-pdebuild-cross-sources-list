@@ -16,17 +16,30 @@ trap 'menage' EXIT INT ABRT KILL TERM
 wkdir=$(mktemp -d)
 cd "$wkdir"
 
+cat <<EOF >fix.sh
+#!/bin/sh
+echo \$CROSSVERS
+sed -i 's/\[.*\] //' /etc/apt/sources.list.d/multistrap-debian.list
+sed -i 's/cdn\.debian\.net/ftp2.fr.debian.org/' /etc/apt/sources.list.d/multistrap-debian.list
+cat /etc/apt/sources.list.d/multistrap-debian.list
+# Fix for missing default cross-gcc
+# See <http://lists.debian.org/debian-embedded/2012/09/msg00066.html>
+eval "\$(dpkg-architecture -a\$CROSSARCH)"
+if [ -z "\$DEB_HOST_MULTIARCH" ]; then
+  DEB_HOST_MULTIARCH=\$DEB_HOST_GNU_TYPE
+fi
+if [ ! -x /usr/bin/\$DEB_HOST_MULTIARCH-gcc ]; then
+  #exes=gcc-ranlib gcc-nm gcc-ar gcc gcov g++
+  exes="gcc gcov g++"
+  for exe in \$exes; do
+    ln -s \$DEB_HOST_MULTIARCH-\$exe-\$CROSSVERS /usr/bin/\$DEB_HOST_MULTIARCH-\$exe
+  done
+fi
+ls -l /usr/bin/\$DEB_HOST_MULTIARCH-*
+EOF
+chmod a+x fix.sh
+
 . "/etc/pdebuild-cross/pdebuild-cross.rc"
+sudo bash -c "CROSSVERS=$CROSSVERS CROSSARCH=$CROSSARCH pbuilder --execute --save-after-exec --configfile /etc/pdebuild-cross/pdebuild-cross.rc --basetgz $BASETGZ -- $(readlink -f ./fix.sh)"
 
-BASETAR="$(dirname "$BASETGZ")/$(basename "$BASETGZ" .gz)"
-[ -f "$BASETGZ" -a ! -f "$BASETAR" ]
-
-sudo gunzip "$BASETGZ"
-sudo sh -c "tar xaf '$BASETAR' -O ./etc/apt/sources.list.d/multistrap-debian.list >./multistrap-debian.list"
-sudo sed 's/\[.*\] //' ./multistrap-debian.list | sudo sort -u | sudo tee ./multistrap-debian.list.tmp
-sudo mv ./multistrap-debian.list.tmp ./multistrap-debian.list
-sudo tar --delete -af "$BASETAR" ./etc/apt/sources.list.d/multistrap-debian.list
-sudo tar raf "$BASETAR" --transform 's:^./:./etc/apt/sources.list.d/:' ./multistrap-debian.list
-sudo gzip "$BASETAR"
-
-sudo pbuilder --update --basetgz "$BASETGZ"
+sudo pbuilder --update --configfile /etc/pdebuild-cross/pdebuild-cross.rc --basetgz "$BASETGZ"

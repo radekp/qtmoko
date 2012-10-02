@@ -1,10 +1,10 @@
 Cross-building QtMoko on Debian
 -------------------------------
 
-It is possible to cross-build QtMoko on a Debian box using the emdebian
-toolchain. The build is run the Debian way, using pbuilder on a Debian
-squeeze, wheezy or sid box. Most of the magic is handled by the pdebuild-cross
-package:
+It is possible to cross-build QtMoko for armel or armhf on a Debian box using
+the emdebian toolchain. The build is run the Debian way, using pbuilder on a
+Debian squeeze, wheezy or sid box. Most of the magic is handled by
+the pdebuild-cross package:
 
 $ sudo apt-get install pdebuild-cross
 
@@ -19,10 +19,10 @@ You'll need to tweak the paths for MULTISTRAPFILE and BASETGZ into pdebuild-cros
 Here is the workflow:
 
 1- Create the chroot tarball:
-$ sudo "DIST=<squeeze|wheezy|sid> pdebuild-cross-create"
-$ DIST=<squeeze|wheezy|sid> debian/pdebuild-cross fix-pdebuild-cross-sources-list
+$ sudo bash -c "CROSSARCH=<armel|armhf> DIST=<squeeze|wheezy|sid> pdebuild-cross-create"
+$ CROSSARCH=<armel|armhf> DIST=<squeeze|wheezy|sid> debian/pdebuild-cross fix-pdebuild-cross-sources-list
 
 2- Build the qtmoko package
-$ QTMOKO_DEVICES=<gta04|neo|neo gta04> DIST=<squeeze|wheezy|sid> pdebuild-cross
+$ CROSSARCH=<armel|armhf> QTMOKO_DEVICES=<gta04|neo|neo gta04> DIST=<squeeze|wheezy|sid> pdebuild-cross
 
- -- Gilles Filippini <gilles.filippini@free.fr>  Thu, 27 Sep 2012 15:09:52 +0200
+ -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 01 Oct 2012 22:41:33 +0200

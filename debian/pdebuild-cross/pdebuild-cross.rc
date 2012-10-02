@@ -4,23 +4,25 @@
 # read pbuilderrc (5) and pdebuild-cross (1) for notes on specific options.
 
 # remember to change CROSSARCH, DEBBUILDOPTS and MULTISTRAPFILE to
-# change your target cross-building architecture from armel.
+# change your target cross-building architecture from ${CROSSARCH}.
 
-CROSSARCH=armel
+CROSSARCH=${CROSSARCH:-armel}
+export CROSSVERS=${CROSSVERS:-4.4}
 
 # "-d" because #688701
-DEBBUILDOPTS="-aarmel -d ${DEBBUILDOPTS}"
+# $MYDEBBUILDOPTS because #547472
+DEBBUILDOPTS="-a${CROSSARCH} -d ${MYDEBBUILDOPTS}"
 
 #DIST=${DIST:-squeeze}
-MULTISTRAPFILE=/etc/multistrap/armel-${DIST}.conf
-BASETGZ=/home/pdebuild-cross/pdebuild-cross-${DIST}.tar.gz
+MULTISTRAPFILE=/etc/multistrap/${CROSSARCH}-${DIST}.conf
+BASETGZ=/home/pdebuild-cross/pdebuild-cross-${CROSSARCH}-${DIST}.tar.gz
 
 BUILDPLACE=/var/lib/pdebuild-cross/build/
 BUILDRESULT=..
 APTCACHE=/var/lib/pdebuild-cross/aptcache/
 APTCACHEHARDLINK=no
 PBUILDERSATISFYDEPENDSCMD=/usr/sbin/embuilddeps
-PBUILDERSATISFYDEPENDSOPT="-m -a armel"
+PBUILDERSATISFYDEPENDSOPT="-m -a ${CROSSARCH}"
 USEDEVPTS=yes
 AUTO_DEBSIGN=no
 

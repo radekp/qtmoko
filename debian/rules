@@ -1,12 +1,19 @@
 #!/usr/bin/make -f
 
-ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
-CC=$(DEB_HOST_GNU_TYPE)-gcc
-CXX=$(DEB_HOST_GNU_TYPE)-g++
-CROSS_CPPFLAGS=-I/usr/$(DEB_HOST_GNU_TYPE)/include/$(DEB_HOST_GNU_TYPE)
-CROSS_INCDIR=/usr/$(DEB_HOST_GNU_TYPE)/include /usr/$(DEB_HOST_GNU_TYPE)/include/$(DEB_HOST_GNU_TYPE) /usr/$(DEB_HOST_GNU_TYPE)/include/dbus-1.0 /usr/$(DEB_HOST_GNU_TYPE)/lib/dbus-1.0/include
+# Squeeze support
+ifeq (,$(DEB_HOST_MULTIARCH)))
+DEB_HOST_MULTIARCH:=$(DEB_HOST_GNU_TYPE)
+DEB_BUILD_MULTIARCH:=$(DEB_BUILD_GNU_TYPE)
+endif
+
+# Cross-build settings
+ifneq ($(DEB_HOST_MULTIARCH),$(DEB_BUILD_MULTIARCH))
+CC=$(DEB_HOST_MULTIARCH)-gcc
+CXX=$(DEB_HOST_MULTIARCH)-g++
+CROSS_CPPFLAGS=-I/usr/$(DEB_HOST_MULTIARCH)/include/$(DEB_HOST_MULTIARCH)
+CROSS_INCDIR=/usr/$(DEB_HOST_MULTIARCH)/include /usr/$(DEB_HOST_MULTIARCH)/include/$(DEB_HOST_MULTIARCH) /usr/$(DEB_HOST_MULTIARCH)/include/dbus-1.0 /usr/$(DEB_HOST_MULTIARCH)/lib/dbus-1.0/include
 CROSS_LDFLAGS=
-CROSS_LIBDIR=/usr/$(DEB_HOST_GNU_TYPE)/lib
+CROSS_LIBDIR=/usr/$(DEB_HOST_MULTIARCH)/lib
 else
 CC=gcc
 CXX=g++
@@ -16,11 +23,19 @@ CROSS_LDFLAGS=
 CROSS_LIBDIR=
 endif
 
-ifeq (arm-linux-gnueabi,$(DEB_HOST_GNU_TYPE))
-CROSS_CPPFLAGS+=-march=armv4t
+ifeq (arm-linux-gnueabi,$(DEB_HOST_MULTIARCH))
 ifeq (,$(filter noopt,$(DEB_BUILD_OPTIONS)))
-CROSS_CPPFLAGS+=-fomit-frame-pointer -finline-functions -falign-functions=2 -falign-loops=2 -falign-jumps=2 -mtune=arm920t -msoft-float
+CROSS_CPPFLAGS+=-fomit-frame-pointer -finline-functions -falign-functions=2 -falign-loops=2 -falign-jumps=2 -march=armv4t -mtune=arm920t -msoft-float
 endif
+endif
+
+ifeq (arm-linux-gnueabihf,$(DEB_HOST_MULTIARCH))
+# <http://processors.wiki.ti.com/index.php/Cortex-A8>
+CROSS_CPPFLAGS+=-march=armv7-a -mtune=cortex-a8 -mfpu=neon -ftree-vectorize -mfloat-abi=hard
+# Avoid "Error: selected processor does not support Thumb mode `swp r6,r4,[r0]'"
+# <http://pandaboard.org/pbirclogs//index.php?date=2011-07-10>
+# at 17:05:14 and 17:30:26
+CROSS_CPPFLAGS+=-marm
 endif
 
 CFLAGS=-pipe $(shell dpkg-buildflags --get CFLAGS) $(CROSS_CPPFLAGS)
@@ -59,6 +74,7 @@ override_dh_auto_configure:
 			-e 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" \
 			-e 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" \
 			-e 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(LDFLAGS):" \
+			-e 's:^\(QMAKE_LIBS[ \t]*=\).*$$:\1 '"-ldl:" \
 			$(call QMAKE_CONF,$$device); \
 	done
 	# Add built qt to LD path to avoid libQtSql.so.4 missing error
