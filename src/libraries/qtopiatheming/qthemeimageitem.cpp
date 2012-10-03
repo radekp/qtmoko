@@ -249,7 +249,7 @@ void QThemeImageItem::resizeImages(qreal width, qreal height)
             key = key.arg(fileInfo.fileName()).arg(width).arg(height).arg(d->color.value().toString()).arg(d->alpha.value().toString());
 
         QPixmap pm;
-        if (fileInfo.fileName().endsWith(".pic")) {
+        if (fileInfo.suffix() == "pic") {
             if (QPixmapCache::find(key, pm)) {
                 d->buffer[state] = pm;
             } else {
