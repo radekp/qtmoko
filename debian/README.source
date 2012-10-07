@@ -12,17 +12,27 @@ The cross-build environement and toolchain are set up via the
 multistrap package (pulled in by pdebuild-cross).
 
 You'll find succesfully tested configuration files in the directory
-debian/pdebuild-cross.
+debian/pdebuild-cross. In order to allow multiple configurations these
+files rely on the following environment variables:
 
-You'll need to tweak the paths for MULTISTRAPFILE and BASETGZ into pdebuild-cross.rc.
+Variable	Meaning				Default value
+-------------------------------------------------------------
+CROSSARCH	armel|armhf			armel
+CROSSVERS	cross gcc version		4.4
+DIST		squeeze|wheezy|sid		squeeze
+MULTISTRAP_ROOT	multistarp conf dir		/etc/multistrap
+CROSS_ROOT	pdebuild-cross worskpace	/var/lib/pdebuild-cross
+QTMOKO_DEVICES	devices to build qtmoko for	neo gta04
 
-Here is the workflow:
+Note: QTMOKO_DEVICES is used at build time only.
+
+Here is an example of workflow:
 
 1- Create the chroot tarball:
-$ sudo bash -c "CROSSARCH=<armel|armhf> DIST=<squeeze|wheezy|sid> pdebuild-cross-create"
-$ CROSSARCH=<armel|armhf> DIST=<squeeze|wheezy|sid> debian/pdebuild-cross fix-pdebuild-cross-sources-list
+$ sudo bash -c "CROSSARCH=armhf CROSSVERS=4.7 DIST=wheezy pdebuild-cross-create"
+$ CROSSARCH=armhf CROSSVERS=4.7 DIST=wheezy debian/pdebuild-cross/fix-pdebuild-cross
 
-2- Build the qtmoko package
-$ CROSSARCH=<armel|armhf> QTMOKO_DEVICES=<gta04|neo|neo gta04> DIST=<squeeze|wheezy|sid> pdebuild-cross
+2- Build the desired qtmoko package
+$ CROSSARCH=armhf CROSSVERS=4.7 DIST=sid QTMOKO_DEVICES=gta04 pdebuild-cross
 
- -- Gilles Filippini <gilles.filippini@free.fr>  Mon, 01 Oct 2012 22:41:33 +0200
+ -- Gilles Filippini <gilles.filippini@free.fr>  Sat, 06 Oct 2012 14:58:27 +0200

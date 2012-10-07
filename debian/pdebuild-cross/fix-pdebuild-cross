@@ -29,10 +29,11 @@ if [ -z "\$DEB_HOST_MULTIARCH" ]; then
   DEB_HOST_MULTIARCH=\$DEB_HOST_GNU_TYPE
 fi
 if [ ! -x /usr/bin/\$DEB_HOST_MULTIARCH-gcc ]; then
-  #exes=gcc-ranlib gcc-nm gcc-ar gcc gcov g++
-  exes="gcc gcov g++"
+  exes="gcc gcov g++ cpp gcc-nm gcc-ar gcc-ranlib"
   for exe in \$exes; do
-    ln -s \$DEB_HOST_MULTIARCH-\$exe-\$CROSSVERS /usr/bin/\$DEB_HOST_MULTIARCH-\$exe
+    if [ -x /usr/bin/\$DEB_HOST_MULTIARCH-\$exe-\$CROSSVERS ]; then
+      ln -s \$DEB_HOST_MULTIARCH-\$exe-\$CROSSVERS /usr/bin/\$DEB_HOST_MULTIARCH-\$exe
+    fi
   done
 fi
 ls -l /usr/bin/\$DEB_HOST_MULTIARCH-*

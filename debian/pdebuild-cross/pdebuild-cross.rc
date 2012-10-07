@@ -3,23 +3,56 @@
 #
 # read pbuilderrc (5) and pdebuild-cross (1) for notes on specific options.
 
-# remember to change CROSSARCH, DEBBUILDOPTS and MULTISTRAPFILE to
-# change your target cross-building architecture from ${CROSSARCH}.
+# CROSSARCH		target arch (default=armel)
+# CROSSVERS		gcc version (default=4.4)
+# DIST			Debian suite (default=squeeze)
+# CROSS_ROOT		pdebuild-cross workspace (default=/var/lib/pdebuild-cross)
+# MULTISTRAP_ROOT	multistrap conf dir (default=/etc/multistrap)
 
 CROSSARCH=${CROSSARCH:-armel}
 export CROSSVERS=${CROSSVERS:-4.4}
+DIST=${DIST:-squeeze}
+MULTISTRAP_ROOT=${MULTISTRAP_ROOT:-/etc/multistrap}
+CROSS_ROOT=${CROSS_ROOT:-/var/lib/pdebuild-cross}
+
+BASETGZ=$CROSS_ROOT/pdebuild-cross-${CROSSARCH}-${DIST}-${CROSSVERS}.tar.gz
+
+exe="$(basename "$(readlink -f "$0")")"
+if [ "$exe" = "pdebuild-cross-create" ]; then
+  clean() {
+    if [ -n "$multistrap_dir" ]; then
+      rm -fr "$multistrap_dir"
+    fi
+  }
+  trap 'clean' TERM ABRT KILL EXIT
+  multistrap_dir=$(mktemp -d)
+  MULTISTRAPFILE="$multistrap_dir/multistrap.conf"
+  case $CROSSARCH in
+    armel)
+      CROSSABI=arm-linux-gnueabi
+      ;;
+    armhf)
+      CROSSABI=arm-linux-gnueabihf
+      ;;
+    default)
+      echo "Invalid arch: $CROSSARCH" >&2
+      exit 1
+      ;;
+  esac
+  sed -e "s/@CROSSVERS@/$CROSSVERS/g" \
+      -e "s/@CROSSARCH@/$CROSSARCH/g" \
+      -e "s/@CROSSABI@/$CROSSABI/g" \
+    "$MULTISTRAP_ROOT/multistrap-${DIST}.conf" >"$MULTISTRAPFILE"
+fi
 
 # "-d" because #688701
 # $MYDEBBUILDOPTS because #547472
 DEBBUILDOPTS="-a${CROSSARCH} -d ${MYDEBBUILDOPTS}"
 
-#DIST=${DIST:-squeeze}
-MULTISTRAPFILE=/etc/multistrap/${CROSSARCH}-${DIST}.conf
-BASETGZ=/home/pdebuild-cross/pdebuild-cross-${CROSSARCH}-${DIST}.tar.gz
 
-BUILDPLACE=/var/lib/pdebuild-cross/build/
+BUILDPLACE=$CROSS_ROOT/build/
 BUILDRESULT=..
-APTCACHE=/var/lib/pdebuild-cross/aptcache/
+APTCACHE=$CROSS_ROOT/aptcache/
 APTCACHEHARDLINK=no
 PBUILDERSATISFYDEPENDSCMD=/usr/sbin/embuilddeps
 PBUILDERSATISFYDEPENDSOPT="-m -a ${CROSSARCH}"
