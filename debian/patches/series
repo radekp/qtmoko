@@ -1,4 +1,2 @@
 restart-when-modem-stops-working.patch
 mokofaen-as-default-theme.patch
-fix-build-error-when-cross-building-with-g-4.4.patch
-use-system-zlib.patch

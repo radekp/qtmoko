@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 # Squeeze support
-ifeq (,$(DEB_HOST_MULTIARCH)))
+ifeq (,$(DEB_HOST_MULTIARCH))
 DEB_HOST_MULTIARCH:=$(DEB_HOST_GNU_TYPE)
 DEB_BUILD_MULTIARCH:=$(DEB_BUILD_GNU_TYPE)
 endif
@@ -77,14 +77,12 @@ override_dh_auto_configure:
 			-e 's:^\(QMAKE_LIBS[ \t]*=\).*$$:\1 '"-ldl:" \
 			$(call QMAKE_CONF,$$device); \
 	done
-	# Add built qt to LD path to avoid libQtSql.so.4 missing error
-	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(PWD)/../build/qtopiacore/host/lib/
 
 	# Fix wrong filename for libjscore.a
 	# http://qt-project.org/forums/viewthread/12732
 	for device in $(DEVICES); do \
-		mkdir -p $(PWD)/../build-$$device/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/; \
-		ln -s $(PWD)/../build-$$device/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/jscore. $(PWD)/../build-$$device/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a; \
+		mkdir -p $(CURDIR)/../build-$$device/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/; \
+		ln -s jscore. $(CURDIR)/../build-$$device/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a; \
 	done
 
 	# Qt Extended configuration step
@@ -99,12 +97,6 @@ override_dh_auto_build:
 	done
 
 override_dh_auto_clean:
-	# Cope with source format = 3.0 (native)
-	if [ "$$(cat debian/source/format)" = "3.0 (native)" ]; then \
-		if which quilt >/dev/null 2>&1; then \
-			! quilt unapp || quilt push -a; \
-		fi; \
-	fi
 	for device in $(DEVICES); do \
 		[ ! -f $(call QMAKE_CONF,$$device).orig ] || mv $(call QMAKE_CONF,$$device).orig $(call QMAKE_CONF,$$device); \
 		rm -fr ../build-$$device; \
@@ -145,18 +137,7 @@ override_dh_makeshlibs:
 override_dh_shlibdeps:
 	#dh_shlibdeps -l$(CURDIR)/debian/qtmoko-$(QTMOKO_DEVICE)/opt/qtmoko/lib
 
+VERSION = $(shell dpkg-parsechangelog | grep '^Version:' | awk '{print $$2}' | sed 's/\(.*\)-[^-]*/\1/')
 get-orig-source: clean
-	if [ "$$(cat debian/source/format)" = "3.0 (native)" ]; then \
-		./debian/rules get-orig-source-3.0-native; \
-	else \
-		./debian/rules get-orig-source-3.0-quilt; \
-	fi
-
-VERSION_NATIVE = $(shell dpkg-parsechangelog | grep '^Version:' | awk '{print $$2}')
-get-orig-source-3.0-native:
-	tar caf $(CURDIR)/../qtmoko_$(VERSION_NATIVE).tar.gz --exclude .pc --exclude .git -C $(CURDIR)/.. $$(basename $(CURDIR))
-
-VERSION_QUILT = $(shell echo $(VERSION_NATIVE) | sed 's/\(.*\)-[^-]*/\1/')
-get-orig-source-3.0-quilt:
 	! quilt app || quilt pop -a
-	tar caf $(CURDIR)/../qtmoko_$(VERSION_QUILT).orig.tar.gz --exclude .pc --exclude .git --exclude $$(basename $(CURDIR))/debian -C $(CURDIR)/.. $$(basename $(CURDIR))
+	tar caf $(CURDIR)/../qtmoko_$(VERSION).orig.tar.gz --exclude .pc --exclude .git --exclude $$(basename $(CURDIR))/debian -C $(CURDIR)/.. $$(basename $(CURDIR))
