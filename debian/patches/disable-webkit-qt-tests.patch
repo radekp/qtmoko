@@ -1,0 +1,13 @@
+Index: qtmoko/qtopiacore/qt/src/3rdparty/webkit/Source/WebKit.pro
+===================================================================
+--- qtmoko.orig/qtopiacore/qt/src/3rdparty/webkit/Source/WebKit.pro	2012-10-08 09:17:23.081423160 +0200
++++ qtmoko/qtopiacore/qt/src/3rdparty/webkit/Source/WebKit.pro	2012-10-09 15:36:14.074937440 +0200
+@@ -22,7 +22,7 @@
+     exists($$PWD/WebKit/qt/declarative): SUBDIRS += WebKit/qt/declarative
+ }
+ 
+-exists($$PWD/WebKit/qt/tests): SUBDIRS += WebKit/qt/tests
++#exists($$PWD/WebKit/qt/tests): SUBDIRS += WebKit/qt/tests
+ 
+ build-qtscript {
+     SUBDIRS += \

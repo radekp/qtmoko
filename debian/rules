@@ -49,6 +49,9 @@ QTMOKO_DEVICES ?= gta04 neo
 DEVICES := $(QTMOKO_DEVICES)
 QMAKE_CONF = devices/$1/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 
+QT_VERSION := $(shell grep '^\# *define *QT_VERSION_STR' "qtopiacore/qt/src/corelib/global/qglobal.h" | awk '{print $$3}')
+export QUILT_PATCHES=debian/patches
+
 %:
 	dh $@
 
@@ -61,6 +64,14 @@ debian/control:
 	done
 
 override_dh_auto_configure:
+	# Qt-4.8 specific patches
+	if [ "$$(echo "4.8\n$(QT_VERSION)" | sort -V | head -1)" = "4.8" ]; then \
+		if [ "$$(basename "$$(readlink -f debian/patches/series)")" = "series-main" ]; then \
+			rm -fr .pc; \
+		fi; \
+		ln -fs series-qt48 debian/patches/series; \
+		quilt push -a; \
+	fi
 	# Patch the qmake.conf file with proper toolchain configuration
 	for device in $(DEVICES); do \
 		sed -i.orig \
@@ -78,17 +89,10 @@ override_dh_auto_configure:
 			$(call QMAKE_CONF,$$device); \
 	done
 
-	# Fix wrong filename for libjscore.a
-	# http://qt-project.org/forums/viewthread/12732
-	for device in $(DEVICES); do \
-		mkdir -p $(CURDIR)/../build-$$device/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/; \
-		ln -s jscore. $(CURDIR)/../build-$$device/qtopiacore/target/src/3rdparty/webkit/JavaScriptCore/release/libjscore.a; \
-	done
-
 	# Qt Extended configuration step
 	for device in $(DEVICES); do \
 		mkdir -p ../build-$$device; \
-		cd ../build-$$device && "$(CONFIGURE)" -device $$device -system-qt -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include; \
+		cd ../build-$$device && "$(CONFIGURE)" -device $$device -system-qt -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -extra-qt-embedded-config="-system-sqlite" -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include; \
 	done
 
 override_dh_auto_build:
@@ -97,6 +101,14 @@ override_dh_auto_build:
 	done
 
 override_dh_auto_clean:
+	# If needed, revert QT_VERSION specific patches
+	if [ "$$(basename "$$(readlink -f debian/patches/series)")" != "series-main" ]; then \
+		if quilt app; then \
+			quilt pop -a; \
+		fi; \
+		ln -fs series-main debian/patches/series; \
+	fi
+
 	for device in $(DEVICES); do \
 		[ ! -f $(call QMAKE_CONF,$$device).orig ] || mv $(call QMAKE_CONF,$$device).orig $(call QMAKE_CONF,$$device); \
 		rm -fr ../build-$$device; \
@@ -123,7 +135,7 @@ override_dh_auto_install:
 
 	# Install missing dependency for qt_plugins/script/libqtscriptdbus.so
 	for device in $(DEVICES); do \
-		install -m"a+r,u+w" ../build-$$device/qtopiacore/target/lib/libQtScript.so.4.7.4 debian/tmp-$$device/opt/qtmoko/lib; \
+		install -m"a+r,u+w" ../build-$$device/qtopiacore/target/lib/libQtScript.so.$(QT_VERSION) debian/tmp-$$device/opt/qtmoko/lib; \
 	done
 	
 	# Install libQtDeclarative so that dh_shlibdeps does not complain
