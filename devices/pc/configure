@@ -1,0 +1,7 @@
+-xplatform linux-native-g++ 
+-arch x86_64
+-prefix /opt/qtmoko
+
+-extra-qt-embedded-config "-qt-mouse-tslib" 
+
+-sound-system alsa

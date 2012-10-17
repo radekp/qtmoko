@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=NetworkServices
+[Desktop Entry]
+Comment[]=Share GPS connection with PC
+Exec=qterminal -c share-gprs.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Share GPRS with PC

@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=DocAPIRescan
+[Desktop Entry]
+Comment[]=Recans the device for document changes
+Exec=qterminal -c docapi-rescan.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Rescan Documents

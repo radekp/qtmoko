@@ -209,11 +209,7 @@ function cpp_compiler_config()
 
     embedded:!enable_rtti {
         # dynamic_cast<>() is not allowed (no RTTI)
-        qt:equals(QTE_MINOR_VERSION,5) {
-            DEFINES+=QT_NO_DYNAMIC_CAST
-        } else {
-            DEFINES+=dynamic_cast=dynamic_cast_not_allowed
-        }
+        DEFINES+=QT_NO_DYNAMIC_CAST
         COMPILER.CXXFLAGS+=$$MKSPEC.CXXFLAGS_DISABLE_RTTI
         !enable_exceptions:COMPILER.CXXFLAGS+=$$MKSPEC.CXXFLAGS_DISABLE_EXCEPTIONS
     }

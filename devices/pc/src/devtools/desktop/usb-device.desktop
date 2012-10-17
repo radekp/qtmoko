@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=USB device mode
+Exec=qterminal -c usb-device.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=USB device mode

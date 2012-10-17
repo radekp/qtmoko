@@ -50,7 +50,7 @@ cd ../build
 
   * Build it:
 
-../qtmoko/configure -system-qt -device neo
+../qtmoko/configure -device neo
 make
 make install
 
@@ -62,6 +62,28 @@ make install
     the translations git branch:
 
 git checkout origin/translations -b translations
+
+
+PC build
+========
+
+    * It's now possible to build QtMoko for x86 without cross compiling. This
+    is great for development. Just do:
+    
+../qtmoko/configure -device pc
+make
+make install
+
+    * To run the image you need to be root and symlink the result image to opt:
+    
+cd /opt
+ln -s /home/radek/qte/build-pc/image qtmoko
+
+    * Now switch to first console (CTRL+ALT+F1) and run it:
+
+. /opt/qtmoko/qpe.env
+qpe
+
 
 Old way
 =======

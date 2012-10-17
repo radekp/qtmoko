@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=Put Neo in fast charge mode
+Exec=qterminal -c fast-charge
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Fast Charge Mode

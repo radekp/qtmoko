@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=USB host mode
+Exec=qterminal -c usb-host.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=USB host mode

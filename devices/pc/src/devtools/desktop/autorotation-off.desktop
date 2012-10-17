@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=Autorotation off
+Exec=qterminal -c autorotation-off.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Autorotation off

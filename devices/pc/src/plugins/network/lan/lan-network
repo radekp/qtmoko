@@ -1,0 +1,552 @@
+#!/bin/sh
+
+# The dialup plugin uses the 'lan-network' script in order to access/install
+# system dependent options. System integrators must provide such a script
+# in order to get the dialup plugin working.
+#
+# For further details how this script is used
+# see $QPEDIR/src/plugins/network/lan/lan.cpp and the Network Services documentation.
+
+
+###############################
+DEBUG=1
+LOG=1
+LOG_FILE="/tmp/qtopia-network.log"
+TMP_FILE="/tmp/lan-intern-network.temp";
+RESOLVCONF="/etc/resolv.conf"
+QPEDIR=/opt/qtmoko
+WPA_CONF=/etc/wpa_supplicant/wpa_supplicant.conf
+
+###############################
+
+#set -x
+
+print_debug()
+{
+    if [ $DEBUG -eq 1 ]; then
+        echo "LAN: $1";
+    fi
+    if [ $LOG -eq 1 ]; then
+        echo "LAN: $1" >> $LOG_FILE;
+    fi
+}
+
+print_options()
+{
+    echo ;
+    echo "Qtopia network interface";
+    echo "Usage: lan-network (install|cleanup|start|stop|route)";
+    echo "";
+    echo "install   <iface name>    dns [DNS1 DNS2] -> sets new dns server";
+    echo "                          dhcp -> obtain interface details via DHCP";
+    echo "                          static <IP> <subnet> <broadcast> <gateway> -> install interface and use given details";
+    echo "                          wireless -essid <ESSID> -mode <Master|Managed|Ad-Hoc>"
+    echo "                                   -ap <AP> -bitrate <BITRATE> -nick <NICKNAME>"
+    echo "                                   -channel <CHANNEL> -keylength <128|64> -authmode <mode>";
+    echo "start     <iface name> -> starts interface";
+    echo "stop      <iface name> -> stops interface ";
+echo "cleanup   deletes remaining configuration files";
+    echo "route     <iface name> [-gw <gateway IP>] -> the given interface becomes the default gateway for IP traffic (don't pass gateway IP if DHCP used)";
+       
+    exit 1;
+}
+
+rescan_docs()
+{
+    export LD_LIBRARY_PATH=$QPEDIR/lib:$LD_LIBRARY_PATH
+    $QPEDIR/bin/qcop QPE/DocAPI 'scanPath(QString,int)' all 1
+}
+
+try_ip()
+{
+    COUNT=0
+    echo "Trying to find ip: $COUNT"
+       until [ "$COUNT" -gt "10" ]; do
+           IP=`/sbin/ifconfig wlan0|grep inet[^6]|awk 'BEGIN{FS=":"}{print $2}'|awk '{print $1}'`
+           if [ -n "$IP" ]; then
+               echo "$IP" > /home/root/Documents/$1.txt
+               rescan_docs
+               route $1
+               COUNT=10
+               return
+            fi
+       sleep 1
+       COUNT=$(( $COUNT + 1 ))
+       done
+stop $1
+}
+
+del_gw()
+{
+    DF=$1
+    GW=""
+    for i in `/sbin/route -n  | grep UG | awk 'BEGIN{FS=" "}{print $8}'`; do
+        if [ "$i" != "$DF" ]; then
+            GW=`/sbin/route -n  | grep UG | grep $i | awk 'BEGIN{FS=" "}{print $2}'`
+            /sbin/route del default gw $GW
+        fi
+    done
+}
+
+update_hosts()
+{
+    TMPHOSTS=$(mktemp /etc/hosts.XXXXXX)
+    awk -v interface=$1 -v ipaddress=$2 '
+        BEGIN {done = 0}
+        $2 == interface {printf "%s\t%s\n", ipaddress, $2 ; done = 1}
+        $2 != interface {print $0}
+        END { if (done == 0) printf "%s\t%s\n", ipaddress, interface }' /etc/hosts > $TMPHOSTS
+    mv -f $TMPHOSTS /etc/hosts
+}
+
+
+# install network configuration and dns server
+# parameter:
+#   $1 =>  <iface name e.g. eth1>
+#           $2  => dns  [$3 => dns1 $4 => dns2] ( if no dns IP passed use dhcp to find dns server)
+#               => dhcp  (we decided to use DHCP -> no futher options required)
+#               => static  $3 => IP $4 => subnet mask $5 => broadcast addr $6 => Gateway IP
+#               => wireless
+#                   the following options can follow the wireless keyword:
+#                       [-essid <ESSID>] [-mode <Master|Managed|Ad-Hoc>]
+#                       [-ap <AP>] [-bitrate <value>] [-nick <nickname>] [-channel <CHANNEL>]
+#                       [-keylength <128|64> ]
+#                       
+#                       * [-authmode <open|shared> -multikey <defaultKey> <key1> <key2> <key3> <key4>]
+#                       * [-authmode <open|shared> -phrase <passphrase> ] 
+#                       * [-authmode <none> -nokey ] 
+#                       * [-authmode <WPA-PSK> <password> <TKIP|AES> ]
+#                       * [-authmode <WPA-EAP> <TLS> <identity> <client-key-password> <clientKey> <clientCert> <serverCert>
+#                       * [-authmode <WPA-EAP> <TTLS|PEAP> <identity> <password> <serverCert> <MD5|GTC|MSCHAPV2|Any> <anonymous identity>
+
+install()
+{
+    # Replace following code if necessary for your system
+print_debug "$*" 
+    #dns and confic options
+    IFACE=$1;
+    shift;
+    MODE=$1;
+    shift
+
+    case $MODE in
+        dns)
+            print_debug "Installing dns server";
+           
+            if [ ! -e /etc/resolvconf ]; then
+               mkdir /etc/resolvconf
+            fi
+
+            #if [ $# -eq 2 ]; then # if no ip passed assume dhcp
+            if [ $# -gt 0 ]; then # if no ip passed assume dhcp
+               echo "Using given dns server: $1 , $2 ";
+             
+               echo "nameserver $1" > $TMP_FILE
+               echo "nameserver $2" >> $TMP_FILE
+               mv -f $TMP_FILE /etc/resolvconf/$IFACE
+               rm -f $RESOLVCONF
+               ln -s /etc/resolvconf/$IFACE $RESOLVCONF
+            else
+               echo "Using DHCP server for dns details";
+               ## ADD CODE HERE ##
+               #echo > $TMP_FILE
+            fi
+
+            ;;
+        dhcp)
+            print_debug "Using DHCP to obtain IP, gateway, broadcast and netmask address";
+
+            if [ ! -e  $HOME/Settings/Network ]; then
+                mkdir -p $HOME/Settings/Network
+            fi
+            NET_OPTIONS=$HOME/Settings/Network/$IFACE
+
+            echo "MODE=dhcp" > $NET_OPTIONS
+            ;;
+        static)
+            print_debug "Using given IP, gateway, broadcast and netmask address";
+            print_debug "IP: $1, netmask: $2, broadcast: $3, gateway: $4"
+            print_debug "ALL: $@"
+
+            if [ ! -e  $HOME/Settings/Network ]; then
+                mkdir -p $HOME/Settings/Network
+            fi
+
+            NET_OPTIONS=$HOME/Settings/Network/$IFACE
+
+            echo "MODE=static" > $NET_OPTIONS
+            echo "IPADDR=$1" >> $NET_OPTIONS
+            echo "NETMASK=$2" >> $NET_OPTIONS
+            echo "BROADCAST=$3" >> $NET_OPTIONS
+            echo "GATEWAY=$4" >> $NET_OPTIONS
+            ;;
+        wireless)
+            echo "lan-network wireless $@"
+            # no implementation required if wireless lan not used
+   
+            if [ ! -e  $HOME/Settings/Network/wireless ]; then
+                mkdir -p $HOME/Settings/Network/wireless
+            fi
+
+            NET_OPTIONS=$HOME/Settings/Network/wireless/$IFACE
+            echo > $TMP_FILE
+
+            while [ $# -gt 0 ]; do
+                case "$1" in
+                    -mode)
+                        shift;
+                        echo "WIRELESS_MODE='$1'" >> $TMP_FILE;
+                        ;;
+                    -essid)
+                        shift;
+                        echo "WIRELESS_ESSID=$1" >> $TMP_FILE;
+                        ;;
+                    -ap)
+                        shift;
+                        echo "WIRELESS_AP=$1" >> $TMP_FILE;
+                        ;;
+                    -bitrate)
+                        shift;
+                        if [ "$1" = "0" ]; then
+                            echo "WIRELESS_BITRATE='auto'" >> $TMP_FILE;
+                        else
+                            echo "WIRELESS_BITRATE='$1'" >> $TMP_FILE;
+                        fi 
+                        ;;
+                    -nick)
+                        shift;
+                        echo "WIRELESS_NICK='$1'" >> $TMP_FILE;
+                        ;;
+                    -channel)
+                        shift;
+                        if [ "$1" = "0" ]; then
+                            echo "WIRELESS_CHANNEL=''" >> $TMP_FILE;
+                        else
+                            echo "WIRELESS_CHANNEL='$1'" >> $TMP_FILE;
+                        fi
+                        ;;
+                    -keylength)
+                        shift;
+                        echo "WIRELESS_KEY_LENGTH='$1'" >> $TMP_FILE;
+                        ;;
+                    -authmode)
+                        shift;
+                        case "$1" in
+                            open|shared|none)
+                                echo "WIRELESS_AUTH_MODE=NONE" >> $TMP_FILE;
+                                # handle open/shared/none encryptipon
+                                shift;
+                                local ka kb kc kd="";
+                                if [ "$1" = "-phrase" ]; then
+                                    shift;
+                                    echo "WIRELESS_WEP_PHRASE=$1" >> $TMP_FILE;
+                                    print_debug "use passphrase $1";
+                                elif [ "$1" = "-nokey" ]; then
+                                    shift;
+                                    ## ADD CODE HERE ##
+                                    print_debug "no password/keys given";
+                                elif [ "$1" = "-multikey" ]; then
+                                    shift;
+                                    echo "WIRELESS_DEFAULT_KEY='$1'" >> $TMP_FILE;
+                                    shift;
+                                    ka=$(echo $1 | tr -d :)
+                                    shift;
+                                    kb=$(echo $1 | tr -d :)
+                                    shift;
+                                    kc=$(echo $1 | tr -d :)
+                                    shift;
+                                    kd=$(echo $1 | tr -d :)
+                                fi
+                                echo "WIRELESS_KEY_0=$ka" >> $TMP_FILE;
+                                echo "WIRELESS_KEY_1=$kb" >> $TMP_FILE;
+                                echo "WIRELESS_KEY_2=$kc" >> $TMP_FILE;
+                                echo "WIRELESS_KEY_3=$kd" >> $TMP_FILE;
+                              #  echo "WIRELESS_GROUP=WEP104" >> $TMP_FILE;
+                                ;;
+                            WPA-PSK)
+                                echo "WIRELESS_AUTH_MODE=WPA-PSK" >> $TMP_FILE;
+                                shift;
+                                echo "WIRELESS_WPA_PSK=$1" >> $TMP_FILE;
+                                shift;
+                                case "$1" in
+                                    TKIP)
+                                        echo "WIRELESS_PAIRWISE=TKIP" >> $TMP_FILE;
+                                        echo "WIRELESS_GROUP=TKIP" >> $TMP_FILE;
+                                        ;;
+                                    AES)
+                                        echo "WIRELESS_PAIRWISE=\"CCMP TKIP\"" >> $TMP_FILE;
+                                        echo "WIRELESS_GROUP=\"CCMP TKIP\"" >> $TMP_FILE;
+                                        ;;
+                                esac
+                                ;;
+                            WPA-EAP)
+                                echo "WIRELESS_AUTH_MODE=WPA-EAP" >> $TMP_FILE;
+                                shift;
+                                mode=$1;
+                                echo "WIRELESS_EAP_MODE=$mode" >> $TMP_FILE;
+                                shift;
+                                echo "WIRELESS_WPA_IDENTITY='$1'" >> $TMP_FILE;
+                                shift;
+                                if [ "$mode" = "TLS" ]; then
+                                    echo "WIRELESS_CLIENT_KEY_PASSWORD='$1'" >> $TMP_FILE;
+                                    shift;
+                                    echo "WIRELESS_CLIENT_KEY='$1'" >> $TMP_FILE;
+                                    shift;
+                                    echo "WIRELESS_CLIENT_CERT='$1'" >> $TMP_FILE;
+                                    shift;
+                                    echo "WIRELESS_CA_CERT='$1'" >> $TMP_FILE;
+                                    shift;
+                                else #PEAP and TTLS
+                                    echo "WIRELESS_WPA_PASSWORD='$1'" >> $TMP_FILE;
+                                    shift;
+                                    echo "WIRELESS_CA_CERT='$1'" >> $TMP_FILE;
+                                    shift;
+                                    echo "WIRELESS_EAP_AUTH='$1'" >> $TMP_FILE;
+                                    shift;
+                                    echo "WIRELESS_WPA_ANONID='$1'" >> $TMP_FILE;
+                                fi
+                                ;;
+                            *)
+                                print_debug "Unknown option: $1"
+                                shift;
+                                ;;
+                        esac
+                        ;;
+                    *) 
+                        print_debug "Unknown option $1";
+                        shift
+                        ;;
+                 
+                esac;
+                [ $# -gt 0 ] && shift;
+            done
+
+            mv -f $TMP_FILE $NET_OPTIONS;
+            ;;
+        *)
+            print_debug "Unknown option: $MODE";
+            print_options;
+            exit 1;
+            ;;
+    esac
+}
+
+# Starts the interface
+# parameter:
+#   $1 => interface name, e.g. eth1
+start()
+{
+    print_debug "starting $*";
+#    ifdown usb0
+
+    . $HOME/Settings/Network/$1
+
+    if [ -r $HOME/Settings/Network/wireless/$1 ]; then
+        echo "Starting wireless"
+        set -x
+        . $HOME/Settings/Network/wireless/$1
+       
+        # Generating wpa_supplicant.conf
+        WPACONF=$WPA_CONF
+
+        echo > $WPACONF
+        echo "ctrl_interface=/var/lib/wpa_supplicant" >> $WPACONF
+        echo "ctrl_interface_group=0" >> $WPACONF
+        echo "eapol_version=1" >> $WPACONF
+        echo "fast_reauth=1" >> $WPACONF
+        echo "ap_scan=1" >> $WPACONF
+        echo "network={" >> $WPACONF
+        [ -n "$WIRELESS_ESSID" ] && echo "    ssid=\"$WIRELESS_ESSID\"" >> $WPACONF
+
+        if [ -n "$WIRELESS_WEP_PHRASE" ]; then
+           echo "    wep_key0=\"$WIRELESS_WEP_PHRASE\"" >> $WPACONF
+        else
+           echo "    proto=WPA2 WPA RSN" >> $WPACONF
+        fi
+   #     [ -n "$WIRELESS_PROTO" } && echo "    proto=$WIRELESS_PROTO" >> $WPACONF 
+
+        [ -n "$WIRELESS_AUTH_MODE" ] && echo "    key_mgmt=$WIRELESS_AUTH_MODE" >> $WPACONF
+
+
+        [ -n "$WIRELESS_PAIRWISE" ] && echo "    pairwise=$WIRELESS_PAIRWISE" >> $WPACONF
+        [ -n "$WIRELESS_GROUP" ] && echo "    group=$WIRELESS_GROUP" >> $WPACONF
+        # WPA-PSK
+        [ -n "$WIRELESS_WPA_PSK" ] && echo "    psk=\"$WIRELESS_WPA_PSK\"" >> $WPACONF
+        # WEP
+        [ -n "$WIRELESS_KEY_0" ] && echo "    wep_key0=$WIRELESS_KEY_0" >> $WPACONF
+        [ -n "$WIRELESS_KEY_1" ] && echo "    wep_key0=$WIRELESS_KEY_1" >> $WPACONF
+        [ -n "$WIRELESS_KEY_2" ] && echo "    wep_key0=$WIRELESS_KEY_2" >> $WPACONF
+        [ -n "$WIRELESS_KEY_3" ] && echo "    wep_key0=$WIRELESS_KEY_3" >> $WPACONF
+        [ -n "$WIRELESS_DEFAULT_KEY" ] && echo "    wep_tx_keyidx=0" >> $WPACONF
+        # WPA-EAP
+        [ -n "$WIRELESS_EAP_MODE" ] && echo "    eap=$WIRELESS_EAP_MODE" >> $WPACONF
+        [ -n "$WIRELESS_WPA_IDENTITY" ] && echo "    identity=\"$WIRELESS_WPA_IDENTITY\"" >> $WPACONF
+        [ -n "$WIRELESS_CLIENT_KEY" ] && echo "    private_key=\"$WIRELESS_CLIENT_KEY\"" >> $WPACONF
+        [ -n "$WIRELESS_CLIENT_KEY_PASSWORD" ] && echo "    private_key_passwd=\"$WIRELESS_CLIENT_KEY_PASSWORD\"" >> $WPACONF
+        [ -n "$WIRELESS_CLIENT_CERT" ] && echo "    client_cert=\"$WIRELESS_CLIENT_CERT\"" >> $WPACONF
+        [ -n "$WIRELESS_CA_CERT" ] && echo "    ca_cert=\"$WIRELESS_CA_CERT\"" >> $WPACONF
+        [ -n "$WIRELESS_WPA_PASSWORD" ] && echo "    password=\"$WIRELESS_WPA_PASSWORD\"" >> $WPACONF
+        [ -n "$WIRELESS_EAP_AUTH" ] && echo "    phase2=\"auth=$WIRELESS_EAP_AUTH\"" >> $WPACONF
+        [ -n "$WIRELESS_WPA_ANONID" ] && echo "    anonymous_identity=\"$WIRELESS_WPA_ANONID\"" >> $WPACONF
+        echo "}" >> $WPACONF
+       
+        /sbin/ifconfig $1 up
+
+        if [ "$WIRELESS_AP" != "" ]; then
+            /sbin/iwconfig $1 ap $WIRELESS_AP
+        else
+            /sbin/iwconfig $1 ap any
+        fi
+
+#        if [ "$WIRELESS_BITRATE" != "" ] && [ "$WIRELESS_BITRATE" != "auto" ]; then
+#            /sbin/iwconfig $1 rate ${WIRELESS_BITRATE}M auto
+#        else
+#            /sbin/iwconfig $1 rate auto
+#        fi
+
+        if [ "$WIRELESS_NICK" != "" ]; then
+            /sbin/iwconfig $1 nick "$WIRELESS_NICK"
+        fi
+
+        if [ "$WIRELESS_CHANNEL" != "" ]; then
+            /sbin/iwconfig $1 channel $WIRELESS_CHANNEL
+        fi
+
+
+
+        if [ "$WIRELESS_WEP_PHRASE" != "" ]; then
+            /sbin/iwconfig $1 enc "s:$WIRELESS_WEP_PHRASE"
+
+            #call this last or else it does not always get set
+            if [ "$WIRELESS_ESSID" != "" ]; then
+                /sbin/iwconfig $1 essid "$WIRELESS_ESSID"
+            else
+                /sbin/iwconfig $1 essid any
+            fi
+        else
+            /sbin/wpa_supplicant -d -c$WPACONF -B -i$1 | logger -t WPA &
+            #ifup $1 | logger -t WPA &
+        fi
+
+        case $MODE in
+            dhcp)
+                # if you add parameters to /sbin/udhcpc below, alway leave "-i $1" last
+                sleep 3
+                /sbin/udhcpc -n -i $1 &
+                try_ip $1
+
+                ;;
+            static)
+                /sbin/ifconfig $1 $IPADDR netmask $NETMASK broadcast $BROADCAST up
+
+                if [ "$1" = "wlan0" ]; then
+                    update_hosts neo $IPADDR
+                else
+                    update_hosts neo-$1 $IPADDR
+                fi
+                #/etc/rc.d/rc.inetd reload
+                ;;
+            *)
+                ;;
+        esac
+
+
+fi
+}
+
+
+# Stops the interface
+# parameter:
+#   $1 => interface name, e.g. eth1
+stop()
+{
+    print_debug "stopping interface $1";
+
+    # bring down interface
+    /sbin/ifconfig $1 0.0.0.0 down
+    ifdown $1
+
+    # stop udhcpc for interface
+    DHCP_PIDS=$( ps aux | grep "[u]dhcpc .*-i $1" | awk '{print $2}' )
+    [ -n "$DHCP_PIDS" ] && kill $DHCP_PIDS 2>&1 >/dev/null
+
+    # stop wpa_supplicant for interface
+    WPASUP_PIDS=$( ps aux | grep "[w]pa_supplicant .* -i$1" | awk '{print $2}' )
+    [ -n "$WPASUP_PIDS" ] && kill $WPASUP_PIDS 2>&1 >/dev/null
+    if [ -e /home/root/Documents/$1.txt ]; then
+        rm /home/root/Documents/$1.txt
+        rescan_docs
+    fi
+    killall -q wpa_supplicant
+
+    ifup usb0
+}
+
+# Cleans any existing configuration file. This is called when the user deletes the interface
+cleanup()
+{
+    print_debug "cleaning interface configuration";
+    ## ADD CODE HERE ##
+    # anything to do?
+}
+
+# Changes the routing information so that the given interface becomes the standard gateway.
+# This is only called when the interface is running already. If no gateway option is passed
+# dhcp lookup is expected
+# parameter:
+#    route [-gw <gateway IP>]
+route()
+{
+    # Replace following code if necessary for your system
+    print_debug "$*"   
+    print_debug "changing default route $*"
+    interface=$1
+   
+    if [ $# -gt 2 ]; then
+        # gateway address was passed to us
+        gateway=$3
+        print_debug "removing old default route";
+        del_gw $interface
+        print_debug "adding new default route via $1";
+        /sbin/route add default gw $gateway;
+    else
+        print_debug "removing old default route";
+        del_gw $interface
+        print_debug "adding new default route via dhcp";
+        echo "Using DHCP information to find gateway IP";
+        # renew udhcpc for interface
+        DHCP_PIDS=$( ps aux | grep "[u]dhcpc .*-i $interface" | awk '{print $2}' )
+        [ -n "$DHCP_PIDS" ] && kill -s USR1 $DHCP_PIDS 2>&1 >/dev/null
+    fi
+}
+
+#######################################
+#Parse command line
+
+print_debug "Starting config script for lan plugin";
+print_debug "With params : $@";
+
+ACTION=$1;
+shift;
+case $ACTION in
+    start)
+        start "$@"
+        ;;
+    stop)
+        stop "$@"
+        ;;
+    install)
+        install "$@";
+        ;;
+    cleanup)
+        cleanup "$@";
+        ;;
+    route)
+        route "$@";
+        ;;
+    *)
+        print_debug "Unknown option: $ACTION";
+        print_options;
+        exit 1;
+        ;;
+esac

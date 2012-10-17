@@ -1,0 +1,8 @@
+# Desktop-specific configuration
+
+# These things can be disabled on a desktop build without causing an error
+-allow-fail ssl
+-allow-fail dbus
+-allow-fail modules,bluetooth
+-allow-fail mediaengines,gstreamer
+

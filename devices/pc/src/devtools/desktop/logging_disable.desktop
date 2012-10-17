@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=Logging disable
+Exec=qterminal -c logging_disable.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Logging disable

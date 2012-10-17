@@ -1,0 +1,7 @@
+This device configuration profile is for the goldelico GTA04.
+
+You can either configure Qtopia with -device gta04 and use a binary toolchain,
+or build debian package with dpkg-buildpackage on ARM device/in qemu.
+
+
+For more information check README in root dir or doc/txt

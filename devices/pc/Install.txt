@@ -1,0 +1,3 @@
+Building Qt Extended for GTA04
+
+Please check README in QtMoko root dir and also doc/txt/

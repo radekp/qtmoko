@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# pack image
+QTOPIA_IMAGE="qtmoko-update.tar.gz"
+rm -rf opt/*
+mkdir -p opt/qtmoko
+cp -r image/* opt/qtmoko
+
+# remove patented stuff - can be installed via package later
+rm -f opt/qtmoko/plugins/codecs/libmadplugin.so
+rm -f opt/qtmoko/lib/libmad.so.0
+
+# symlink to ttfont installed together with X
+cd opt/qtmoko/lib
+rm -rf fonts
+ln -s ../../../usr/share/fonts/truetype/ttf-dejavu/ fonts
+cd ../../..
+
+# make package
+tar -czvf $QTOPIA_IMAGE opt
+
+PHONEIP=192.168.0.202
+ssh root@$PHONEIP '/etc/init.d/qtmoko-gta04 stop'
+scp $QTOPIA_IMAGE root@$PHONEIP:/
+ssh root@$PHONEIP "gzip -dc /${QTOPIA_IMAGE} | tar -C / -xvpf -"
+ssh root@$PHONEIP '/etc/init.d/qtmoko-gta04 start'

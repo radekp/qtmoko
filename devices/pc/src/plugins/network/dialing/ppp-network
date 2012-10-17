@@ -1,0 +1,193 @@
+#!/bin/sh
+
+# The dialup plugin uses the 'ppp-network' script in order to access/install
+# system dependent options. System integrators must provide such a script 
+# in order to get the dialup plugin working.
+#
+# This script is a template of 'ppp-network'. Complete this script where 
+# ##ADD CODE HERE## appears.
+#
+# The completed script has to be renamed to ppp-network and must be copied into
+# $QPEDIR/src/plugins/network/dialing. The build system automatically installs ppp-network
+# into the image directory.
+#
+# For further details how this script is used 
+# see $QPEDIR/src/plugins/network/dialing/dialup.cpp.
+
+
+########## constants
+DEBUG=1
+LOG=0
+LOG_FILE="/tmp/qtopia-network.log"
+TMP_FILE="/tmp/ppp-intern-network.temp"
+PPPD="/usr/sbin/pppd";
+RESOLVCONF="/etc/resolv.conf"
+####################
+
+
+print_debug()
+{
+    if [ $DEBUG -eq 1 ]; then
+        echo "PPP: $1";
+    fi
+    if [ $LOG -eq 1 ]; then
+        echo "PPP: $1" >> $LOG_FILE;
+    fi
+}
+
+print_options()
+{
+    echo ;
+    echo "Qtopia network interface";
+    echo "Usage: ppp-network (install|cleanup|start|stop|route)";
+    echo "";
+    echo "install   peer <new peer file> -> install the given peer file as new peer file";
+    echo "          dns <dns1> <dns2> -> installs the given IPs as dns server";
+    echo "start     <additional pppd command line parameter> -> starts pppd using the given parameter";
+    echo "stop      <ppp interface name> -> stops pppd on given interface";
+    echo "cleanup   peer <peer filename> -> deletes peer file";
+    echo "          peer dns -> delete dns details";
+    echo "route     <ppp interface name> -> the given interface becomes the default gateway for IP traffic";
+        
+    exit 1;
+}
+
+
+# install peer files and dns server settings
+# parameter:
+#   $1 => peer $2 => new peer file
+#      => dns  $2 => 1st dns server IP $3 => 2nd dns server IP
+install()
+{
+    NEXT=$1;
+    case $NEXT in 
+        peer)
+            #install a new peer file
+            print_debug "installing $2 to /etc/ppp/peers"
+            ##ADD CODE HERE##
+            if [ ! -e /etc/ppp/peers ]; then
+                mkdir /etc/ppp/peers
+             fi
+            cp -f $2 /etc/ppp/peers
+            ;;
+        dns)
+            #install new dns server 
+            print_debug "writing dns server details to /etc/ppp/resolv.conf";
+            shift;
+            rm -f $TMP_FILE
+            if [ $# -gt 0 ]; then
+                while [ $# -gt 0 ]; do
+                    echo "nameserver $1" >> $TMP_FILE 
+                    shift;
+                done
+                mv $TMP_FILE /var/run/resolv.conf
+            elif [ -f "/etc/ppp/resolv.conf" ]; then
+                cp -f /etc/ppp/resolv.conf /var/run/resolv.conf
+            fi
+            rm -f $RESOLVCONF
+            ln -s /var/run/resolv.conf $RESOLVCONF
+            ;;    
+        *)
+            print_debug "Unknown option: $ACTION";
+            print_options;
+            exit 1;
+            ;;
+    esac
+}
+
+# Starts pppd
+# parameter:
+#   start parameters for pppd
+start()
+{
+    print_debug "starting pppd using parameters: $*"
+    "$PPPD" "$*" &
+}
+
+# Stops pppd
+# parameter:
+#   $1 => ppp interface name (e.g. ppp2)
+stop()
+{
+    print_debug "stopping pppd for interface $1";
+    if [ -f "/var/run/$1.pid" ]; then
+        print_debug "pppd pid: `cat /var/run/$1.pid`"
+        kill -SIGTERM `cat /var/run/$1.pid`
+    fi
+}
+
+# parameter:
+#   $1 => peer $2 => name of peer file (no path)
+#      => dns
+cleanup()
+{
+    NEXT=$1;
+    case $NEXT in
+        peer)
+            # delete peers file given as $2
+            print_debug "deleting peer file /etc/ppp/peers/$1";
+            rm -f "/etc/ppp/peers/$1";
+            ;;
+        dns)
+            # remove dns server details 
+            print_debug "deinstalling dns server";
+            ##ADD CODE HERE##
+            ;;
+        *) 
+            print_debug "Unknown option: $ACTION";
+            print_options;
+            exit 1;
+            ;;
+    esac
+}
+
+# Changes the routing information so that the given interface becomes the standard gateway
+# This is only called when the interface is running already.
+# parameter:
+#   $1 => name of running ppp interface (e.g. ppp1)
+route()
+{
+    # find the IP of the gateway associated with our ppp interface
+    gateway=`/sbin/route -n|grep -i "$1" | cut -d' ' -f1`;
+    gateway=`echo $gateway | cut -d' ' -f1`;
+    
+    # set IP as default gateway
+    print_debug "changing default route"
+    if [ -n "$gateway" ]; then
+        print_debug "removing old default route";
+        /sbin/route del default;
+        print_debug "adding new default route via $1";
+        /sbin/route add default gw $gateway;
+    fi
+}
+
+#######################################
+#Parse command line
+
+print_debug "Starting config script for dialup plugin"
+print_debug "$0 $*"
+
+ACTION=$1;
+shift;
+case $ACTION in
+    start)
+        start $*
+        ;;
+    stop)
+        stop $1
+        ;;
+    install)
+        install $*;
+        ;;
+    cleanup)
+        cleanup $*;
+        ;;
+    route)
+        route $*;
+        ;;
+    *)
+        print_options;
+        exit 1;
+        ;;
+esac
+

@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=Logging stop
+Exec=qterminal -c logging_stop.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Logging stop

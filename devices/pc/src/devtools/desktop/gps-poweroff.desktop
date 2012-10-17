@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=Turn off GPS
+Exec=qterminal -c gps-poweroff.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Turn off GPS

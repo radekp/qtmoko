@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=Wifi maxperf off
+Exec=qterminal -c wifi-maxperf-off.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Wifi maxperf off

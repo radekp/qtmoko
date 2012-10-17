@@ -3,7 +3,7 @@ TARGET=qtopiamail
 MODULE_NAME=qtopiamail
 VERSION=4.0.0
 
-CONFIG+=qtopia hide_symbols singleexec
+CONFIG+=qtopia singleexec
 QTOPIA*=pim
 equals(QTOPIA_UI,home):MODULES*=homeui
 

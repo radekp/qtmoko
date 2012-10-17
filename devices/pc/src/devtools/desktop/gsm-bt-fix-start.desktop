@@ -1,0 +1,10 @@
+[Translation]
+File=QtopiaApplications
+Context=NetworkServices
+[Desktop Entry]
+Comment[]=Start gsm bt audio fix
+Exec=qterminal -c gsm-bt-fix-start.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Start gsm bt audio fix
+    

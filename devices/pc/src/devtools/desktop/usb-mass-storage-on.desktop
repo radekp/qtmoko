@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=USB mass storage on
+Exec=qterminal -c usb-mass-storage-on.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=USB mass storage on

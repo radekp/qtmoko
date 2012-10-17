@@ -1,0 +1,10 @@
+[Translation]
+File=QtopiaApplications
+Context=NetworkServices
+[Desktop Entry]
+Comment[]=Fix bluetooth
+Exec=qterminal -c btfix.sh
+Icon=devtools/devtools
+Type=ConsoleApplication
+Name[]=Fix bluetooth
+	
