@@ -45,7 +45,7 @@ CONFIGURE := $(CURDIR)/configure
 LANGUAGES := $(shell ls i18n/ | xargs echo | sed 's/ /,/g')
 
 TOOLCHAIN := linux-native-g++
-QTMOKO_DEVICES ?= gta04 neo
+QTMOKO_DEVICES ?= gta04 neo pc
 DEVICES := $(QTMOKO_DEVICES)
 QMAKE_CONF = devices/$1/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 
