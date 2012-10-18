@@ -1,3 +1,30 @@
 #!/bin/sh
-export PKG_CONFIG_PREFIX=/usr/arm-linux-gnueabi/
-export PKG_CONFIG_PATH=/usr/arm-linux-gnueabi/lib/pkgconfig/
+
+echo "Running environment script for device neo with PKG_CONFIG_PREFIX=$PKG_CONFIG_PREFIX"
+
+# Guess PKG_CONFIG_PREFIX if not already exported (e.g. by dpkg-builpackage).
+# It should point to directory where libs are see:
+# http://radekp.github.com/qtmoko/api/buildsystem/over-device-profiles-1.html#pkg-config
+
+# Cross compiling
+if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
+    PKG_CONFIG_PREFIX=/usr/arm-linux-gnueabi/lib
+fi
+
+# Native toolchain on squeeze/armel
+if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
+    PKG_CONFIG_PREFIX=/usr/lib
+fi
+
+# PKG_CONFIG_PATH should point to directory with all the .pc files
+PKG_CONFIG_PATH=$PKG_CONFIG_PREFIX/pkgconfig
+
+if [ -d "$PKG_CONFIG_PATH" ]; then
+    echo "Variable PKG_CONFIG_PREFIX is now set to: $PKG_CONFIG_PREFIX"
+    echo "Variable PKG_CONFIG_PATH   is now set to: $PKG_CONFIG_PATH"
+else
+    echo "Warning: PKG_CONFIG_PATH directory $PKG_CONFIG_PATH does not exist!!"
+fi
+
+export PKG_CONFIG_PREFIX
+export PKG_CONFIG_PATH

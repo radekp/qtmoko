@@ -1,9 +1,25 @@
 #!/bin/sh
-#TOOLCHAIN=/opt/toolchains/arm920t-eabi
-#TOOLCHAIN=/opt/toolchains/arm920t
-#USE_TB=1
-#TB_CC_PREFIX=arm-linux-
-#TB_CC_VER=auto
-#TB_SYS=neo:eabi
-#export PKG_CONFIG_PREFIX=$TOOLCHAIN/arm-angstrom-linux-gnueabi
-export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/
+
+echo "Running environment script for device pc with PKG_CONFIG_PREFIX=$PKG_CONFIG_PREFIX"
+
+# Set PKG_CONFIG_PREFIX for native compiling if not already exported (e.g. by
+# dpkg-builpackage). It should point to directory where libs are see:
+# http://radekp.github.com/qtmoko/api/buildsystem/over-device-profiles-1.html#pkg-config
+
+# Native toolchain on wheezy/x86_64
+if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
+    PKG_CONFIG_PREFIX=/usr/lib/x86_64-linux-gnu
+fi
+
+# PKG_CONFIG_PATH should point to directory with all the .pc files
+PKG_CONFIG_PATH=$PKG_CONFIG_PREFIX/pkgconfig
+
+if [ -d "$PKG_CONFIG_PATH" ]; then
+    echo "Variable PKG_CONFIG_PREFIX is now set to: $PKG_CONFIG_PREFIX"
+    echo "Variable PKG_CONFIG_PATH   is now set to: $PKG_CONFIG_PATH"
+else
+    echo "Warning: PKG_CONFIG_PATH directory $PKG_CONFIG_PATH does not exist!!"
+fi
+
+export PKG_CONFIG_PREFIX
+export PKG_CONFIG_PATH
