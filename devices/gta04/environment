@@ -11,9 +11,18 @@ if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
     PKG_CONFIG_PREFIX=/usr/arm-linux-gnueabi/lib
 fi
 
+if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
+    PKG_CONFIG_PREFIX=/usr/arm-linux-gnueabihf/lib
+fi
+
 # Native toolchain on wheezy/armhf
 if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
     PKG_CONFIG_PREFIX=/usr/lib/arm-linux-gnueabihf
+fi
+
+# Native toolchain on wheezy/armel
+if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
+    PKG_CONFIG_PREFIX=/usr/lib/arm-linux-gnueabi
 fi
 
 # Native toolchain on squeeze/armel
