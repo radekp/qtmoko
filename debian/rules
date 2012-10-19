@@ -45,7 +45,7 @@ CONFIGURE := $(CURDIR)/configure
 LANGUAGES := $(shell ls i18n/ | xargs echo | sed 's/ /,/g')
 
 TOOLCHAIN := linux-native-g++
-QTMOKO_DEVICES ?= gta04 neo
+QTMOKO_DEVICES ?= gta04 neo pc
 DEVICES := $(QTMOKO_DEVICES)
 QMAKE_CONF = devices/$1/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 
@@ -65,13 +65,13 @@ debian/control:
 
 override_dh_auto_configure:
 	# Qt-4.8 specific patches
-	if [ "$$(echo "4.8\n$(QT_VERSION)" | sort -V | head -1)" = "4.8" ]; then \
-		if [ "$$(basename "$$(readlink -f debian/patches/series)")" = "series-main" ]; then \
-			rm -fr .pc; \
-		fi; \
-		ln -fs series-qt48 debian/patches/series; \
-		quilt push -a; \
-	fi
+#	if [ "$$(echo "4.8\n$(QT_VERSION)" | sort -V | head -1)" = "4.8" ]; then \
+#		if [ "$$(basename "$$(readlink -f debian/patches/series)")" = "series-main" ]; then \
+#			rm -fr .pc; \
+#		fi; \
+#		ln -fs series-qt48 debian/patches/series; \
+#		quilt push -a; \
+#	fi
 	# Patch the qmake.conf file with proper toolchain configuration
 	for device in $(DEVICES); do \
 		sed -i.orig \
