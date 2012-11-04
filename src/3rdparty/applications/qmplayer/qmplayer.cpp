@@ -810,6 +810,8 @@ int QMplayer::scanDir(QString const &path, int level, int maxLevel, int min,
         if (fileName.endsWith(".mp3", Qt::CaseInsensitive)
             || fileName.endsWith(".ogg", Qt::CaseInsensitive)
             || fileName.endsWith(".ogv", Qt::CaseInsensitive)
+	    || fileName.endsWith(".mkv", Qt::CaseInsensitive)
+	    || fileName.endsWith(".webm", Qt::CaseInsensitive)
             || fileName.endsWith(".avi", Qt::CaseInsensitive)
             || fileName.endsWith(".mp4", Qt::CaseInsensitive)
             || fileName.endsWith(".wav", Qt::CaseInsensitive)
@@ -1206,6 +1208,10 @@ void QMplayer::newConnection()
                         mime = "video/mp4";
                     } else if (reqPath.endsWith(".ogv")) {
                         mime = "video/theora";
+                    } else if (reqPath.endsWith(".mkv")) {
+                        mime = "video/x-matroska";
+                    } else if (reqPath.endsWith(".webm")) {
+                        mime = "video/webm";
                     } else if (reqPath.endsWith(".ogg")) {
                         mime = "audio/vorbis";
                     } else if (reqPath.endsWith(".mp3")) {
@@ -1417,7 +1423,7 @@ bool QMplayer::installMplayer()
     QFile f("/home/root/.mplayer/config");
     f.open(QFile::WriteOnly);
     f.write
-        ("vo=fbdev2\nao=alsa\n[default]\nafm=ffmpeg\nvfm=ffmpeg\nvf=scale=480:640\nsws=0\nframedrop=1");
+        ("vo=fbdev2\nao=alsa\n[default]\nafm=ffmpeg\nvfm=ffmpeg\nvf=expand=640:480,rotate=1\nsws=0\nframedrop=1");
     f.close();
 #else
     QMessageBox::critical(this, tr("qmplayer"), tr("You must install mplayer"));

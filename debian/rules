@@ -92,7 +92,9 @@ override_dh_auto_configure:
 	# Qt Extended configuration step
 	for device in $(DEVICES); do \
 		mkdir -p ../build-$$device; \
-		cd ../build-$$device && "$(CONFIGURE)" -device $$device -system-qt -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -extra-qt-embedded-config="-system-sqlite" -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include; \
+		export LD_LIBRARY_PATH=$$(dirname ${PWD})/build-$$device/qtopiacore/host/lib; \
+		export; \
+		cd ../build-$$device && "$(CONFIGURE)" -device $$device -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -extra-qt-embedded-config="-system-sqlite" -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include; \
 	done
 
 override_dh_auto_build:
@@ -117,6 +119,8 @@ override_dh_auto_clean:
 
 override_dh_auto_install:
 	for device in $(DEVICES); do \
+		export LD_LIBRARY_PATH=$$(dirname ${PWD})/build-$$device/qtopiacore/host/lib; \
+		export; \
 		$(MAKE) -C ../build-$$device install; \
 		mkdir -p debian/tmp-$$device/opt/qtmoko; \
 		cp -r ../build-$$device/image/* debian/tmp-$$device/opt/qtmoko; \

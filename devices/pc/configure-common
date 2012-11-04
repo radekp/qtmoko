@@ -8,11 +8,9 @@
 -libamr
 -pictureflow
 
-# FIXME Enable this once it actually works
-#-add-mediaengine gstreamer
 # Features that are controlled via modules.
 
--add-mediaengine cruxus
+-add-mediaengine gstreamer
 -add-module bluetooth
 -add-module cell
 -add-module connectivity
@@ -40,5 +38,5 @@
 
 -D _FORTIFY_SOURCE=0
 -rtti
--force-pkg-config
--system-qt
+-no-pkg-config
+-build-qt

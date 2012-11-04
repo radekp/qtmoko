@@ -20,6 +20,11 @@
 #ifndef QCONFIG_QPE_H
 #define QCONFIG_QPE_H
 
+// Disable dynamic cast
+#ifndef QT_NO_DYNAMIC_CAST
+#  define QT_NO_DYNAMIC_CAST
+#endif
+
 // Data structures
 #ifndef QT_NO_STL
 #  define QT_NO_STL

@@ -93,7 +93,7 @@ audio/x-wav			wav
 audio/amr			amr
 audio/mpegurl       m3u
 audio/x-scpls       pls
-audio/ogg           oga
+audio/ogg           ogg
 audio/ogg+vorbis    ogg
 audio/x-broadcom-ept            ept
 chemical/x-pdb			xyz

@@ -1,5 +1,46 @@
-Cross compling from sources
-===========================
+Cross compling from sources in debian chroot
+============================================
+
+  * The most easy and painless way is to build QtMoko in debian squeeze chroot.
+
+  * You will need debian on your PC
+
+  * Clone current git tree:
+
+git clone git://github.com/radekp/qtmoko.git
+
+  * Initialize and update submodules
+
+cd qtmoko
+git submodule init
+git submodule update
+
+  * Create and enter debian chroot:
+
+sudo scripts/qtmoko-chroot.sh
+
+  * Build it:
+
+mkdir -p /root/qte/build
+cd /root/qte/build
+../qtmoko/configure -device gta04
+make
+export LD_LIBRARY_PATH=/root/qte/build/qtopiacore/host/lib/
+make install
+
+  * If you have e.g. 8 core processor you can speed it up by passing -j8 arg
+    to configure and make.
+
+  * Upload the result to your device (you must have phone and usb network up)
+
+../qtmoko/devices/gta04/scripts/update_qtmoko
+
+
+Cross compiling without chroot
+==============================
+  
+  * This is not supported anymore, but if you know what you are doing you can
+    go on...
 
   * You will need Debian wheezy on your PC
   
@@ -26,7 +67,10 @@ apt-get install g++-4.4-arm-linux-gnueabi
   * Install xapt and libraries qtmoko depens on:
   
 apt-get install xapt
-xapt -a armel -m libqt4-dev libts-dev libasound2-dev libspeexdsp-dev libssl-dev libxtst-dev libbluetooth-dev libdbus-1-dev
+xapt -a armel -m libxext-dev libasound2-dev libdbus-1-dev libssl-dev libts-dev libbluetooth-dev libxtst-dev libpng12-dev libjpeg8-dev libv4l-dev libspeexdsp-dev libglib2.0-dev libsqlite3-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
+
+  * Make sure that there is no libqt4 installed in /usr/arm-linux-gnueabi
+    because QtMoko build can link agains that qt-x11 and will not work.
 
   * Make link for dbus.h:
   

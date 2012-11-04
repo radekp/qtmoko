@@ -168,6 +168,10 @@ set_optvar("verbose", +{
     },
     "value" => 0,
 });
+set_optvar("j", +{
+    "type" => "value",
+    "set" => [ "%=s", "Number of parallel task used during -build-qt. "],
+});
 set_optvar("silent", +{
     "type" => "bool",
     "set" => [ "%", "Hide compiler commandlines." ],
@@ -3057,7 +3061,7 @@ if ( opt("qtopia_ui") && !opt("qte_config") ) {
     }
     my $args = "-embedded ".opt("arch")." -platform $qt_platform -xplatform $qt_xplatform ".
                "-prefix ".fixpath("$SDKROOT/qtopiacore/target")." -make src -nomake tools ".
-               "-no-stl -no-exceptions -no-xmlpatterns -no-qt3support -no-glib -no-cups -no-dbus -no-accessibility -phonon -no-phonon-backend ".
+               "-no-stl -no-exceptions -no-xmlpatterns -no-qt3support -no-phonon -no-cups -no-dbus -no-accessibility ".
                "-nomake examples -nomake demos -nomake docs ".
                "-DQT_QWS_DISABLE_FLUSHCLIPPING ".
                "-confirm-license -opensource";
@@ -3757,9 +3761,9 @@ sub configure_qt
     my @hidden_files;
     # The GPL package has trouble when both Qt and Qt Embedded sources are located in
     # the same directory. Hide this file from Qt so that it doesn't get confused.
-    if ( configopt("free") && $QTDIR eq $DQTDIR ) {
-        push(@hidden_files, "src/gui/kernel/qapplication_qws.cpp");
-    }
+    #if ( configopt("free") && $QTDIR eq $DQTDIR ) {
+    #    push(@hidden_files, "src/gui/kernel/qapplication_qws.cpp");
+    #}
     for ( @hidden_files ) {
         if ( -f "$qt_depot_path/$_" ) {
             move("$qt_depot_path/$_", "$qt_depot_path/$_.disabled");
@@ -3826,7 +3830,7 @@ sub configure_qt
     filter_system($command, \&filter_qt);
 
     # Restore the hidden files
-    push(@hidden_files, "src/gui/kernel/qapplication_qws.cpp");
+    #push(@hidden_files, "src/gui/kernel/qapplication_qws.cpp");
     for ( @hidden_files ) {
         if ( -f "$qt_depot_path/$_.disabled" ) {
             move("$qt_depot_path/$_.disabled", "$qt_depot_path/$_");
@@ -4850,9 +4854,9 @@ END
     my @hidden_files;
     # The GPL package has trouble when both Qt and Qt Embedded sources are located in
     # the same directory. Hide this file from Qt so that it doesn't get confused.
-    if ( configopt("free") && $QTDIR eq $DQTDIR ) {
-        push(@hidden_files, "src/gui/kernel/qapplication_qws.cpp");
-    }
+    #if ( configopt("free") && $QTDIR eq $DQTDIR ) {
+    #    push(@hidden_files, "src/gui/kernel/qapplication_qws.cpp");
+    #}
     for ( @hidden_files ) {
         if ( -f "$qt_depot_path/$_" ) {
             move("$qt_depot_path/$_", "$qt_depot_path/$_.disabled");
@@ -4909,7 +4913,7 @@ END
     filter_system($command, \&filter_qt);
 
     # Restore the hidden files
-    push(@hidden_files, "src/gui/kernel/qapplication_qws.cpp");
+    #push(@hidden_files, "src/gui/kernel/qapplication_qws.cpp");
     for ( @hidden_files ) {
         if ( -f "$qt_depot_path/$_.disabled" ) {
             move("$qt_depot_path/$_.disabled", "$qt_depot_path/$_");
@@ -4921,7 +4925,13 @@ END
           "Building Qt\n".
           '*'x($cols-1)."\n\n";
 
-    system(opt("make")) == 0 or return 0;
+    # Number of parallel tasks for building host qt
+    my $build_qt_parallel = "";
+    if(opt("j")) {
+        $build_qt_parallel = " -j" . opt("j");
+    }
+
+    system(opt("make") . $build_qt_parallel) == 0 or return 0;
 
     # Print a banner
     print '*'x($cols-1)."\n".

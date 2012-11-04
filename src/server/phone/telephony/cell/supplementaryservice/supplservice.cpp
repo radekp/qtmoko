@@ -97,13 +97,11 @@ void SupplementaryServiceTask::unstructuredNotification
     QString title = tr("Service request");
     QString displayText = "<qt>" + text + "</qt>";
     static QAbstractMessageBox *serviceMsgBox = 0;
-    if (!serviceMsgBox) {
-        serviceMsgBox = QAbstractMessageBox::messageBox(0, title, displayText,
-                                       QAbstractMessageBox::Information);
-    } else {
-        serviceMsgBox->setWindowTitle(title);
-        serviceMsgBox->setText(displayText);
+    if (serviceMsgBox) {
+        delete serviceMsgBox;
     }
+    serviceMsgBox = QAbstractMessageBox::messageBox(0, title, displayText,
+                                       QAbstractMessageBox::Information);
     QtopiaApplication::showDialog(serviceMsgBox);
 }
 

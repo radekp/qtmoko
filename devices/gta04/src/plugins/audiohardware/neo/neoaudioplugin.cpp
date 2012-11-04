@@ -525,7 +525,7 @@ bool RecordingAudioState::enter(QAudio::AudioCapability capability)
 {
     Q_UNUSED(capability)
         qLog(AudioState) << "RecordingAudioState::enter()";
-    return restoreState("recording.state");
+    return restoreState("recording");
 }
 
 bool RecordingAudioState::leave()

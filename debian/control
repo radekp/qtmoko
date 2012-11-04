@@ -2,7 +2,7 @@ Source: qtmoko
 Section: comm
 Priority: optional
 Maintainer: Radek Polak <psonek2@seznam.cz>
-Build-Depends: debhelper (>= 7.0.50~), libqt4-dev, libxext-dev, libasound2-dev, libdbus-1-dev, libssl-dev, libts-dev, libbluetooth-dev, libxtst-dev, libpng12-dev, libjpeg8-dev, libv4l-dev, libqt4-sql-sqlite, libspeexdsp-dev, libglib2.0-dev, libsqlite3-dev, quilt
+Build-Depends: debhelper (>= 7.0.50~), libxext-dev, libasound2-dev, libdbus-1-dev, libssl-dev, libts-dev, libbluetooth-dev, libxtst-dev, libpng12-dev, libjpeg8-dev, libv4l-dev, libspeexdsp-dev, libglib2.0-dev, libsqlite3-dev, quilt
 Standards-Version: 3.9.2
 Homepage: http://www.qtmoko.org
 Vcs-Git: git://github.com/radekp/qtmoko.git

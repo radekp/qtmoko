@@ -34,6 +34,7 @@ class BusHelperPrivate : public QObject
 public:
     void addWatch(GstBus* bus, BusHelper* helper)
     {
+        this->m_helper = helper;
         setParent(helper);
         m_tag = gst_bus_add_watch_full(bus, 0, busCallback, this, NULL);
     }
