@@ -337,6 +337,16 @@ dpkg -i qtmoko-theme-mokofaen_3-1_all.deb
 rm qtmoko-theme-mokofaen_3-1_all.deb
 exit
 
+Step 8.2 - some more alarm and ringtones
+========================================
+
+mkdir -p /media/card/home/root/Documents
+cd /media/card/home/root/Documents
+wget https://github.com/radekp/qtmoko/raw/master/src/applications/clock/sounds/Alarm_Beep_01.ogg
+wget https://github.com/radekp/qtmoko/raw/master/src/applications/clock/sounds/Alarm_Beep_02.ogg
+wget https://github.com/radekp/qtmoko/raw/master/src/applications/clock/sounds/Alarm_Beep_03.ogg
+
+
 Step 9 - Linux kernel
 =====================
 

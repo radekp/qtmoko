@@ -40,9 +40,9 @@
 #ifndef QT_NO_INPUTDIALOG
 #  define QT_NO_INPUTDIALOG
 #endif
-#ifndef QT_NO_FILEDIALOG
-#  define QT_NO_FILEDIALOG
-#endif
+//#ifndef QT_NO_FILEDIALOG          file dialog is useful e.g. in fbreader
+//#  define QT_NO_FILEDIALOG
+//#endif
 #ifndef QT_NO_PROGRESSDIALOG
 #  define QT_NO_PROGRESSDIALOG
 #endif

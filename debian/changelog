@@ -1,3 +1,26 @@
+qtmoko (49-1) unstable; urgency=low
+
+  * upgrade to qt 4.8.3
+  * using gstreamer as media engine instead of cruxus
+  * support for html5 video in browsers
+  * fixed DTMF tones on gta04 (Neil Jerram)
+  * fixed USSD message box size (Stefan Rupp)
+  * A3 earpiece state uses HiFi priority (Neil Jerram)
+  * lot of work on debian package (Gilles Filippini)
+  * ogg metadata plugin (Neil Jerram)
+  * fixed empty email content with windows charset (Neil Jerram)
+  * fixed some email content displaying (Neil Jerram)
+  * fixes in QtMaze accelerometer (Neil Jerram)
+  * improvements in svg layouts (adrien)
+  * arora and qx use new accelerometer library (Neil Jerram)
+  * qmplayer scans for webm and mkv now too
+  * updated build instructions - cross building is now done in chroot
+  * using now glib even loop
+  * parallel make option in configure for -build-qt option
+  * pc build
+  
+ -- Radek Polak <psonek2@seznam.cz>  Wed, 07 Oct 2012 21:09:00 +0100
+
 qtmoko (48-1) unstable; urgency=low
 
   * working alarm

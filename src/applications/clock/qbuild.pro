@@ -73,7 +73,7 @@ timeservice [
 
 sound [
     hint=image
-    files=sounds/*
+    files=sounds/alarm.wav
     path=/sounds
 ]
 
