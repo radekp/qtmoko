@@ -30,7 +30,7 @@ expr:@/UI/DisplayTime/Time
      <status name="gps" imageon="gps-fix.svg" on="expr:@/Gps/State == 3" active="expr:@/Gps/State == 3"/>
   </exclusive>
 
-  <exclusive rect="-256,5,15x30">
+  <exclusive rect="-271,5,30x30">
      <text outline="#000000" color="#FFFFFF" bold="yes" align="right,vcenter" size="6" >expr:@/Gps/NumSatellites</text>
   </exclusive>
 
