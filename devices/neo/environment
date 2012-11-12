@@ -1,33 +1,23 @@
 #!/bin/sh
 
-# We are not using pkg-config. All lib and include args are in mkspecs/.
-return
+echo "Running environment script for device neo with PKG_CONFIG_LIBDIR=$PKG_CONFIG_LIBDIR"
 
-echo "Running environment script for device neo with PKG_CONFIG_PREFIX=$PKG_CONFIG_PREFIX"
-
-# Guess PKG_CONFIG_PREFIX if not already exported (e.g. by dpkg-builpackage).
-# It should point to directory where libs are see:
+# Guess PKG_CONFIG_LIBDIR if not already exported (e.g. by dpkg-builpackage).
+# It should point to directory where .pc files are see:
 # http://radekp.github.com/qtmoko/api/buildsystem/over-device-profiles-1.html#pkg-config
 
 # Cross compiling
-if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
-    PKG_CONFIG_PREFIX=/usr/arm-linux-gnueabi/lib
-fi
+PKG_CONFIG_LIBDIR=${PKG_CONFIG_LIBDIR:-/usr/arm-linux-gnueabi/lib/pkgconfig}
 
 # Native toolchain on squeeze/armel
-if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
-    PKG_CONFIG_PREFIX=/usr/lib
+if [ ! -d "$PKG_CONFIG_LIBDIR" ]; then
+    PKG_CONFIG_LIBDIR=/usr/lib/pkgconfig
 fi
 
-# PKG_CONFIG_PATH should point to directory with all the .pc files
-PKG_CONFIG_PATH=$PKG_CONFIG_PREFIX/pkgconfig
-
-if [ -d "$PKG_CONFIG_PATH" ]; then
-    echo "Variable PKG_CONFIG_PREFIX is now set to: $PKG_CONFIG_PREFIX"
-    echo "Variable PKG_CONFIG_PATH   is now set to: $PKG_CONFIG_PATH"
+if [ -d "$PKG_CONFIG_LIBDIR" ]; then
+    echo "Variable PKG_CONFIG_LIBDIR is now set to: $PKG_CONFIG_LIBDIR"
 else
-    echo "Warning: PKG_CONFIG_PATH directory $PKG_CONFIG_PATH does not exist!!"
+    echo "Warning: PKG_CONFIG_LIBDIR directory $PKG_CONFIG_LIBDIR does not exist!!"
 fi
 
-unset PKG_CONFIG_PREFIX
-export PKG_CONFIG_PATH
+export PKG_CONFIG_LIBDIR

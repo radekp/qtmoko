@@ -28,11 +28,16 @@ Note: QTMOKO_DEVICES is used at build time only.
 
 Here is an example of workflow:
 
-1- Create the chroot tarball:
-$ sudo bash -c "CROSSARCH=armhf CROSSVERS=4.7 DIST=wheezy pdebuild-cross-create"
-$ CROSSARCH=armhf CROSSVERS=4.7 DIST=wheezy debian/pdebuild-cross/fix-pdebuild-cross
+1- Create the chroot tarball (once):
+$ sudo bash -c "CROSSARCH=armhf CROSSVERS=4.6 DIST=wheezy pdebuild-cross-create"
+$ CROSSARCH=armhf CROSSVERS=4.6 DIST=wheezy debian/pdebuild-cross/fix-pdebuild-cross
 
-2- Build the desired qtmoko package
-$ CROSSARCH=armhf CROSSVERS=4.7 DIST=sid QTMOKO_DEVICES=gta04 pdebuild-cross
+2- Prepare the qtmoko source tarball (once):
+$ git submodule init
+$ git submodule update
+$ ./debian/rules get-orig-source
 
- -- Gilles Filippini <gilles.filippini@free.fr>  Sat, 06 Oct 2012 14:58:27 +0200
+3- Build the qtmoko package
+$ CROSSARCH=armhf CROSSVERS=4.6 DIST=wheezy QTMOKO_DEVICES=gta04 pdebuild-cross
+
+ -- Gilles Filippini <gilles.filippini@free.fr>  Thu, 01 Nov 2012 16:13:30 +0100

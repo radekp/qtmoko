@@ -1,5 +1,6 @@
 #!/bin/sh
 pkgconfig=pkg-config
+system_path=$(dirname $(dirname $PKG_CONFIG_LIBDIR))
 
 # Test that the package exists
 $pkgconfig $PACKAGE
@@ -14,7 +15,9 @@ fi
 
 # Now pull out the information we want
 for f in $(echo $FLAGS | sed 's/,/ /g'); do
-    echo $(echo $f | tr '[a-z]' '[A-Z]')=$($pkgconfig $PACKAGE --$f)
+    echo $(echo $f | tr '[a-z]' '[A-Z]')=$($pkgconfig $PACKAGE --$f) |
+        sed -e 's~\-L'"$system_path"'/lib ~~g' \
+            -e 's~\-I'"$system_path"'/include ~~g'
 done
 
 exit 0
