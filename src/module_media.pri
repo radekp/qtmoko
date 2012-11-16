@@ -6,7 +6,7 @@ PROJECTS*=\
         libraries/qtopiavideo \
         tools/mediaserver \
         plugins/content/id3 \
-        plugins/content/ogg \
+        #plugins/content/ogg \
         plugins/content/threegpp
 SERVER_PROJECTS*=\
         server/media/servercontrol                #(re)starts media server
