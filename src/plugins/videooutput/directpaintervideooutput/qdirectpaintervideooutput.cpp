@@ -232,7 +232,14 @@ void QDirectPainterVideoOutput::doRenderFrame( const QVideoFrame& frame )
             break;
         }
 
-        const uchar* imageData = frame.planeData(0);
+        uchar* imageData = (uchar *) frame.planeData(0);
+        int count = frame.planeSize(0).width() * frame.planeSize(0).height() * 4;
+        for(int i = 0; i < count; i+=4)
+        {
+            uchar r = imageData[i];
+            imageData[i] = imageData[i+2];
+            imageData[i+2] = r;
+        }
 
         //QTime t;
         //t.start();
