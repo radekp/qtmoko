@@ -634,6 +634,7 @@ void RingControl::nextRing()
 
 #ifdef MEDIA_SERVER
         d->soundcontrol->setVolume(volmap[d->lastRingVolume]);
+        d->soundcontrol->sound()->stop();
         d->soundcontrol->sound()->play();
 #elif defined(Q_WS_QWS)
         if (d->soundclient)
