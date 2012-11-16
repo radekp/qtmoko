@@ -62,13 +62,27 @@ export QTMOKO_PKG_CONFIG_PATH=/usr/$(DEB_HOST_MULTIARCH)/lib/pkgconfig
 ifneq (,$(QTMOKO_SYSTEM_QT))
 SYSTEM_QT_BUILD_DEPS := , libqt4-dev, libqt4-sql-sqlite
 SYSTEM_QT_OPTION := -system-qt
-else
-# with '-build-qt' we need to force LD_LIBRARY_PATH at install time
-SDK_HOST_LD_LIBRARY_PATH = LD_LIBRARY_PATH=$$(readlink -f ../build-$1)/sdk/qtopiacore/host/lib
+endif
+
+# /!\ Ugly workaround to have cross libpulsecommon-2.0.so which isn't
+# handled by xapt + dpkg-cross starting from wheezy
+# It requires "dpkg --add-architecture $(DEB_HOST_MULTIARCH)" in the chroot
+# Hopefully all this crap won't be needed with true multiarch enabled cross
+# toolchains
+ifneq ($(DEB_HOST_MULTIARCH),$(DEB_BUILD_MULTIARCH))
+ifeq (OK,$(shell if dpkg --compare-versions "$(shell dpkg -l dpkg | grep ^ii | awk '{print $$3}')" '>=' "1.16.2"; then echo "OK"; fi))
+LIBPULSECOMMON_CROSS := libpulsecommon-cross
+QMAKE_LDFLAGS += -Wl,-rpath-link,$(CURDIR)/pulseaudio-cross/usr/lib/$(DEB_HOST_MULTIARCH)/pulseaudio
+endif
 endif
 
 %:
 	dh $@
+
+libpulsecommon-cross:
+	mkdir pulseaudio-cross
+	cd pulseaudio-cross && apt-get download libpulse0:$(DEB_HOST_ARCH)
+	cd pulseaudio-cross && dpkg -x libpulse0_*.deb .
 
 clean: debian/control
 .PHONY: debian/control
@@ -78,7 +92,7 @@ debian/control:
 		cat debian/control-$$device >> debian/control; \
 	done
 
-override_dh_auto_configure:
+override_dh_auto_configure: $(LIBPULSECOMMON_CROSS)
 	# Qt-4.8 specific patches
 #	if [ "$$(echo "4.8\n$(QT_VERSION)" | sort -V | head -1)" = "4.8" ]; then \
 #		if [ "$$(basename "$$(readlink -f debian/patches/series)")" = "series-main" ]; then \
@@ -107,7 +121,7 @@ override_dh_auto_configure:
 	# Qt Extended configuration step
 	for device in $(DEVICES); do \
 		mkdir -p ../build-$$device; \
-		cd ../build-$$device && "$(CONFIGURE)" -device $$device $(SYSTEM_QT_OPTION) -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -extra-qt-embedded-config="-system-sqlite -system-libtiff -system-libmng" -extra-qt-config="-system-sqlite -no-gif -nomake tools -no-declarative"; \
+		cd ../build-$$device && "$(CONFIGURE)" -device $$device $(SYSTEM_QT_OPTION) -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -extra-qt-embedded-config="-system-sqlite -system-libtiff -system-libmng" -extra-qt-config="-release -static -system-sqlite -no-gif -nomake tools -no-declarative"; \
 		cd $(CURDIR); \
 	done
 
@@ -130,10 +144,13 @@ override_dh_auto_clean:
 		rm -fr ../build-$$device; \
 	done
 	rm -f sdk/LICENSE.QtopiaGPL
+ifneq (,$(LIBPULSECOMMON_CROSS))
+	rm -fr pulseaudio-cross
+endif
 
 override_dh_auto_install:
 	for device in $(DEVICES); do \
-		$(call SDK_HOST_LD_LIBRARY_PATH,$$device) $(MAKE) -C ../build-$$device install; \
+		$(MAKE) -C ../build-$$device install; \
 		mkdir -p debian/tmp-$$device/opt/qtmoko; \
 		cp -r ../build-$$device/image/* debian/tmp-$$device/opt/qtmoko; \
 	done

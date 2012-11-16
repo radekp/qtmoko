@@ -516,7 +516,7 @@ set_optvar("version", +{
     "hostqt" => $hostQtVersionStr,
     "config_pri" => "QTOPIA_VERSION=%{qtopia}\n".
                     "QTOPIA_LICENSE=\"GPL v2\"\n".
-                    "QTOPIA_MAINTAINER=\"QtMoko project (www.qtmoko.org)\"",
+                    "QTOPIA_MAINTAINER=\"QtMoko project (qtmoko.sourceforge.net)\"",
 });
 set_optvar("page_size", +{
     "type" => "placeholder",

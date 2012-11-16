@@ -40,6 +40,10 @@ ls -l /usr/bin/\$DEB_HOST_MULTIARCH-*
 EOF
 chmod a+x fix.sh
 
+if [ "$DIST" != squeeze ]; then
+  echo "dpkg --add-architecture $CROSSARCH" >>fix.sh
+fi
+
 . "/etc/pdebuild-cross/pdebuild-cross.rc"
 sudo bash -c "CROSSVERS=$CROSSVERS CROSSARCH=$CROSSARCH pbuilder --execute --save-after-exec --configfile /etc/pdebuild-cross/pdebuild-cross.rc --basetgz $BASETGZ -- $(readlink -f ./fix.sh)"
 

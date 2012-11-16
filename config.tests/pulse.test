@@ -1,0 +1,5 @@
+#!/bin/sh
+# This says, "get the pkg-config package libpulse-simple or die"
+env PACKAGE=libpulse-simple $(dirname $0)/pkg_config.test >/dev/null || exit $?
+# This says, "get the pkg-config package libpulse-simple and print CFLAGS and LIBS but prefix them with PULSE_"
+env PACKAGE=libpulse-simple $(dirname $0)/pkg_config.test | sed 's/\(CFLAGS\|LIBS\)=/PULSE_\1=/'

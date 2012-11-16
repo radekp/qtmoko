@@ -942,7 +942,6 @@ set_optvar("sound_system", +{
     "set" => [ "%=s", "Select the sound system to use. ".
                       "You might need to force OSS if your toolchain has ALSA but your kernel does not." ],
     "arg" => "ss",
-    # FIXME see below for the code that hides pulse from the help
     "available" => ["alsa", "oss", "pulse"],
     "default" => "alsa",
     "default_tested" => 1,
@@ -1449,7 +1448,7 @@ set_optvar("version", +{
     "hostqt" => $hostQtVersionStr,
     "config_pri" => "QTOPIA_VERSION=%{qtopia}\n".
                     "QTOPIA_LICENSE=\"GPL v2\"\n".
-                    "QTOPIA_MAINTAINER=\"QtMoko project (www.qtmoko.org)\"",
+                    "QTOPIA_MAINTAINER=\"QtMoko project (qtmoko.sourceforge.net)\"",
 });
 set_optvar("page_size", +{
     "type" => "placeholder",
@@ -1725,8 +1724,6 @@ if ( !Qtopia::Opt::validate() ) {
 }
 
 if ( !$ok || opt("help") ) {
-    # FIXME Don't show that -sound-system=pulse is available
-    opt("sound_system", "available") = ["alsa", "oss"];
     Qtopia::Opt::get_help();
 }
 
@@ -2797,6 +2794,26 @@ END
 
         # this needs to be last
         last;
+    }
+}
+
+if ( opt("qtopia_ui") && opt("sound_system") eq "pulse" ) {
+    print "Testing for PulseAudio: ";
+    print "\n" if ( opt("verbose") );
+    mkpath("$QPEDIR/config.tests/sound_system");
+    my $out;
+    my $pulse = configtest("pulse", "outvar", $out);
+    if ( $pulse ) {
+        open OUT, ">$QPEDIR/config.tests/sound_system/pulse.pri" or die "Can't write $QPEDIR/config.tests/sound_system/pulse.pri";
+        print OUT $out;
+        close OUT;
+        print "OK\n";
+    } else {
+        print "FAIL\n";
+        die_if_not_allowed("sound_system");
+        opt("sound_system", "auto") = 1;
+        opt("sound_system") = "alsa";
+        print "Using Alsa as the sound system.\n";
     }
 }
 
