@@ -410,6 +410,19 @@ nameserver 8.8.8.8
 __END__
 
 
+Step 9.9 - enable ssh access just on usb
+========================================
+
+* SSH root access can be dangerous on wifi or on GPRS, so enable it only on usb0
+
+echo "# Enable ssh access just on usb" >> /media/card/etc/rc.local
+echo "ip6tables -A INPUT ! -i usb0 -p tcp --dport 22 -j REJECT --reject-with tcp-reset; iptables -A INPUT ! -i usb0 -p tcp --dport 22 -j REJECT --reject-with tcp-reset" >> /media/card/etc/rc.local
+
+* Manually edit /media/card/etc/rc.local and move "exit" 0 to the end of file:
+
+nano /media/card/etc/rc.local
+
+
 Step 10 - release tarball
 =========================
 
