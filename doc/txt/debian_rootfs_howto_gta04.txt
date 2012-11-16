@@ -30,7 +30,7 @@ Step 1
 
 * We will be installing new image to /media/card:
 
-cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,rfkill,ntpdate,libspeex1,libspeexdsp1,lsof,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-pulseaudio,pulseaudio,libasound2-plugins squeeze /media/card/ http://cdn.debian.net/debian/
+cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,rfkill,ntpdate,libspeex1,libspeexdsp1,lsof,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-pulseaudio,pulseaudio,pulseaudio-utils,libasound2-plugins squeeze /media/card/ http://cdn.debian.net/debian/
 
 Step 2
 ======
