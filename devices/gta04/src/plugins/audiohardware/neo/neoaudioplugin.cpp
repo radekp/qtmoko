@@ -72,8 +72,20 @@ static bool amixerSet(QStringList & args)
     return ret == 0;
 }*/
 
+bool usePulse;
+
 static bool alsactl(QStringList & args)
 {
+    if(usePulse) {
+        QProcess p;
+        args.insert(0, "alsactl");
+        args.insert(0, "--");
+        qLog(AudioState) << "pasuspender " << args;
+        p.start("pasuspender", args);
+        p.waitForFinished(-1);
+        return true;
+    }
+    
     qLog(AudioState) << "alsactl " << args;
 
     for(int i = 0; i < 8; i++) {
@@ -148,6 +160,7 @@ static bool gsmVoiceStart()
     }
     
     voicePs = new QProcess();
+    QStringList args;
 
     // Dump output always to stderr if audio logging is enabled
     if (qLogEnabled(AudioState)) {
@@ -162,7 +175,14 @@ static bool gsmVoiceStart()
         voicePs->setProcessChannelMode(QProcess::ForwardedChannels);
     }
 
-    voicePs->start("gsm-voice-routing");
+    if(usePulse) {
+        args.insert(0, "gsm-voice-routing");
+        args.insert(0, "--");
+        qLog(AudioState) << "pasuspender " << args;
+        voicePs->start("pasuspender", args);
+    } else
+        voicePs->start("gsm-voice-routing");
+
     if (voicePs->waitForStarted(3000)) {
         qLog(AudioState) << "starting gsm-voice-routing pid " << voicePs->pid();
         return true;
@@ -715,6 +735,8 @@ NeoAudioPlugin::NeoAudioPlugin(QObject * parent):
 QAudioStatePlugin(parent)
 {
     m_data = new NeoAudioPluginPrivate;
+    
+    usePulse = QFile::exists("/usr/bin/pasuspender");
     
     // On A4+ models use HW sound routing, on A3 do SW routing
     bool gta04a4 = QFile::exists("/sys/class/gpio/gpio186/value");

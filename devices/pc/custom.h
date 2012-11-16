@@ -29,7 +29,7 @@
 //#define QT_NO_LOG_STREAM
 
 
-#define QPE_NEED_CALIBRATION
+//#define QPE_NEED_CALIBRATION
 
 #define QTOPIA_PHONE_DEVICE "/dev/ttyHS_Application"
 //#define QTOPIA_PHONE_VENDOR "ficgta01"

@@ -1,28 +1,25 @@
 #!/bin/sh
 
-# We are not using pkg-config. All lib and include args are in mkspecs/.
-return
-
-echo "Running environment script for device pc with PKG_CONFIG_PREFIX=$PKG_CONFIG_PREFIX"
-
-# Set PKG_CONFIG_PREFIX for native compiling if not already exported (e.g. by
-# dpkg-builpackage). It should point to directory where libs are see:
-# http://radekp.github.com/qtmoko/api/buildsystem/over-device-profiles-1.html#pkg-config
+echo "Running environment script for device pc with QTMOKO_PKG_CONFIG_PATH=$QTMOKO_PKG_CONFIG_PATH"
 
 # Native toolchain on wheezy/x86_64
-if [ ! -d "$PKG_CONFIG_PREFIX" ]; then
-    PKG_CONFIG_PREFIX=/usr/lib/x86_64-linux-gnu
+if [ ! -d "$QTMOKO_PKG_CONFIG_PATH" ]; then
+    QTMOKO_PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
 fi
 
-# PKG_CONFIG_PATH should point to directory with all the .pc files
-PKG_CONFIG_PATH=$PKG_CONFIG_PREFIX/pkgconfig
+# Native toolchain on squeeze/armel
+if [ ! -d "$QTMOKO_PKG_CONFIG_PATH" ]; then
+    QTMOKO_PKG_CONFIG_PATH=/usr/lib/pkgconfig
+fi
 
-if [ -d "$PKG_CONFIG_PATH" ]; then
-    echo "Variable PKG_CONFIG_PREFIX is now set to: $PKG_CONFIG_PREFIX"
-    echo "Variable PKG_CONFIG_PATH   is now set to: $PKG_CONFIG_PATH"
+if [ -d "$QTMOKO_PKG_CONFIG_PATH" ]; then
+    echo "Variable QTMOKO_PKG_CONFIG_PATH is now set to: $QTMOKO_PKG_CONFIG_PATH"
 else
-    echo "Warning: PKG_CONFIG_PATH directory $PKG_CONFIG_PATH does not exist!!"
+    echo "Warning: QTMOKO_PKG_CONFIG_PATH directory $QTMOKO_PKG_CONFIG_PATH does not exist!!"
 fi
 
-unset PKG_CONFIG_PREFIX
+# src/build/bin/configure insists on using PKG_CONFIG_PATH only
+# PKG_CONFIG_LIBDIR won't be handled correctly when switching between
+# host and target configuration
+PKG_CONFIG_PATH=$QTMOKO_PKG_CONFIG_PATH
 export PKG_CONFIG_PATH

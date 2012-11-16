@@ -67,7 +67,7 @@ apt-get install g++-4.4-arm-linux-gnueabi
   * Install xapt and libraries qtmoko depens on:
   
 apt-get install xapt
-xapt -a armel -m libxext-dev libasound2-dev libdbus-1-dev libssl-dev libts-dev libbluetooth-dev libxtst-dev libpng12-dev libjpeg8-dev libv4l-dev libspeexdsp-dev libglib2.0-dev libsqlite3-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
+xapt -a armel -m libxext-dev libasound2-dev libdbus-1-dev libssl-dev libts-dev libbluetooth-dev libxtst-dev libpng12-dev libjpeg8-dev libv4l-dev libspeexdsp-dev libglib2.0-dev libsqlite3-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libpulse-dev
 
   * Make sure that there is no libqt4 installed in /usr/arm-linux-gnueabi
     because QtMoko build can link agains that qt-x11 and will not work.
@@ -112,16 +112,25 @@ PC build
 ========
 
     * It's now possible to build QtMoko for x86 without cross compiling. This
-    is great for development. Just do:
+    is great for development.
+
+   * Create and enter debian chroot:
+
+sudo scripts/qtmoko-chroot.sh
+mkdir -p /root/qte/build-pc
+cd /root/qte/build-pc
+
+  * Build it:
     
 ../qtmoko/configure -device pc
 make
+export LD_LIBRARY_PATH=/root/qte/build-pc/qtopiacore/host/lib/
 make install
 
     * To run the image you need to be root and symlink the result image to opt:
     
 cd /opt
-ln -s /home/radek/qte/build-pc/image qtmoko
+ln -s /root/qte/build-pc/image qtmoko
 
     * Now switch to first console (CTRL+ALT+F1) and run it:
 

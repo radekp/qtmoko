@@ -1,0 +1,11 @@
+#!/bin/sh
+if [ -n "$PKG_CONFIG_PATH" ]; then
+  # Strip out target system default paths when cross building
+  system_path=$(dirname $(dirname "$PKG_CONFIG_PATH"))
+  pkg-config "$@" |
+    sed -e 's~\-L'"$system_path"'/lib ~~g' \
+        -e 's~\-I'"$system_path"'/include ~~g' \
+        -e 's~\-I'"$system_path"'/include$~~g'
+else
+  pkg-config "$@"
+fi

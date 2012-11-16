@@ -1,5 +1,5 @@
 MODULE_NAME=pulse
 DEP.libs [
     TYPE=DEPENDS PERSISTED SDK
-    EVAL="LIBS+=-pulse-simple"
+    EVAL="LIBS+=-lpulse-simple"
 ]

@@ -8,6 +8,9 @@ if [ ! -d /dev/pts ]; then
     modprobe joydev
 fi
 
+# Start pulse audio
+pulse.sh &
+
 if [ ! "$(pidof udevd)" ]; then
   # running on devtmpfs
   wifi-poweron.sh &

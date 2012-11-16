@@ -10,15 +10,15 @@ endif
 ifneq ($(DEB_HOST_MULTIARCH),$(DEB_BUILD_MULTIARCH))
 CC=$(DEB_HOST_MULTIARCH)-gcc
 CXX=$(DEB_HOST_MULTIARCH)-g++
-CROSS_CPPFLAGS=-I/usr/$(DEB_HOST_MULTIARCH)/include/$(DEB_HOST_MULTIARCH)
-CROSS_INCDIR=/usr/$(DEB_HOST_MULTIARCH)/include /usr/$(DEB_HOST_MULTIARCH)/include/$(DEB_HOST_MULTIARCH) /usr/$(DEB_HOST_MULTIARCH)/include/dbus-1.0 /usr/$(DEB_HOST_MULTIARCH)/lib/dbus-1.0/include
+CROSS_CPPFLAGS=
+CROSS_INCDIR=
 CROSS_LDFLAGS=
-CROSS_LIBDIR=/usr/$(DEB_HOST_MULTIARCH)/lib
+CROSS_LIBDIR=
 else
 CC=gcc
 CXX=g++
 CROSS_CPPFLAGS=
-CROSS_INCDIR=/usr/include/dbus-1.0 /usr/lib/dbus-1.0/include
+CROSS_INCDIR=
 CROSS_LDFLAGS=
 CROSS_LIBDIR=
 endif
@@ -38,8 +38,8 @@ CROSS_CPPFLAGS+=-march=armv7-a -mtune=cortex-a8 -mfpu=neon -ftree-vectorize -mfl
 CROSS_CPPFLAGS+=-marm
 endif
 
-CFLAGS=-pipe $(shell dpkg-buildflags --get CFLAGS) $(CROSS_CPPFLAGS)
-LDFLAGS=$(shell dpkg-buildflags --get LDFLAGS) $(CROSS_LDFLAGS)
+QMAKE_CFLAGS=-pipe $(shell CC=$(CC) dpkg-buildflags --get CFLAGS) $(CROSS_CPPFLAGS)
+QMAKE_LDFLAGS=$(shell CC=$(CC) dpkg-buildflags --get LDFLAGS) $(CROSS_LDFLAGS)
 
 CONFIGURE := $(CURDIR)/configure
 LANGUAGES := $(shell ls i18n/ | xargs echo | sed 's/ /,/g')
@@ -52,13 +52,28 @@ QMAKE_CONF = devices/$1/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
 QT_VERSION := $(shell grep '^\# *define *QT_VERSION_STR' "qtopiacore/qt/src/corelib/global/qglobal.h" | awk '{print $$3}')
 export QUILT_PATCHES=debian/patches
 
+# Force our pkg-config wrapper
+export PKG_CONFIG=$(CURDIR)/pkg-config-cross
+# PKG_CONFIG_PATH to use for target system; See devices/<device>/environment
+export QTMOKO_PKG_CONFIG_PATH=/usr/$(DEB_HOST_MULTIARCH)/lib/pkgconfig
+
+# The configure step defaults to '-build-qt'. If QTMOKO_SYSTEM_QT isn't
+# empty, we use 'system-qt' instead. 
+ifneq (,$(QTMOKO_SYSTEM_QT))
+SYSTEM_QT_BUILD_DEPS := , libqt4-dev, libqt4-sql-sqlite
+SYSTEM_QT_OPTION := -system-qt
+else
+# with '-build-qt' we need to force LD_LIBRARY_PATH at install time
+SDK_HOST_LD_LIBRARY_PATH = LD_LIBRARY_PATH=$$(readlink -f ../build-$1)/sdk/qtopiacore/host/lib
+endif
+
 %:
 	dh $@
 
 clean: debian/control
 .PHONY: debian/control
 debian/control:
-	cp debian/control-src debian/control
+	sed 's/@SYSTEM_QT@/'"$(SYSTEM_QT_BUILD_DEPS)"'/' debian/control-src >debian/control
 	for device in $(DEVICES); do \
 		cat debian/control-$$device >> debian/control; \
 	done
@@ -79,12 +94,12 @@ override_dh_auto_configure:
 			-e 's:^\(QMAKE_CXX[ \t]*=\).*$$:\1 '"$(CXX):" \
 			-e 's:^\(QMAKE_LINK[ \t]*=\).*$$:\1 '"$(CXX):" \
 			-e 's:^\(QMAKE_LINK_SHLIB[ \t]*=\).*$$:\1 '"$(CXX):" \
-			-e 's:^\(QMAKE_CFLAGS[ \t]*=\).*$$:\1 '"$(CFLAGS):" \
+			-e 's:^\(QMAKE_CFLAGS[ \t]*=\).*$$:\1 '"$(QMAKE_CFLAGS):" \
 			-e 's:^\(QMAKE_CFLAGS_RELEASE[ \t]*=\).*$$:\1 :' \
 			-e 's:^\(QMAKE_CFLAGS_DEBUG[ \t]*=\).*$$:\1 :' \
 			-e 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" \
 			-e 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" \
-			-e 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(LDFLAGS):" \
+			-e 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(QMAKE_LDFLAGS):" \
 			-e 's:^\(QMAKE_LIBS[ \t]*=\).*$$:\1 '"-ldl:" \
 			$(call QMAKE_CONF,$$device); \
 	done
@@ -92,9 +107,8 @@ override_dh_auto_configure:
 	# Qt Extended configuration step
 	for device in $(DEVICES); do \
 		mkdir -p ../build-$$device; \
-		export LD_LIBRARY_PATH=$$(dirname ${PWD})/build-$$device/qtopiacore/host/lib; \
-		export; \
-		cd ../build-$$device && "$(CONFIGURE)" -device $$device -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -extra-qt-embedded-config="-system-sqlite" -l dbus-1 -I /usr/include/dbus-1.0/ -I /usr/lib/dbus-1.0/include; \
+		cd ../build-$$device && "$(CONFIGURE)" -device $$device $(SYSTEM_QT_OPTION) -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -extra-qt-embedded-config="-system-sqlite -system-libtiff -system-libmng" -extra-qt-config="-system-sqlite -no-gif -nomake tools -no-declarative"; \
+		cd $(CURDIR); \
 	done
 
 override_dh_auto_build:
@@ -119,9 +133,7 @@ override_dh_auto_clean:
 
 override_dh_auto_install:
 	for device in $(DEVICES); do \
-		export LD_LIBRARY_PATH=$$(dirname ${PWD})/build-$$device/qtopiacore/host/lib; \
-		export; \
-		$(MAKE) -C ../build-$$device install; \
+		$(call SDK_HOST_LD_LIBRARY_PATH,$$device) $(MAKE) -C ../build-$$device install; \
 		mkdir -p debian/tmp-$$device/opt/qtmoko; \
 		cp -r ../build-$$device/image/* debian/tmp-$$device/opt/qtmoko; \
 	done

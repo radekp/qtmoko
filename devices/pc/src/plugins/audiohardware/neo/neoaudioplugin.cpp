@@ -75,7 +75,9 @@ static bool amixerSet(QStringList & args)
 static bool alsactl(QStringList & args)
 {
     qLog(AudioState) << "alsactl " << args;
+    return true;
 
+    /*
     for(int i = 0; i < 8; i++) {
         
         QProcess p;
@@ -90,7 +92,7 @@ static bool alsactl(QStringList & args)
         qWarning() << "alsactl returned " << output << ", running kill-snd-card-users.sh";
         QProcess::execute("kill-snd-card-users.sh");
     }
-    return false;
+    return false;   */
 }
 
 static bool restoreState(QString stateFile, bool gsm = false)
@@ -113,63 +115,6 @@ static bool writeToFile(const char *filename, const char *val, int len)
 {
     qLog(AudioState) << "echo " << val << " > " << filename;
     return (bool) Qtopia::writeFile(filename, val, len);
-}
-
-QProcess *voicePs = NULL;
-
-static bool gsmVoiceStop()
-{
-    // Move back alsa config (used e.g. by blueooth a2dp sound)
-    if(QFile::exists("/home/root/.asoundrc.tmp")) {
-        QFile::rename("/home/root/.asoundrc.tmp", "/home/root/.asoundrc");
-    }
-
-    if (voicePs == NULL) {
-        return true;
-    }
-    qLog(AudioState) << "terminating gsm-voice-routing pid " << voicePs->pid();
-    voicePs->terminate();
-    if (!voicePs->waitForFinished(1000)) {
-        qWarning() << "gsm-voice-routing process failed to terminate";
-        voicePs->kill();
-    }
-    delete(voicePs);
-    voicePs = NULL;
-    return true;
-}
-
-static bool gsmVoiceStart()
-{
-    gsmVoiceStop();
-
-    // Move away alsa config (used e.g. by blueooth a2dp sound)
-    if(QFile::exists("/home/root/.asoundrc")) {
-        QFile::rename("/home/root/.asoundrc", "/home/root/.asoundrc.tmp");
-    }
-    
-    voicePs = new QProcess();
-
-    // Dump output always to stderr if audio logging is enabled
-    if (qLogEnabled(AudioState)) {
-        QStringList env = QProcess::systemEnvironment();
-        for (int i = 0; i < env.count(); i++) {
-            if (env.at(i).startsWith("GSM_VOICE_ROUTING_LOGFILE")) {
-                env.removeAt(i);
-                voicePs->setEnvironment(env);
-                break;
-            }
-        }
-        voicePs->setProcessChannelMode(QProcess::ForwardedChannels);
-    }
-
-    voicePs->start("gsm-voice-routing");
-    if (voicePs->waitForStarted(3000)) {
-        qLog(AudioState) << "starting gsm-voice-routing pid " << voicePs->pid();
-        return true;
-    }
-    qWarning() << "failed to start gsm-voice-routing: " <<
-        voicePs->errorString();
-    return false;
 }
 
 // ========================================================================= //
@@ -225,13 +170,7 @@ bool SpeakerAudioState::isAvailable() const
 bool SpeakerAudioState::enter(QAudio::AudioCapability)
 {
     qLog(AudioState) << "SpeakerAudioState::enter()" << "isPhone" << m_isPhone;
-
     bool ok = restoreState("speaker", m_isPhone);
-
-    if (m_isPhone) {
-        gsmVoiceStart();
-    }
-
     return ok;
 
 }
@@ -239,82 +178,6 @@ bool SpeakerAudioState::enter(QAudio::AudioCapability)
 bool SpeakerAudioState::leave()
 {
     qLog(AudioState) << "SpeakerAudioState::leave()";
-
-    if (m_isPhone) {
-        gsmVoiceStop();
-    }
-    return true;
-}
-
-// ========================================================================= //
-class EarpieceAudioState : public QAudioState
-{
-    Q_OBJECT
-public:
-    EarpieceAudioState(bool isPhone, QObject * parent = 0);
-
-    QAudioStateInfo info() const;
-    QAudio::AudioCapabilities capabilities() const;
-
-    bool isAvailable() const;
-    bool enter(QAudio::AudioCapability capability);
-    bool leave();
-
-private:
-    QAudioStateInfo m_info;
-    bool m_isPhone;
-};
-
-EarpieceAudioState::EarpieceAudioState(bool isPhone, QObject * parent):
-QAudioState(parent), m_isPhone(isPhone)
-{
-    if (isPhone) {
-        m_info.setDomain("Phone");
-        m_info.setProfile("PhoneEarpiece");
-        m_info.setPriority(100);
-    } else {
-        m_info.setDomain("Media");
-        m_info.setProfile("MediaEarpiece");
-        m_info.setPriority(150);
-    }
-    m_info.setDisplayName(tr("Earpiece"));
-}
-
-QAudioStateInfo EarpieceAudioState::info() const
-{
-    return m_info;
-}
-
-QAudio::AudioCapabilities EarpieceAudioState::capabilities()const
-{
-    return QAudio::OutputOnly;
-}
-
-bool EarpieceAudioState::isAvailable() const
-{
-    return true;
-}
-
-bool EarpieceAudioState::enter(QAudio::AudioCapability)
-{
-    qLog(AudioState) << "EarpieceAudioState::enter()" << "isPhone" << m_isPhone;
-
-    bool ok = restoreState("earpiece", m_isPhone);
-
-    if (m_isPhone) {
-        gsmVoiceStart();
-    }
-
-    return ok;
-}
-
-bool EarpieceAudioState::leave()
-{
-    qLog(AudioState) << "EarpieceAudioState::leave()";
-
-    if (m_isPhone) {
-        gsmVoiceStop();
-    }
     return true;
 }
 
@@ -464,18 +327,11 @@ bool HeadsetAudioState::enter(QAudio::AudioCapability)
     bool ok = writeToFile("/sys/devices/virtual/gpio/gpio55/value", "1", 1) // switch off video out
         && restoreState("headset", m_isPhone);
 
-    if (m_isPhone) {
-        gsmVoiceStart();
-    }
-
     return ok;
 }
 
 bool HeadsetAudioState::leave()
 {
-    if (m_isPhone) {
-        gsmVoiceStop();
-    }
     return true;
 }
 
@@ -717,12 +573,7 @@ QAudioStatePlugin(parent)
     m_data = new NeoAudioPluginPrivate;
     
     // On A4+ models use HW sound routing, on A3 do SW routing
-    bool gta04a4 = QFile::exists("/sys/class/gpio/gpio186/value");
-    if(gta04a4)
-        m_data->m_states.push_back(new EarpieceHwAudioState(this));   // default for gsm calls
-    else
-        m_data->m_states.push_back(new EarpieceAudioState(this));   // default for gsm calls
-    
+    m_data->m_states.push_back(new EarpieceHwAudioState(this));   // default for gsm calls    
     m_data->m_states.push_back(new SpeakerAudioState(false, this)); // ringtones, mp3 etc..
     m_data->m_states.push_back(new SpeakerAudioState(true, this));  // loud gsm
     m_data->m_states.push_back(new HeadsetAudioState(false, this)); // audio in headphones

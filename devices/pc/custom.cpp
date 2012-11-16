@@ -36,25 +36,6 @@ QTOPIABASE_EXPORT int qpe_sysBrightnessSteps()
     return 100;
 }
 
-// Write string count bytes long to file
-static int write_file(const char *path, const char *value, size_t count)
-{
-    int fd = open(path, O_WRONLY);
-    if (fd < 0)
-        return - 1;
-    int res = write(fd, value, count);
-    close(fd);
-    return res;
-}
-
-
 QTOPIABASE_EXPORT void qpe_setBrightness(int b)
 {
-    char str[8];
-    int n = sprintf(str, "%d", b);
-    for(int i = 10; i >= 0; i--) {
-        if(write_file("/sys/class/backlight/pwm-backlight/brightness", str, n) == n)
-            return;
-        perror("qpe_setBrightness failed");
-    }
 }

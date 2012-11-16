@@ -4,4 +4,4 @@
 
 -extra-qt-embedded-config "-qt-mouse-tslib" 
 
--sound-system alsa
+-sound-system pulse

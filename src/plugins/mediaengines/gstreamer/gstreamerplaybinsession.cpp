@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-#include <gst/gst.h>
-
 #include <QDebug>
 #include <QVideoSurface>
 #include <QMediaVideoControlServer>
@@ -34,6 +32,7 @@
 
 #include <custom.h>
 
+//#define DEBUG_SESSION 1
 
 namespace gstreamer
 {
@@ -121,30 +120,82 @@ bool PlaybinSession::isValid() const
     return true;
 }
 
+static const char *qtStateName(QtopiaMedia::State state)
+{
+    switch(state)
+    {
+        case QtopiaMedia::Playing: return "playing";
+        case QtopiaMedia::Paused: return "paused";
+        case QtopiaMedia::Stopped: return "stopped";
+        case QtopiaMedia::Buffering: return "buffering";
+        case QtopiaMedia::Error: return "error";
+        default: return "???";
+    }
+}
+
+// Set QtopiaMedia state
+void PlaybinSession::setQtState(QtopiaMedia::State state)
+{
+    if(state == d->state)
+        return;
+    
+#if DEBUG_SESSION
+    qDebug() << "PlaybinSession::setQtState " << qtStateName(d->state) << "->" << qtStateName(state);
+#endif
+    
+    d->state = state;
+    emit playerStateChanged(state);
+}
+
+// Set gst playbin element state
+bool PlaybinSession::setGstState(GstState state)
+{
+#if DEBUG_SESSION
+    qDebug() << "PlaybinSession::setGstState " << gst_element_state_get_name(state);
+#endif
+    
+    if(d->playbin == 0)
+        return false;
+    
+    if(gst_element_set_state(d->playbin, state) != GST_STATE_CHANGE_FAILURE)
+        return true;
+
+    qWarning() << "setGstState failed, state=" << gst_element_state_get_name(state) << ", url=" << d->url.toString();
+    emit playerStateChanged(QtopiaMedia::Error);
+    return false;
+}
+
+
 void PlaybinSession::start()
 {
-    if (d->playbin != 0) {
-        if (gst_element_set_state(d->playbin, GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
-            qWarning() << "GStreamer; Unable to play -" << d->url.toString();
-            emit playerStateChanged(QtopiaMedia::Error);
-        }
-    }
+#if DEBUG_SESSION
+    qDebug() << "PlaybinSession::start()";
+#endif
+    setGstState(GST_STATE_PLAYING);
 }
 
 void PlaybinSession::pause()
 {
-    if (d->playbin != 0)
-        gst_element_set_state(d->playbin, GST_STATE_PAUSED);
+#if DEBUG_SESSION
+    qDebug() << "PlaybinSession::pause()";
+#endif
+    setGstState(GST_STATE_PAUSED);
 }
 
 void PlaybinSession::stop()
 {
-    if (d->playbin != 0)
-        gst_element_set_state(d->playbin, GST_STATE_NULL);
+#if DEBUG_SESSION
+    qDebug() << "PlaybinSession::stop()";
+#endif
+    if(setGstState(GST_STATE_NULL))
+        setQtState(QtopiaMedia::Stopped);
 }
 
 void PlaybinSession::suspend()
 {
+#if DEBUG_SESSION
+    qDebug() << "PlaybinSession::suspend()";
+#endif
     if ( !d->suspended ) {
         d->suspended = true;
         if (d->playbin != 0) {
@@ -159,6 +210,9 @@ void PlaybinSession::suspend()
 
 void PlaybinSession::resume()
 {
+#if DEBUG_SESSION
+    qDebug() << "PlaybinSession::resume()";
+#endif
     if ( d->suspended ) {
         d->suspended = false;
         if ( d->stateBeforeSuspend == QtopiaMedia::Playing )
@@ -310,8 +364,7 @@ void PlaybinSession::busMessage(Message const& msg)
                     case GST_STATE_READY:
                         break;
                     case GST_STATE_PAUSED:
-                        if ( d->state != QtopiaMedia::Paused )
-                            emit playerStateChanged(d->state = QtopiaMedia::Paused);
+                        setQtState(QtopiaMedia::Paused);
 
                         if ( d->jumpPosition ) {
                             gst_element_seek_simple(d->playbin, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, d->jumpPosition );
@@ -322,16 +375,14 @@ void PlaybinSession::busMessage(Message const& msg)
                         if (oldState == GST_STATE_PAUSED)
                             getStreamsInfo();
 
-                        if (d->state != QtopiaMedia::Playing)
-                            emit playerStateChanged(d->state = QtopiaMedia::Playing);
+                        setQtState(QtopiaMedia::Playing);
                         break;
                 }
             }
             break;
 
         case GST_MESSAGE_EOS:
-            if (d->state != QtopiaMedia::Stopped)
-                emit playerStateChanged(d->state = QtopiaMedia::Stopped);
+            setQtState(QtopiaMedia::Stopped);
             break;
 
         case GST_MESSAGE_STREAM_STATUS:

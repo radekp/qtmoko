@@ -46,21 +46,10 @@ public:
     ~NeoHardware();
 
 private:
-    QPowerSourceProvider ac;
-    QPowerSourceProvider battery;
-    QValueSpaceObject batteryVso;
-    QValueSpaceObject vsoPortableHandsfree;
     QTcpSocket ueventSocket;
-    QTimer timer;
-    bool hasSmartBattery;
-    QtopiaIpcAdaptor *adaptor;
-    QtopiaIpcAdaptor *audioMgr;
 
 private slots:
-    void headphonesInserted(bool);
-    void shutdownRequested();
     void uevent();
-    void updateStatus();
 };
 
 #endif

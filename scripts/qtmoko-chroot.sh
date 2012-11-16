@@ -48,9 +48,22 @@ then
 
     if [ ! -d ../qtmoko-chroot/root/qte ]
     then
-	mkdir -p ../qtmoko-chroot/root/qte
+        mkdir -p ../qtmoko-chroot/root/qte
     fi
     mount -o bind .. ../qtmoko-chroot/root/qte
+
+    if [ ! -d ../qtmoko-chroot/var/lib/dbus ]
+    then
+        mkdir -p ../qtmoko-chroot/var/lib/dbus
+    fi
+    mount -o bind .. ../qtmoko-chroot/var/lib/dbus
+
+    if [ ! -d ../qtmoko-chroot/var/lib/dbus ]
+    then
+        mkdir -p ../qtmoko-chroot/var/lib/dbus
+    fi
+    mount -o bind /var/lib/dbus ../qtmoko-chroot/var/lib/dbus
+    mount -o bind /var/run/ ../qtmoko-chroot/var/run
 fi
 
 if [ ! -e ../qtmoko-chroot/usr/bin/arm-linux-gnueabi-gcc ]

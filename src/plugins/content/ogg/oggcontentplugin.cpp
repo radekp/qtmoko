@@ -61,6 +61,7 @@ bool OggContentPlugin::installContent( const QString &filePath, QContent *conten
 
 	qLog(DocAPI) << filePath;
 
+	memset(&ovfile, 0, sizeof(ovfile));
 	rc = ov_open(fp, &ovfile, NULL, 0);
 
 	if (rc == 0) {
