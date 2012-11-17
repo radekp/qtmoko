@@ -384,6 +384,15 @@ dpkg -i libts-0.0-0_1.0-8lindi1_armel.deb
 rm libts-0.0-0_1.0-8lindi1_armel.deb
 exit
 
+Step 9.4 - Set pulseaudio as default source/sink for gstreamer
+==============================================================
+
+chroot /media/card
+. /opt/qtmoko/qpe.env 
+gconftool-2 -t string --set /system/gstreamer/0.10/default/audiosink pulsesink
+gconftool-2 -t string --set /system/gstreamer/0.10/default/audiosrc pulsesrc
+exit
+
 
 Step 9.5 - remove bash history
 ==============================
