@@ -1,23 +1,43 @@
-qtmoko (49-1) unstable; urgency=low
+qtmoko (50-1) unstable; urgency=low
 
   * upgrade to qt 4.8.3
-  * using gstreamer as media engine instead of cruxus
   * support for html5 video in browsers
+
+ -- Radek Polak <psonek2@seznam.cz>  Wed, 17 Nov 2012 21:09:00 +0100
+
+
+qtmoko (49-1) unstable; urgency=low
+
+  * using gstreamer as media engine instead of cruxus
+  * using pulseaudio for sounds
+  * using pasuspender to pause media during calls and state switching
   * fixed DTMF tones on gta04 (Neil Jerram)
   * fixed USSD message box size (Stefan Rupp)
   * A3 earpiece state uses HiFi priority (Neil Jerram)
+  * modem is now in 3g mode since modem usb disconnect fix is in kernel
+  * modem dissapearing from usb in now logged to /modem_reenumerate.log
   * lot of work on debian package (Gilles Filippini)
+  * fixed pkg-config handling (Gilles Filippini)
   * ogg metadata plugin (Neil Jerram)
   * fixed empty email content with windows charset (Neil Jerram)
   * fixed some email content displaying (Neil Jerram)
   * fixes in QtMaze accelerometer (Neil Jerram)
   * improvements in svg layouts (adrien)
   * arora and qx use new accelerometer library (Neil Jerram)
+  * arora provides web access e.g. for web links in email (Neil Jerram)
+  * mokofaen - space for 10 and more satellites (Neil Jerram)
   * qmplayer scans for webm and mkv now too
+  * ssh access in allowed only on usb now (Paul Ferster, lindi)
   * updated build instructions - cross building is now done in chroot
   * using now glib even loop
   * parallel make option in configure for -build-qt option
   * pc build
+  * kernel changes:
+  * external gps antenna should work now (Christoph Mair)
+  * avoid errors by stoping omap DMA channels before unlinking (Neil Brown)
+  * CONFIG_TIDSPBRIDGE=m so that we can use dsp
+  * jffs2 as module so that we can mount hw validation in nand 
+  * fixed modem disapearing from usb (Dr. H. Nikolaus Schaller)
   
  -- Radek Polak <psonek2@seznam.cz>  Wed, 07 Oct 2012 21:09:00 +0100
 
