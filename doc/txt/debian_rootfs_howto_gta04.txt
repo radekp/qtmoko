@@ -227,7 +227,6 @@ rm -rf .udev
 rm /media/card/etc/network/run
 mkdir /media/card/etc/network/run
 
-
 Step 7.5 - dash
 ===============
 
@@ -301,6 +300,18 @@ wget http://qtmoko.sourceforge.net/apps/qtmoko-theme-mokofaen_3-1_all.deb
 dpkg -i qtmoko-theme-mokofaen_3-1_all.deb
 rm qtmoko-theme-mokofaen_3-1_all.deb
 exit
+
+Step 8.1 - mokofaen theme
+=========================
+
+* For debian images we use mokofaen theme:
+
+chroot /media/card/
+wget http://qtmoko.sourceforge.net/apps/qtmoko-theme-mokofaen_2-1_all.deb
+dpkg -i qtmoko-theme-mokofaen_2-1_all.deb
+rm qtmoko-theme-mokofaen_2-1_all.deb
+exit
+
 
 Step 8.2 - some more alarm and ringtones
 ========================================

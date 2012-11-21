@@ -6,6 +6,11 @@ PLUGIN_TYPE=inputmethods
 
 CONFIG+=qtopia singleexec
 
+STRING_LANGUAGE=en_US
+AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
+LANGUAGES=$$QTOPIA_LANGUAGES
+TRANSLATION_SUBDIR=translations
+
 # packaged with the keyboard input method
 
 HEADERS=\

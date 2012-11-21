@@ -5,6 +5,12 @@ VERSION=4.0.0
 
 CONFIG+=qtopia hide_symbols singleexec
 
+STRING_LANGUAGE=en_US
+AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
+LANGUAGES=$$QTOPIA_LANGUAGES
+UNIFIED_NCT_LUPDATE=1
+TRANSLATION_SUBDIR=translations
+
 pkg [
     name=printinglib
     desc="Printing library for Qt Extended."

@@ -51,6 +51,7 @@ qtmoko (48-1) unstable; urgency=low
   * fixed sound in calls on A3 (Neil Jerram)
   * better sound volume on A3 (Neil Jerram)
   * make gsm location working (Neil Jerram)
+  * fix DTMF on gta04 (Neil Jerram)
   * using /dev/input/incoming for leds signaling of SMS/call on gta04
   * race free suspend on gta04
   * updated mokofaen theme (Joif)
@@ -73,7 +74,7 @@ qtmoko (48-1) unstable; urgency=low
   * merged master and master_gta04 branches, master_gta04 is now obsolete
   * debian now uses multipackage
   
- -- Radek Polak <psonek2@seznam.cz>  Wed, 05 Sep 2012 15:40:00 +0100
+ -- Radek Polak <psonek2@seznam.cz>  Sun, 09 Sep 2012 22:14:00 +0100
 
 qtmoko (47-1) unstable; urgency=low
 
