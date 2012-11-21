@@ -23,12 +23,14 @@ CROSS_LDFLAGS=
 CROSS_LIBDIR=
 endif
 
+# Build flags for armel arch
 ifeq (arm-linux-gnueabi,$(DEB_HOST_MULTIARCH))
 ifeq (,$(filter noopt,$(DEB_BUILD_OPTIONS)))
 CROSS_CPPFLAGS+=-fomit-frame-pointer -finline-functions -falign-functions=2 -falign-loops=2 -falign-jumps=2 -march=armv4t -mtune=arm920t -msoft-float
 endif
 endif
 
+# Build flags for armhf flags (GTA04 only)
 ifeq (arm-linux-gnueabihf,$(DEB_HOST_MULTIARCH))
 # <http://processors.wiki.ti.com/index.php/Cortex-A8>
 CROSS_CPPFLAGS+=-march=armv7-a -mtune=cortex-a8 -mfpu=neon -ftree-vectorize -mfloat-abi=hard
@@ -38,31 +40,48 @@ CROSS_CPPFLAGS+=-march=armv7-a -mtune=cortex-a8 -mfpu=neon -ftree-vectorize -mfl
 CROSS_CPPFLAGS+=-marm
 endif
 
+# Add dpkg-buildflags settings
 QMAKE_CFLAGS=-pipe $(shell CC=$(CC) dpkg-buildflags --get CFLAGS) $(CROSS_CPPFLAGS)
 QMAKE_LDFLAGS=$(shell CC=$(CC) dpkg-buildflags --get LDFLAGS) $(CROSS_LDFLAGS)
 
-CONFIGURE := $(CURDIR)/configure
+# Configure flags
+# ---------------
+# Force target architecture
+CONFIGURE_FLAGS := -arch $(DEB_HOST_GNU_CPU)
+
+# No pkgmanagement - everything should be handled the Debian way
+CONFIGURE_FLAGS += -remove-module pkgmanagement
+
+# Languages
 LANGUAGES := $(shell ls i18n/ | xargs echo | sed 's/ /,/g')
+CONFIGURE_FLAGS += -languages $(LANGUAGES)
 
-TOOLCHAIN := linux-native-g++
-QTMOKO_DEVICES ?= gta04 neo pc
-DEVICES := $(QTMOKO_DEVICES)
-QMAKE_CONF = devices/$1/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
-
-QT_VERSION := $(shell grep '^\# *define *QT_VERSION_STR' "qtopiacore/qt/src/corelib/global/qglobal.h" | awk '{print $$3}')
-export QUILT_PATCHES=debian/patches
-
-# Force our pkg-config wrapper
-export PKG_CONFIG=$(CURDIR)/pkg-config-cross
-# PKG_CONFIG_PATH to use for target system; See devices/<device>/environment
-export QTMOKO_PKG_CONFIG_PATH=/usr/$(DEB_HOST_MULTIARCH)/lib/pkgconfig
+# Use system librairies where possible
+CONFIGURE_FLAGS += -extra-qt-embedded-config="-system-sqlite -system-libtiff -system-libmng"
 
 # The configure step defaults to '-build-qt'. If QTMOKO_SYSTEM_QT isn't
 # empty, we use 'system-qt' instead. 
 ifneq (,$(QTMOKO_SYSTEM_QT))
 SYSTEM_QT_BUILD_DEPS := , libqt4-dev, libqt4-sql-sqlite
-SYSTEM_QT_OPTION := -system-qt
+CONFIGURE_FLAGS += -system-qt
+else
+# Shorten native Qt build
+# -release: avoid dependency on gdb
+# -static:  avoid setting LD_LIBRARY_PATH at make install step
+# TO DO: check whether sqlite is actually needed
+CONFIGURE_FLAGS += -extra-qt-config="-release -static -system-sqlite -no-gif -nomake tools -no-declarative"
 endif
+
+# Use toolchain linux-native-g++ (from device mkspecs)
+TOOLCHAIN := linux-native-g++
+QMAKE_CONF = devices/$1/mkspecs/qws/$(TOOLCHAIN)/qmake.conf
+CONFIGURE_FLAGS += -xplatform $(TOOLCHAIN)
+# ---------------
+
+# Force our pkg-config wrapper
+export PKG_CONFIG=$(CURDIR)/pkg-config-cross
+# PKG_CONFIG_PATH to use for target system; See devices/<device>/environment
+export QTMOKO_PKG_CONFIG_PATH=/usr/$(DEB_HOST_MULTIARCH)/lib/pkgconfig
 
 # /!\ Ugly workaround to have cross libpulsecommon-2.0.so which isn't
 # handled by xapt + dpkg-cross starting from wheezy
@@ -76,6 +95,16 @@ QMAKE_LDFLAGS += -Wl,-rpath-link,$(CURDIR)/pulseaudio-cross/usr/lib/$(DEB_HOST_M
 endif
 endif
 
+# Retrieve Qt version from sources
+QT_VERSION := $(shell grep '^\# *define *QT_VERSION_STR' "qtopiacore/qt/src/corelib/global/qglobal.h" | awk '{print $$3}')
+
+# Tell quilt where to look for specific patches
+export QUILT_PATCHES=debian/patches
+
+# Devices to build QtMoko for
+QTMOKO_DEVICES ?= gta04 neo pc
+
+
 %:
 	dh $@
 
@@ -84,15 +113,15 @@ libpulsecommon-cross:
 	cd pulseaudio-cross && apt-get download libpulse0:$(DEB_HOST_ARCH)
 	cd pulseaudio-cross && dpkg -x libpulse0_*.deb .
 
-clean: debian/control
-.PHONY: debian/control
-debian/control:
+clean: $(foreach device,$(QTMOKO_DEVICES),gen_control_$(device))
+gen_control:
 	sed 's/@SYSTEM_QT@/'"$(SYSTEM_QT_BUILD_DEPS)"'/' debian/control-src >debian/control
-	for device in $(DEVICES); do \
-		cat debian/control-$$device >> debian/control; \
-	done
+gen_control_%: DEVICE=$(patsubst gen_control_%,%,$@)
+gen_control_%: gen_control
+	cat debian/control-$(DEVICE) >>debian/control
 
-override_dh_auto_configure: $(LIBPULSECOMMON_CROSS)
+
+configure_main: $(LIBPULSECOMMON_CROSS)
 	# Qt-4.8 specific patches
 #	if [ "$$(echo "4.8\n$(QT_VERSION)" | sort -V | head -1)" = "4.8" ]; then \
 #		if [ "$$(basename "$$(readlink -f debian/patches/series)")" = "series-main" ]; then \
@@ -101,88 +130,84 @@ override_dh_auto_configure: $(LIBPULSECOMMON_CROSS)
 #		ln -fs series-qt48 debian/patches/series; \
 #		quilt push -a; \
 #	fi
+
+override_dh_auto_configure: $(foreach device,$(QTMOKO_DEVICES),configure_$(device))
+configure_%: DEVICE=$(patsubst configure_%,%,$@)
+configure_%: configure_main
 	# Patch the qmake.conf file with proper toolchain configuration
-	for device in $(DEVICES); do \
-		sed -i.orig \
-			-e 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" \
-			-e 's:^\(QMAKE_CXX[ \t]*=\).*$$:\1 '"$(CXX):" \
-			-e 's:^\(QMAKE_LINK[ \t]*=\).*$$:\1 '"$(CXX):" \
-			-e 's:^\(QMAKE_LINK_SHLIB[ \t]*=\).*$$:\1 '"$(CXX):" \
-			-e 's:^\(QMAKE_CFLAGS[ \t]*=\).*$$:\1 '"$(QMAKE_CFLAGS):" \
-			-e 's:^\(QMAKE_CFLAGS_RELEASE[ \t]*=\).*$$:\1 :' \
-			-e 's:^\(QMAKE_CFLAGS_DEBUG[ \t]*=\).*$$:\1 :' \
-			-e 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" \
-			-e 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" \
-			-e 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(QMAKE_LDFLAGS):" \
-			-e 's:^\(QMAKE_LIBS[ \t]*=\).*$$:\1 '"-ldl:" \
-			$(call QMAKE_CONF,$$device); \
-	done
-
+	sed -i.orig \
+		-e 's:^\(QMAKE_CC[ \t]*=\).*$$:\1 '"$(CC):" \
+		-e 's:^\(QMAKE_CXX[ \t]*=\).*$$:\1 '"$(CXX):" \
+		-e 's:^\(QMAKE_LINK[ \t]*=\).*$$:\1 '"$(CXX):" \
+		-e 's:^\(QMAKE_LINK_SHLIB[ \t]*=\).*$$:\1 '"$(CXX):" \
+		-e 's:^\(QMAKE_CFLAGS[ \t]*=\).*$$:\1 '"$(QMAKE_CFLAGS):" \
+		-e 's:^\(QMAKE_CFLAGS_RELEASE[ \t]*=\).*$$:\1 :' \
+		-e 's:^\(QMAKE_CFLAGS_DEBUG[ \t]*=\).*$$:\1 :' \
+		-e 's:^\(QMAKE_INCDIR[ \t]*=\).*$$:\1 '"$(CROSS_INCDIR):" \
+		-e 's:^\(QMAKE_LIBDIR[ \t]*=\).*$$:\1 '"$(CROSS_LIBDIR):" \
+		-e 's:^\(QMAKE_LFLAGS[ \t]*=\).*$$:\1 '"$(QMAKE_LDFLAGS):" \
+		-e 's:^\(QMAKE_LIBS[ \t]*=\).*$$:\1 '"-ldl:" \
+		$(call QMAKE_CONF,$(DEVICE)); \
 	# Qt Extended configuration step
-	for device in $(DEVICES); do \
-		mkdir -p ../build-$$device; \
-		cd ../build-$$device && "$(CONFIGURE)" -device $$device $(SYSTEM_QT_OPTION) -xplatform $(TOOLCHAIN) -remove-module pkgmanagement -languages $(LANGUAGES) -extra-qt-embedded-config="-system-sqlite -system-libtiff -system-libmng" -extra-qt-config="-release -static -system-sqlite -no-gif -nomake tools -no-declarative"; \
-		cd $(CURDIR); \
-	done
+	mkdir -p ../build-$(DEVICE)
+	cd ../build-$(DEVICE) && "$(CURDIR)/configure" -device $(DEVICE) $(CONFIGURE_FLAGS)
 
-override_dh_auto_build:
-	for device in $(DEVICES); do \
-		$(MAKE) -C ../build-$$device; \
-	done
+override_dh_auto_build: $(foreach device,$(QTMOKO_DEVICES),build_$(device))
+build_%: DEVICE=$(patsubst build_%,%,$@)
+build_%:
+	$(MAKE) -C ../build-$(DEVICE)
 
-override_dh_auto_clean:
+
+override_dh_auto_clean: $(foreach device,$(QTMOKO_DEVICES),clean_$(device))
 	# If needed, revert QT_VERSION specific patches
 	if [ "$$(basename "$$(readlink -f debian/patches/series)")" != "series-main" ]; then \
 		if quilt app; then \
 			quilt pop -a; \
-		fi; \
+		fi && \
 		ln -fs series-main debian/patches/series; \
 	fi
-
-	for device in $(DEVICES); do \
-		[ ! -f $(call QMAKE_CONF,$$device).orig ] || mv $(call QMAKE_CONF,$$device).orig $(call QMAKE_CONF,$$device); \
-		rm -fr ../build-$$device; \
-	done
 	rm -f sdk/LICENSE.QtopiaGPL
 ifneq (,$(LIBPULSECOMMON_CROSS))
 	rm -fr pulseaudio-cross
 endif
 
-override_dh_auto_install:
-	for device in $(DEVICES); do \
-		$(MAKE) -C ../build-$$device install; \
-		mkdir -p debian/tmp-$$device/opt/qtmoko; \
-		cp -r ../build-$$device/image/* debian/tmp-$$device/opt/qtmoko; \
-	done
+clean_%: DEVICE=$(patsubst clean_%,%,$@)
+clean_%:
+	[ ! -f $(call QMAKE_CONF,$(DEVICE)).orig ] || mv $(call QMAKE_CONF,$(DEVICE)).orig $(call QMAKE_CONF,$(DEVICE))
+	rm -fr ../build-$(DEVICE)
+
+
+override_dh_auto_install: $(foreach device,$(QTMOKO_DEVICES),install_$(device))
+
+install_%: DEVICE=$(patsubst install_%,%,$@)
+install_%:
+	$(MAKE) -C ../build-$(DEVICE) install
+	mkdir -p debian/tmp-$(DEVICE)/opt/qtmoko
+	cp -r ../build-$(DEVICE)/image/* debian/tmp-$(DEVICE)/opt/qtmoko
 
 	# remove patented stuff - can be installed via package later
-	for device in $(DEVICES); do \
-		rm -f debian/tmp-$$device/opt/qtmoko/plugins/codecs/libmadplugin.so; \
-		rm -f debian/tmp-$$device/opt/qtmoko/lib/libmad.so.0; \
-	done
+	rm -f debian/tmp-$(DEVICE)/opt/qtmoko/plugins/codecs/libmadplugin.so
+	rm -f debian/tmp-$(DEVICE)/opt/qtmoko/lib/libmad.so.0
 
 	# symlink to ttfont installed together with X
-	for device in $(DEVICES); do \
-		rm -rf debian/tmp-$$device/opt/qtmoko/lib/fonts; \
-	done
+	rm -rf debian/tmp-$(DEVICE)/opt/qtmoko/lib/fonts
 
 	# Install missing dependency for qt_plugins/script/libqtscriptdbus.so
-	for device in $(DEVICES); do \
-		install -m"a+r,u+w" ../build-$$device/qtopiacore/target/lib/libQtScript.so.$(QT_VERSION) debian/tmp-$$device/opt/qtmoko/lib; \
-	done
+	install -m"a+r,u+w" ../build-$(DEVICE)/qtopiacore/target/lib/libQtScript.so.$(QT_VERSION) debian/tmp-$(DEVICE)/opt/qtmoko/lib
 	
 	# Install libQtDeclarative so that dh_shlibdeps does not complain
-	for device in $(DEVICES); do \
-		install -m"a+r,u+w" ../build-$$device/qtopiacore/target/lib/libQtDeclarative* debian/tmp-$$device/opt/qtmoko/lib/; \
-	done
+	install -m"a+r,u+w" ../build-$(DEVICE)/qtopiacore/target/lib/libQtDeclarative* debian/tmp-$(DEVICE)/opt/qtmoko/lib/
+
 
 override_dh_makeshlibs:
 	dh_makeshlibs -n
 
 override_dh_shlibdeps:
-	#dh_shlibdeps -l$(CURDIR)/debian/qtmoko-$(QTMOKO_DEVICE)/opt/qtmoko/lib
+	dh_shlibdeps -l$(CURDIR)/debian/qtmoko-$(word 1,$(QTMOKO_DEVICES))/opt/qtmoko/lib:/usr/$(DEB_HOST_MULTIARCH)/lib \
+		-- $(foreach device,$(QTMOKO_DEVICES),-xqtmoko-$(device))
 
-VERSION = $(shell dpkg-parsechangelog | grep '^Version:' | awk '{print $$2}' | sed 's/\(.*\)-[^-]*/\1/')
+
+get-orig-source: VERSION=$(shell dpkg-parsechangelog | grep '^Version:' | awk '{print $$2}' | sed 's/\(.*\)-[^-]*/\1/')
 get-orig-source: clean
 	! quilt app || quilt pop -a
 	tar caf $(CURDIR)/../qtmoko_$(VERSION).orig.tar.gz --exclude .pc --exclude .git --exclude $$(basename $(CURDIR))/debian -C $(CURDIR)/.. $$(basename $(CURDIR))

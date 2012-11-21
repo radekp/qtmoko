@@ -22,7 +22,7 @@ CROSSVERS	 cross gcc version		4.4
 DIST		 squeeze|wheezy|sid		squeeze
 MULTISTRAP_ROOT	 multistarp conf dir		/etc/multistrap
 CROSS_ROOT	 pdebuild-cross worskpace	/var/lib/pdebuild-cross
-QTMOKO_DEVICES	 devices to build qtmoko for	neo gta04
+QTMOKO_DEVICES	 devices to build qtmoko for	neo gta04 pc
 QTMOKO_SYSTEM_QT force '-system-qt' option      no value means '-build-qt'
 
 Note: QTMOKO_* variables are used at build time only.
