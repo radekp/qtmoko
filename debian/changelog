@@ -1,7 +1,9 @@
 qtmoko (50-1) unstable; urgency=low
 
-  * upgrade to qt 4.8.3
-  * support for html5 video in browsers
+  * fixed led blinking in suspend on incoming SMS
+  * fixed ogg content (Neil Jerram)
+  * debian package improvements (Gilles Filippini)
+  * fixed swapped colors in videos
 
  -- Radek Polak <psonek2@seznam.cz>  Wed, 17 Nov 2012 21:09:00 +0100
 
