@@ -274,6 +274,10 @@ function qt_get_libs(qtdir,sdkdir)
         ret.push(sdkdir+"/lib/libQtWebKit"+suffix);
     if (qconfig.property("QT_CONFIG").contains("dbus"))
         ret.push(sdkdir+"/lib/libQtDBus"+suffix);
+    if (qconfig.property("QT_CONFIG").contains("script"))
+        ret.push(sdkdir+"/lib/libQtScript"+suffix);
+    if (qconfig.property("QT_CONFIG").contains("declarative"))
+        ret.push(sdkdir+"/lib/libQtDeclarative"+suffix);
 
     // Qt doesn't tell us if this is on or not (use the Qt Extended switch instead)
     if (project.config("script"))

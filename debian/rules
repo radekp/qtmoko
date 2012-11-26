@@ -192,14 +192,6 @@ install_%:
 	# symlink to ttfont installed together with X
 	rm -rf debian/tmp-$(DEVICE)/opt/qtmoko/lib/fonts
 
-	# Install missing dependency for qt_plugins/script/libqtscriptdbus.so
-	install -m"a+r,u+w" ../build-$(DEVICE)/qtopiacore/target/lib/libQtScript.so.$(QT_VERSION) debian/tmp-$(DEVICE)/opt/qtmoko/lib
-	ln -s libQtScript.so.$(QT_VERSION) debian/tmp-$(DEVICE)/opt/qtmoko/lib/libQtScript.so.$(shell echo $(QT_VERSION) | sed 's/\.[0-9]*$$//')
-	ln -s libQtScript.so.$(QT_VERSION) debian/tmp-$(DEVICE)/opt/qtmoko/lib/libQtScript.so.$(shell echo $(QT_VERSION) | sed 's/\..*//')
-	
-	# Install libQtDeclarative so that dh_shlibdeps does not complain
-	install -m"a+r,u+w" ../build-$(DEVICE)/qtopiacore/target/lib/libQtDeclarative* debian/tmp-$(DEVICE)/opt/qtmoko/lib/
-
 
 override_dh_makeshlibs:
 	dh_makeshlibs -n
