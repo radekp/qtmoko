@@ -949,7 +949,7 @@ static const int PSKAlgorithmRole = Qt::UserRole + 21;
 static const int WPAEnterpriseRole = Qt::UserRole + 22;
 
 WSearchPage::WSearchPage(const QString & c, QWidget * parent, Qt::WFlags flags)
-:QWidget(parent, flags), config(c), scanEngine(0),
+:QWidget(parent, flags), config(c), scanEngine(0), noKnownNetworksItem(0),
 state(QtopiaNetworkInterface::Unknown), currentSelection(0), isRestart(false),
 changingPriority(false)
 {
@@ -1062,10 +1062,13 @@ void WSearchPage::loadKnownNetworks()
     int size = cfg.beginReadArray("WirelessNetworks");
 
     if (size <= 0) {
-        QListWidgetItem *item = new QListWidgetItem(tr("<No known networks>"));
-        item->setData(MacAddressRole, "INVALID");
-        item->setTextAlignment(Qt::AlignCenter);
-        netList->addItem(item);
+        if(noKnownNetworksItem == NULL)
+        {
+            noKnownNetworksItem = new QListWidgetItem(tr("<No known networks>"));
+            noKnownNetworksItem->setData(MacAddressRole, "INVALID");
+            noKnownNetworksItem->setTextAlignment(Qt::AlignCenter);
+        }
+        netList->addItem(noKnownNetworksItem);
         netList->setSelectionMode(QAbstractItemView::NoSelection);
         cfg.endArray();
         return;
@@ -1226,11 +1229,10 @@ void WSearchPage::saveKnownNetworks()
             item = netList->item(i);
             if (!item)
                 continue;
-            QString mac = item->data(MacAddressRole).toString();
-            if (mac == "INVALID")   //don't save the "no known network" item
+            if (item == noKnownNetworksItem)
                 continue;
             cfg.setArrayIndex(i);
-            cfg.setValue("AccessPoint", mac);
+            cfg.setValue("AccessPoint", item->data(MacAddressRole).toString());
             cfg.setValue("ESSID", item->data(ESSIDRole).toString());
             cfg.setValue("BitRate", item->data(BitRateRole).toString());
             int channel = 0;
@@ -1570,8 +1572,7 @@ void WSearchPage::showAllNetworks()
             net.data(WirelessNetwork::ESSID).toString();
 
         //delete "no known network item"
-        if (netList->count() == 1 && netList->item(0)
-            && netList->item(0)->data(MacAddressRole).toString() == "INVALID") {
+        if (netList->count() == 1 && netList->item(0) == noKnownNetworksItem) {
             netList->clear();
         }
         //select current item if it's among known Networks already (matching MAC and ESSID)
@@ -1617,6 +1618,8 @@ void WSearchPage::showAllNetworks()
   */
 void WSearchPage::updateConnectivity()
 {
+    int i,j;
+    
     if (!scanEngine)
         return;
 
@@ -1624,15 +1627,18 @@ void WSearchPage::updateConnectivity()
     QStringList foundMacs;
     QStringList foundEssids;
 
-    // Update netList so that available networks are first
-    for (int i = 0; i < results.count(); i++) {
+    // Remove no known networks item if we got scan results
+    if(results.count() > 0 && netList->count() > 0 && netList->item(0) == noKnownNetworksItem)
+        netList->clear();
+    
+    // Update netList
+    for (i = 0; i < results.count(); i++) {
         WirelessNetwork net = results.at(i);
         QString mac = net.data(WirelessNetwork::AP).toString();
         QString essid = net.data(WirelessNetwork::ESSID).toString();
         foundMacs.append(mac);
         foundEssids.append(essid);
 
-        int j;
         QListWidgetItem *item = NULL;
         for (j = 0; j < netList->count(); j++) {
             item = netList->item(j);
@@ -1671,18 +1677,41 @@ void WSearchPage::updateConnectivity()
             }
             item->setText(essid);
             item->setData(MacAddressRole, net.data(WirelessNetwork::AP));
-        } else {
-            netList->takeItem(j);   // move network in range to the beginning
-        }
-        netList->insertItem(0, item);
+            
+            j = netList->count();
+            netList->addItem(item);
+        } 
     }
+    
+    // Move items out of range to the end of list
+    for (j = 0; j < netList->count();) {
+       QListWidgetItem *item = netList->item(j);
+       const QString itemEssid = item->data(ESSIDRole).toString();
+       
+       bool inRange = false;
+       for (i = 0; i < results.count(); i++) {
+            WirelessNetwork net = results.at(i);
+            QString essid = net.data(WirelessNetwork::ESSID).toString();   
+            if((inRange = (essid == itemEssid)))
+                break;
+       }
+       if(inRange || j >= results.count()) {   // item in range or after in range items
+           j++;
+           continue;
+       }
+
+       // Move out of range item from the begginging to the end
+       netList->takeItem(j);
+       netList->addItem(item);
+   }
+
 
     // network is a match if
     // a) essid is not hidden and mac and essid match or
     // b) essid is not hidden and essid matches or
     // c) essid is hidden and mac matches
 
-    for (int i = 0; i < netList->count(); ++i) {
+    for (i = 0; i < netList->count(); ++i) {
         QListWidgetItem *item = netList->item(i);
         if (!item)
             continue;

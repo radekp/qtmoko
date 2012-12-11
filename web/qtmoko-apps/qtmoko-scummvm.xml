@@ -1,0 +1,13 @@
+<package
+      name="qtmoko-scummvm"
+      version="50-1"
+      arch="all"
+      title="ScummVM"
+      summary="ScummVM allows you to play many good and old games"
+      category="games"
+      >
+      <details>
+          <p>For details please visit <a href="http://scummvm.org/">ScummVM homepage</a></p>
+      </details>
+</package>
+  

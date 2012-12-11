@@ -371,7 +371,7 @@ DetailsPage::DetailsPage( QWidget *parent, const char *name )
     m_toFieldLabel->setText( tr( "To" ) );
     m_toBox = new QHBoxLayout( );
     m_toField = new RecipientEdit( this );
-    setFocusProxy(m_toField);
+    //setFocusProxy(m_toField);
     m_toBox->addWidget( m_toField );
     m_toFieldLabel->setBuddy(m_toField);
     connect( m_toField, SIGNAL(textChanged(QString)), this, SIGNAL(changed()) );

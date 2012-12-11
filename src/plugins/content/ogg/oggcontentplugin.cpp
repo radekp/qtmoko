@@ -21,7 +21,7 @@
 #include <qmimetype.h>
 #include <QtDebug>
 #include <qtopialog.h>
-#include <ivorbisfile.h>
+#include <vorbis/vorbisfile.h>
 
 /*!
     \class OggContentPlugin
@@ -55,7 +55,8 @@ bool OggContentPlugin::installContent( const QString &filePath, QContent *conten
     vorbis_comment *vc;
     int ii;
 
-    fp = fopen(filePath.toUtf8().constData(), "r");
+    QByteArray filePathUtf8 = filePath.toUtf8();
+    fp = fopen(filePathUtf8.constData(), "r");
 
     if (fp != NULL) {
 

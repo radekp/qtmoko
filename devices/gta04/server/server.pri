@@ -1,10 +1,10 @@
 QT+=dbus
 HEADERS+=\
-    neovolumeservice.h\
+    gta04headsetvolumeservice.h\
     neohardware.h\
     gta04pressure.h
 SOURCES+=\
     neosuspend.cpp \
-    neovolumeservice.cpp\
+    gta04headsetvolumeservice.cpp\
     neohardware.cpp\
     gta04pressure.cpp

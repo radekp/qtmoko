@@ -1,0 +1,6 @@
+[Desktop Entry]
+Comment[]=ScummVM (no sound)
+Exec=scummvm-no-sound.sh
+Icon=scummvm
+Type=Application
+Name[]=ScummVM (no sound)

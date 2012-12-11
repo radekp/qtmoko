@@ -25,6 +25,7 @@
 
 #include "gstreamerqtopiavideosink.h"
 
+#include <gst/video/video.h>
 
 namespace gstreamer
 {
@@ -85,16 +86,12 @@ GstCaps* QtopiaVideoSink::get_caps(GstBaseSink* sink)
     }
 
     if (!supportedBpp.isEmpty()) {
-        QString rgbCaps("video/x-raw-rgb, "
-                        "framerate = (fraction) [ 0, MAX ], "
-                        "width = (int) [ 1, MAX ], "
-                        "height = (int) [ 1, MAX ], "
-                        "bpp = (int) { %1 }" );
+        QString rgbCaps(GST_VIDEO_CAPS_xRGB_HOST_ENDIAN);
 
         if (!supportedFourcc.isEmpty())
             capsString += "; ";
 
-        capsString += rgbCaps.arg(supportedBpp.join(", "));
+        capsString += rgbCaps;
     }
 
     return gst_caps_from_string(capsString.toLatin1());

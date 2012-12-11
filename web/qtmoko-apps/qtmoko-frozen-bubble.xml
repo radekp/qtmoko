@@ -1,0 +1,37 @@
+<package
+      name="qtmoko-frozen-bubble"
+      version="50-1"
+      arch="all"
+      title="Frozen Bubble"
+      summary="Cool game where you pop out the bubbles!"
+      category="games"
+      >
+      <details>
+          <p>Frozen-Bubble is a clone of the popular "Puzzle Bobble" game, in which
+ you attempt to shoot bubbles into groups of the same color to cause them
+ to pop. It features 100 single-player levels, a two-player mode, music
+ and striking graphics.</p>
+ 
+           <p>This game is widely rumored to be responsible for delaying the Woody release.</p>
+
+   <h3>Game controls</h3>
+   <pre>
+       
+       +---------------------------------------+
+       | Fullscreen       UP                   |
+       | toggle                                |
+       |                                       |
+       |                                       |
+       | LEFT            ENTER           RIGHT |
+       |                                       |
+       |                                       |
+       |                                       |
+       |                 DOWN                  |
+       +---------------------------------------+
+       
+   </pre>
+ 
+ 
+ </details>
+</package>
+  

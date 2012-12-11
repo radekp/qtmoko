@@ -95,6 +95,7 @@ Step 4
 echo g_ether > /media/card/etc/modules
 echo ppp_generic >> /media/card/etc/modules
 echo joydev >> /media/card/etc/modules
+echo bq27000_battery >> /media/card/etc/modules
 
 * Edit /media/card/etc/ppp/options and replace "auth" with "noauth"
 
@@ -392,6 +393,18 @@ find  GTA02/lib/modules -name *.ko -exec /opt/toolchains/arm920t-eabi/bin/arm-li
 mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008000 -n "qtmoko-v28" -d linux.bin uImage-GTA02.bin
 
 
+Step 9.2 - import QtMoko debian repository public keys
+======================================================
+
+* We use secure apt and we need keys for QtMoko repositories:
+
+chroot /media/card
+wget https://github.com/radekp/qtmoko/raw/master/dist/qtmoko-pubring.gpg
+apt-key add /qtmoko-pubring.gpg 
+rm qtmoko-pubring.gpg
+exit
+
+
 Step 9.5 - remove bash history
 ==============================
 
@@ -408,6 +421,19 @@ Step 9.6 - setup default DNS
 cat > /media/card/etc/resolv.conf <<__END__
 nameserver 8.8.8.8
 __END__
+
+
+Step 9.9 - enable ssh access just on usb
+========================================
+
+* SSH root access can be dangerous on wifi or on GPRS, so enable it only on usb0
+
+echo "# Enable ssh access just on usb" >> /media/card/etc/rc.local
+echo "ip6tables -A INPUT ! -i usb0 -p tcp --dport 22 -j REJECT --reject-with tcp-reset; iptables -A INPUT ! -i usb0 -p tcp --dport 22 -j REJECT --reject-with tcp-reset" >> /media/card/etc/rc.local
+
+* Manually edit /media/card/etc/rc.local and move "exit" 0 to the end of file:
+
+nano /media/card/etc/rc.local
 
 
 Step 10 - release tarball
@@ -502,6 +528,11 @@ Step 13 - generate Packages.gz for debian repository
   have to generate Packages.gz:
 
 dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz
+
+* For secure apt you need to generate and sign Release file:
+
+apt-ftparchive release . > Release
+gpg -abs -o Release.gpg Release
 
 Boot speedup
 ============

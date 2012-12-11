@@ -5,6 +5,7 @@ PROJECTS*=\
     3rdparty/applications/qx \
     3rdparty/applications/screenshot \
     3rdparty/applications/qterminal \
+    settings/backup \
     settings/light-and-power \
     settings/security \
     applications/calculator \

@@ -149,6 +149,7 @@ private:
     QAction *connectAction, *scanAction, *environmentAction, *deleteAction,
         *filterHidden, *priorityAction;
     QListWidget *netList;
+    QListWidgetItem *noKnownNetworksItem;
     QLabel *descr;
     QLabel *currentNetwork;
      QtopiaNetworkInterface::Status state;

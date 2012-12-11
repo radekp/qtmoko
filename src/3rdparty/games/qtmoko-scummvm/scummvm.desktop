@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment[]=ScummVM
+Exec=scummvm.sh
+Icon=scummvm
+Type=Application
+Name[]=ScummVM
+

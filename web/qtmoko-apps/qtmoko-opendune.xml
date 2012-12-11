@@ -1,0 +1,11 @@
+<package
+      name="qtmoko-opendune"
+      version="50-1"
+      title="Open Dune"
+      summary="OpenDUNE is an open source re-creation of the popular game Dune II"
+      category="games"
+      >
+      <details>
+ </details>
+</package>
+  

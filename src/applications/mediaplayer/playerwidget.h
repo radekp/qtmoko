@@ -22,6 +22,7 @@
 
 #include "playercontrol.h"
 #include "statewidget.h"
+#include "rotate.h"
 
 #include <media.h>
 #include <qmediacontent.h>
@@ -215,6 +216,7 @@ private:
     SkipDialog *m_skipdialog;
 
     QScreenInformation* m_tvScreen;
+    RotateHelper rotHelper;
 };
 
 #ifndef NO_HELIX

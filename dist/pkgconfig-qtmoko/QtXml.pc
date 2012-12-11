@@ -1,0 +1,9 @@
+prefix=/root/qte/build
+
+Name: Qtxml
+Description: Qtxml Library
+Version: 4.8.3
+Libs: -L/root/qte/build/qtopiacore/target/lib -lQtXml
+Cflags: -DQT_SHARED -I/root/qte/build/qtopiacore/target/include -I/root/qte/build/qtopiacore/target/include/QtXml
+Requires: QtCore
+

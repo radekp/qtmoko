@@ -1,0 +1,9 @@
+[Translation]
+File=QtopiaApplications
+Context=PowerManagerServices
+[Desktop Entry]
+Comment[]=Backup settings before an upgrade
+Exec=backup.sh
+Icon=backup/backup
+Type=ConsoleApplication
+Name[]=Backup Settings

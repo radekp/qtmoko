@@ -1,0 +1,19 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib/x86_64-linux-gnu
+includedir=${prefix}/include/qt4/QtScript
+qt_config=lex yacc uic resources qt release incremental link_prl gdb_dwarf_index def_files_disabled exceptions no_mocdepend release stl qt_no_framework system-sqlite release shared dll largefile stl precompile_header mmx 3dnow sse sse2 sse3 ssse3 sse4_1 sse4_2 avx dylib create_prl link_prl depend_includepath QTDIR_build nostrip use_libmysqlclient_r qt_install_headers qt depend_includepath qmake_cache target_qt hide_symbols bsymbolic_functions create_pc create_libtool explicitlib building-libs standalone_package depend_includepath moc thread shared dll
+moc_location=/usr/bin/moc-qt4
+uic_location=/usr/bin/uic-qt4
+rcc_location=/usr/bin/rcc
+lupdate_location=/usr/bin/lupdate
+lrelease_location=/usr/bin/lrelease
+
+Name: Qtscript
+Description: Qtscript Library
+Version: 4.8.2
+Libs: -L${libdir} -lQtScript 
+Libs.private: -L/usr/lib/x86_64-linux-gnu  -lQtCore -L/usr/lib/x86_64-linux-gnu -lfontconfig -lpthread   
+Cflags: -DQT_SHARED -I/usr/include/qt4 -I${includedir}
+Requires: QtCore
+

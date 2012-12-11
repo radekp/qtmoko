@@ -65,7 +65,6 @@ contains(QTOPIAMEDIA_ENGINES,cruxus) {
         3rdparty/plugins/codecs/libtimidity
     # OGG Vorbis support
     PROJECTS*=\
-        3rdparty/libraries/tremor\
         3rdparty/plugins/codecs/tremor
     # WAV support
     PROJECTS*=\

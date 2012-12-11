@@ -1,0 +1,9 @@
+prefix=/root/qte/build
+
+Name: Qtgui
+Description: Qtgui Library
+Version: 4.8.3
+Libs: -L/root/qte/build/qtopiacore/target/lib -L/root/qte/build-gta04/sdk/lib -lQtGui
+Cflags: -DQT_SHARED -I/root/qte/build/qtopiacore/target/include -I/root/qte/build/qtopiacore/target/include/QtGui -I/root/qte/build/sdk/include/qtopia -I/root/qte/build/sdk/include/qtopiabase
+Requires: QtCore
+

@@ -257,7 +257,7 @@ void NeoModemService::handleInputEvent()
             qLedSetCall(qLedAttrBrightness(), qLedMaxBrightness());
             qLedSetCall(qLedAttrTrigger(), "timer");
             qLedSetCall(qLedAttrDelayOff(), "1024");
-            qLedSetCall(qLedAttrDelayOn(), "32");
+            qLedSetCall(qLedAttrDelayOn(), "64");
             break;
         }
         ev++;

@@ -30,7 +30,7 @@ Step 1
 
 * We will be installing new image to /media/card:
 
-cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,rfkill,ntpdate,libspeex1,libspeexdsp1,lsof,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-pulseaudio,pulseaudio,libasound2-plugins squeeze /media/card/ http://cdn.debian.net/debian/
+cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,rfkill,ntpdate,libspeex1,libspeexdsp1,lsof,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-pulseaudio,pulseaudio,pulseaudio-utils,libasound2-plugins squeeze /media/card/ http://cdn.debian.net/debian/
 
 Step 2
 ======
@@ -41,7 +41,6 @@ mkdir /media/card/mnt/nfs
 mkdir /media/card/mnt/p1
 mkdir /media/card/mnt/p2
 mkdir /media/card/mnt/p3
-mkdir /media/card/mnt/p4
 mkdir /media/card/mnt/p5
 mkdir /media/card/mnt/p6
 mkdir /media/card/media/card
@@ -63,8 +62,7 @@ __END__
 cat > /media/card/etc/fstab << __END__
 rootfs  /                auto    defaults,errors=remount-ro,noatime 0 1
 /dev/mmcblk0p1 /media/p1   auto  defaults                           0 0
-/dev/mmcblk0p3 /media/card auto  defaults                           0 0
-/dev/mmcblk0p4 swap      swap    defaults                           0 0
+/dev/mmcblk0p5 /media/card auto  defaults                           0 0
 proc    /proc            proc    defaults                           0 0
 #tmpfs   /var/cache/apt   tmpfs   defaults,noatime                   0 0
 192.168.0.200:/ /mnt/nfs  nfs noauto,nolock,soft,rsize=32768,wsize=32768 0 0
@@ -352,6 +350,11 @@ dpkg -i linux-image-3.5-qtmoko-gta04_49-1_armel.deb
 rm linux-image-3.5-qtmoko-gta04_49-1_armel.deb
 exit
 
+* Install bootargs.scr so for correct kernel cmdline arguments:
+
+cd /media/card/boot
+wget https://github.com/radekp/qtmoko/raw/master/devices/gta04/boot/bootargs.scr
+
 
 Step 9.1 - Linux kernel cross compiling - not using anymore for releases
 ========================================================================
@@ -384,9 +387,40 @@ dpkg -i libts-0.0-0_1.0-8lindi1_armel.deb
 rm libts-0.0-0_1.0-8lindi1_armel.deb
 exit
 
+Step 9.4 - Set pulseaudio as default source/sink for gstreamer
+==============================================================
 
-Step 9.5 - remove bash history
+chroot /media/card
+. /opt/qtmoko/qpe.env 
+gconftool-2 -t string --set /system/gstreamer/0.10/default/audiosink pulsesink
+gconftool-2 -t string --set /system/gstreamer/0.10/default/audiosrc pulsesrc
+exit
+
+Step 9.4.1 - config pulseaudio
 ==============================
+
+* Use speex-fixed-3 for resampling (http://lists.goldelico.com/pipermail/gta04-owner/2012-November/003549.html)
+
+nano /etc/pulse/daemon.conf
+
+* Change the line with speex-float-3 to:
+
+resample-method = speex-fixed-3
+
+
+Step 9.5 - import QtMoko debian repository public keys
+======================================================
+
+* We use secure apt and we need keys for QtMoko repositories:
+
+chroot /media/card
+wget https://github.com/radekp/qtmoko/raw/master/dist/qtmoko-pubring.gpg
+apt-key add /qtmoko-pubring.gpg 
+rm qtmoko-pubring.gpg
+exit
+
+Step 9.5.1 - remove bash history
+================================
 
 * Remove .bash_history created during install
 
@@ -425,8 +459,25 @@ create subdirectory here and unpack distribution tarball here. E.g:
     cd SHR
     tar xzvpf /path/to/shr-rootfs.tar.gz
 
+You need first SD partition to be FAT and enable initramfs multiboot system:
+
+    mkdir /media/p1/gta04-init
+
 Now press POWER, select the distribution from combo box and press "Restart Device"
 __END__
+
+
+Step 9.9 - enable ssh access just on usb
+========================================
+
+* SSH root access can be dangerous on wifi or on GPRS, so enable it only on usb0
+
+echo "# Enable ssh access just on usb" >> /media/card/etc/rc.local
+echo "ip6tables -A INPUT ! -i usb0 -p tcp --dport 22 -j REJECT --reject-with tcp-reset; iptables -A INPUT ! -i usb0 -p tcp --dport 22 -j REJECT --reject-with tcp-reset" >> /media/card/etc/rc.local
+
+* Manually edit /media/card/etc/rc.local and move "exit" 0 to the end of file:
+
+nano /media/card/etc/rc.local
 
 
 Step 10 - release tarball
@@ -567,6 +618,11 @@ Step 13 - generate Packages.gz for debian repository
   have to generate Packages.gz:
 
 dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz
+
+* For secure apt you need to generate and sign Release file:
+
+apt-ftparchive release . > Release
+gpg -abs -o Release.gpg Release
 
 
 Boot speedup

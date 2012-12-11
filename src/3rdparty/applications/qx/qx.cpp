@@ -170,6 +170,10 @@ QX::QX(QWidget *parent, Qt::WFlags f)
     wmTimer = new QTimer(this);
     connect(wmTimer, SIGNAL(timeout()), this, SLOT(processWmEvents()));
     screen = QX::ScreenMain;
+
+    if(getenv("DISPLAY") == NULL)
+        setenv("DISPLAY", "0:0", true);
+
 #if QTOPIA
     powerConstraint = QtopiaApplication::Disable;
 

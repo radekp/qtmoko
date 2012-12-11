@@ -5,7 +5,7 @@ PLUGIN_FOR=qtopia
 PLUGIN_TYPE=content
 
 CONFIG+=qtopia singleexec
-MODULES*=tremor
+LIBS += -lvorbisfile
 
 pkg [
     name=ogg-content

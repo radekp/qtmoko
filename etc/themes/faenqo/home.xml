@@ -38,7 +38,7 @@
 			</rect>
 		</layout>
 		<text name="calls" size="6" rect="0,25pt,0x9pt" align="hcenter" bold="yes" color="#ffffff" outline="#000000" >
-			<tr><trtext>1 missed</trtext><trarg>@/Communications/Calls/MissedCalls</trarg></tr>
+			<tr><trtext>1 missed</trtext></tr>
 		</text>
 	</rect>
 	<rect name="calls" rect="0,28pt,0x0" transient="yes" active="expr:@/Communications/Calls/MissedCalls > 1" interactive="yes">

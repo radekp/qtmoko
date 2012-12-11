@@ -73,6 +73,7 @@ static bool amixerSet(QStringList & args)
 }*/
 
 bool usePulse;
+bool gta04a3;
 
 static bool alsactl(QStringList & args)
 {
@@ -103,22 +104,6 @@ static bool alsactl(QStringList & args)
         QProcess::execute("kill-snd-card-users.sh");
     }
     return false;
-}
-
-static bool restoreState(QString stateFile, bool gsm = false)
-{
-    if (gsm) {
-        stateFile = "gsm" + stateFile;
-    }
-    stateFile += ".state";
-    return alsactl(QStringList() << "-f" << "/opt/qtmoko/etc/alsa/" +
-                   stateFile << "restore");
-}
-
-// Initialise to default state (for audio playback with mic off)
-static bool restoreDefaultState()
-{
-    return restoreState("speaker");
 }
 
 static bool writeToFile(const char *filename, const char *val, int len)
@@ -152,7 +137,9 @@ static bool gsmVoiceStop()
 
 static bool gsmVoiceStart()
 {
-    gsmVoiceStop();
+    if (voicePs != NULL) {
+        return true;
+    }
 
     // Move away alsa config (used e.g. by blueooth a2dp sound)
     if(QFile::exists("/home/root/.asoundrc")) {
@@ -192,265 +179,118 @@ static bool gsmVoiceStart()
     return false;
 }
 
-// ========================================================================= //
-class SpeakerAudioState : public QAudioState
+/* Class for an audio state based on an ALSA state file. */
+class StateFileAudioState : public QAudioState
 {
     Q_OBJECT
 public:
-    SpeakerAudioState(bool isPhone, QObject * parent = 0);
+    StateFileAudioState(QByteArray domain,
+			QByteArray profile,
+			int priority,
+			QObject * parent = 0);
 
-    QAudioStateInfo info() const;
-     QAudio::AudioCapabilities capabilities() const;
+    virtual QAudioStateInfo info() const;
+    virtual QAudio::AudioCapabilities capabilities() const;
 
-    bool isAvailable() const;
-    bool enter(QAudio::AudioCapability capability);
-    bool leave();
-
-private:
-     QAudioStateInfo m_info;
-    bool m_isPhone;
-};
-
-SpeakerAudioState::SpeakerAudioState(bool isPhone, QObject * parent):
-QAudioState(parent), m_isPhone(isPhone)
-{
-    if (isPhone) {
-        m_info.setDomain("Phone");
-        m_info.setProfile("PhoneSpeaker");
-        m_info.setPriority(150);
-
-    } else {
-        m_info.setDomain("Media");
-        m_info.setProfile("MediaSpeaker");
-        m_info.setPriority(100);
-    }
-    m_info.setDisplayName(tr("Speaker"));
-}
-
-QAudioStateInfo SpeakerAudioState::info() const
-{
-    return m_info;
-}
-
-QAudio::AudioCapabilities SpeakerAudioState::capabilities()const
-{
-    return QAudio::OutputOnly;
-}
-
-bool SpeakerAudioState::isAvailable() const
-{
-    return true;
-}
-
-bool SpeakerAudioState::enter(QAudio::AudioCapability)
-{
-    qLog(AudioState) << "SpeakerAudioState::enter()" << "isPhone" << m_isPhone;
-
-    bool ok = restoreState("speaker", m_isPhone);
-
-    if (m_isPhone) {
-        gsmVoiceStart();
-    }
-
-    return ok;
-
-}
-
-bool SpeakerAudioState::leave()
-{
-    qLog(AudioState) << "SpeakerAudioState::leave()";
-
-    if (m_isPhone) {
-        gsmVoiceStop();
-    }
-    return true;
-}
-
-// ========================================================================= //
-class EarpieceAudioState : public QAudioState
-{
-    Q_OBJECT
-public:
-    EarpieceAudioState(bool isPhone, QObject * parent = 0);
-
-    QAudioStateInfo info() const;
-    QAudio::AudioCapabilities capabilities() const;
-
-    bool isAvailable() const;
-    bool enter(QAudio::AudioCapability capability);
-    bool leave();
+    virtual bool isAvailable() const;
+    virtual bool enter(QAudio::AudioCapability capability);
+    virtual bool leave();
 
 private:
     QAudioStateInfo m_info;
-    bool m_isPhone;
 };
 
-EarpieceAudioState::EarpieceAudioState(bool isPhone, QObject * parent):
-QAudioState(parent), m_isPhone(isPhone)
+StateFileAudioState::StateFileAudioState(QByteArray domain,
+					 QByteArray profile,
+					 int priority,
+					 QObject * parent) :
+    QAudioState(parent)
 {
-    if (isPhone) {
-        m_info.setDomain("Phone");
-        m_info.setProfile("PhoneEarpiece");
-        m_info.setPriority(100);
-    } else {
-        m_info.setDomain("Media");
-        m_info.setProfile("MediaEarpiece");
-        m_info.setPriority(150);
-    }
-    m_info.setDisplayName(tr("Earpiece"));
+    m_info.setDomain(domain);
+    m_info.setProfile(profile);
+    m_info.setPriority(priority);
+    m_info.setDisplayName(tr(profile));
 }
 
-QAudioStateInfo EarpieceAudioState::info() const
+QAudioStateInfo StateFileAudioState::info() const
 {
     return m_info;
 }
 
-QAudio::AudioCapabilities EarpieceAudioState::capabilities()const
+QAudio::AudioCapabilities StateFileAudioState::capabilities() const
 {
-    return QAudio::OutputOnly;
+    return (QAudio::InputOnly |
+	    QAudio::OutputOnly |
+	    QAudio::InputAndOutput);
 }
 
-bool EarpieceAudioState::isAvailable() const
+bool StateFileAudioState::isAvailable() const
 {
     return true;
 }
 
-bool EarpieceAudioState::enter(QAudio::AudioCapability)
+bool StateFileAudioState::enter(QAudio::AudioCapability)
 {
-    qLog(AudioState) << "EarpieceAudioState::enter()" << "isPhone" << m_isPhone;
+    if (gta04a3 && (m_info.domain() != "Phone")) {
+        gsmVoiceStop();
+    }
 
-    bool ok = restoreState("earpiece", m_isPhone);
+    QString stateFile = "/opt/qtmoko/etc/alsa/";
 
-    if (m_isPhone) {
+    if (gta04a3) {
+        stateFile += "a3/";
+    } else {
+        stateFile += "a4/";
+    }
+
+    stateFile += m_info.domain() + m_info.profile() + ".state";
+
+    bool ok = alsactl(QStringList() << "-f" << stateFile << "restore");
+
+    if (gta04a3 && (m_info.domain() == "Phone")) {
         gsmVoiceStart();
     }
 
     return ok;
 }
 
-bool EarpieceAudioState::leave()
+bool StateFileAudioState::leave()
 {
-    qLog(AudioState) << "EarpieceAudioState::leave()";
-
-    if (m_isPhone) {
-        gsmVoiceStop();
-    }
     return true;
 }
 
-// ========================================================================= //
-class EarpieceHwAudioState : public QAudioState
+/* We need a subclass for Headset, so we can indicate when the headset
+   is available. */
+class HeadsetAudioState : public StateFileAudioState
 {
     Q_OBJECT
 public:
-    EarpieceHwAudioState(bool isPhone, QObject * parent = 0);
+    HeadsetAudioState(QByteArray domain,
+		      int priority,
+		      QObject * parent = 0);
 
-    QAudioStateInfo info() const;
-    QAudio::AudioCapabilities capabilities() const;
-
-    bool isAvailable() const;
-    bool enter(QAudio::AudioCapability capability);
-    bool leave();
-
-private:
-    QAudioStateInfo m_info;
-    bool m_isPhone;
-};
-
-EarpieceHwAudioState::EarpieceHwAudioState(bool isPhone, QObject * parent):
-QAudioState(parent), m_isPhone(isPhone)
-{
-    if (isPhone) {
-        m_info.setDomain("Phone");
-        m_info.setProfile("PhoneEarpiece");
-        m_info.setPriority(100);
-    } else {
-        m_info.setDomain("Media");
-        m_info.setProfile("MediaEarpiece");
-        m_info.setPriority(150);
-    }
-    m_info.setDisplayName(tr("Earpiece"));
-}
-
-QAudioStateInfo EarpieceHwAudioState::info() const
-{
-    return m_info;
-}
-
-QAudio::AudioCapabilities EarpieceHwAudioState::capabilities()const
-{
-    return QAudio::OutputOnly;
-}
-
-bool EarpieceHwAudioState::isAvailable() const
-{
-    return true;
-}
-
-bool EarpieceHwAudioState::enter(QAudio::AudioCapability)
-{
-    qLog(AudioState) << "EarpieceHwAudioState::enter()" << "isPhone" << m_isPhone;
-    return restoreState("earpiecehw", m_isPhone);
-}
-
-bool EarpieceHwAudioState::leave()
-{
-    qLog(AudioState) << "EarpieceHwAudioState::leave()";
-    return true;
-}
-
-
-// ========================================================================= //
-class HeadsetAudioState : public QAudioState
-{
-    Q_OBJECT
-public:
-    HeadsetAudioState(bool isPhone, QObject * parent = 0);
-
-    QAudioStateInfo info() const;
-    QAudio::AudioCapabilities capabilities() const;
-
-    bool isAvailable() const;
-    bool enter(QAudio::AudioCapability capability);
-    bool leave();
+    virtual bool isAvailable() const;
+    virtual bool enter(QAudio::AudioCapability capability);
 
 private slots:
     void onHeadsetModified();
 
 private:
-    QAudioStateInfo m_info;
-    bool m_isPhone;
     QValueSpaceItem *m_headset;
 };
 
-HeadsetAudioState::HeadsetAudioState(bool isPhone, QObject * parent):
-QAudioState(parent), m_isPhone(isPhone)
+HeadsetAudioState::HeadsetAudioState(QByteArray domain,
+				     int priority,
+				     QObject * parent) :
+    StateFileAudioState(domain,
+			"Headset",
+			priority,
+			parent)
 {
-    if (m_isPhone) {
-        m_info.setDomain("Phone");
-        m_info.setProfile("Headset");
-    } else {
-        m_info.setDomain("Media");
-        m_info.setProfile("Headset");
-    }
-
-    m_info.setDisplayName(tr("Headphones"));
-    m_info.setPriority(50);
-
     m_headset =
         new QValueSpaceItem("/Hardware/Accessories/PortableHandsfree/Present",
                             this);
     connect(m_headset, SIGNAL(contentsChanged()), SLOT(onHeadsetModified()));
-}
-
-QAudioStateInfo HeadsetAudioState::info() const
-{
-    return m_info;
-}
-
-QAudio::AudioCapabilities HeadsetAudioState::capabilities()const
-{
-    return QAudio::InputOnly | QAudio::OutputOnly;
 }
 
 void HeadsetAudioState::onHeadsetModified()
@@ -458,16 +298,6 @@ void HeadsetAudioState::onHeadsetModified()
     bool avail = m_headset->value().toBool();
 
     qLog(AudioState) << __PRETTY_FUNCTION__ << avail;
-
-    if (!avail) {
-        QtopiaIpcEnvelope e("QPE/AudioVolumeManager/NeoVolumeService",
-                            "setAmp(bool)");
-        e << true;              //turn on the speaker amp
-    } else {
-        QtopiaIpcEnvelope e("QPE/AudioVolumeManager/NeoVolumeService",
-                            "setAmp(bool)");
-        e << false;             //turn of the speaker amp
-    }
 
     emit availabilityChanged(avail);
 }
@@ -477,81 +307,12 @@ bool HeadsetAudioState::isAvailable() const
     return m_headset->value().toBool();
 }
 
-bool HeadsetAudioState::enter(QAudio::AudioCapability)
+bool HeadsetAudioState::enter(QAudio::AudioCapability cap)
 {
-    qLog(AudioState) << "HeadsetAudioState::enter()" << "isPhone" << m_isPhone;
-
     bool ok = writeToFile("/sys/devices/virtual/gpio/gpio55/value", "1", 1) // switch off video out
-        && restoreState("headset", m_isPhone);
-
-    if (m_isPhone) {
-        gsmVoiceStart();
-    }
+      && StateFileAudioState::enter(cap);
 
     return ok;
-}
-
-bool HeadsetAudioState::leave()
-{
-    if (m_isPhone) {
-        gsmVoiceStop();
-    }
-    return true;
-}
-
-// ========================================================================= //
-class RecordingAudioState : public QAudioState
-{
-    Q_OBJECT
-public:
-    RecordingAudioState(QObject * parent = 0);
-
-    QAudioStateInfo info() const;
-    QAudio::AudioCapabilities capabilities() const;
-
-    bool isAvailable() const;
-    bool enter(QAudio::AudioCapability capability);
-    bool leave();
-
-private:
-    QAudioStateInfo m_info;
-};
-
-RecordingAudioState::RecordingAudioState(QObject * parent):
-QAudioState(parent)
-{
-    m_info.setDomain("Media");
-    m_info.setProfile("Recording");
-    m_info.setDisplayName(tr("Recording"));
-    m_info.setPriority(150);
-}
-
-QAudioStateInfo RecordingAudioState::info() const
-{
-    return m_info;
-}
-
-QAudio::AudioCapabilities RecordingAudioState::capabilities()const
-{
-    return QAudio::InputOnly;
-}
-
-bool RecordingAudioState::isAvailable() const
-{
-    return true;
-}
-
-bool RecordingAudioState::enter(QAudio::AudioCapability capability)
-{
-    Q_UNUSED(capability)
-        qLog(AudioState) << "RecordingAudioState::enter()";
-    return restoreState("recording");
-}
-
-bool RecordingAudioState::leave()
-{
-    qLog(AudioState) << "RecordingAudioState::leave()";
-    return true;
 }
 
 #ifdef QTOPIA_BLUETOOTH
@@ -559,7 +320,9 @@ class BluetoothAudioState : public QAudioState
 {
     Q_OBJECT
 public:
-    explicit BluetoothAudioState(bool isPhone, QObject * parent = 0);
+    explicit BluetoothAudioState(bool isPhone,
+				 int priority,
+				 QObject * parent = 0);
     virtual ~ BluetoothAudioState();
 
     virtual QAudioStateInfo info() const;
@@ -586,7 +349,9 @@ private:
     bool m_isAvail;
 };
 
-BluetoothAudioState::BluetoothAudioState(bool isPhone, QObject * parent):
+BluetoothAudioState::BluetoothAudioState(bool isPhone,
+					 int priority,
+					 QObject * parent):
 QAudioState(parent),
 m_isPhone(isPhone), m_currAudioGateway(0), m_isActive(false), m_isAvail(false)
 {
@@ -614,12 +379,11 @@ m_isPhone(isPhone), m_currAudioGateway(0), m_isActive(false), m_isAvail(false)
     if (isPhone) {
         m_info.setDomain("Phone");
         m_info.setProfile("PhoneBluetoothHeadset");
-        m_info.setPriority(25);
     } else {
         m_info.setDomain("Media");
         m_info.setProfile("MediaBluetoothHeadset");
-        m_info.setPriority(150);
     }
+    m_info.setPriority(priority);
 
     m_info.setDisplayName(tr("Bluetooth Headset"));
     m_isAvail = resetCurrAudioGateway();
@@ -739,25 +503,47 @@ QAudioStatePlugin(parent)
     usePulse = QFile::exists("/usr/bin/pasuspender");
     
     // On A4+ models use HW sound routing, on A3 do SW routing
-    bool gta04a4 = QFile::exists("/sys/class/gpio/gpio186/value");
-    if(gta04a4)
-        m_data->m_states.push_back(new EarpieceHwAudioState(this));   // default for gsm calls
-    else
-        m_data->m_states.push_back(new EarpieceAudioState(this));   // default for gsm calls
-    
-    m_data->m_states.push_back(new SpeakerAudioState(false, this)); // ringtones, mp3 etc..
-    m_data->m_states.push_back(new SpeakerAudioState(true, this));  // loud gsm
-    m_data->m_states.push_back(new HeadsetAudioState(false, this)); // audio in headphones
-    m_data->m_states.push_back(new HeadsetAudioState(true, this));  // gsm in headphones
-    m_data->m_states.push_back(new RecordingAudioState(this));  // for recording e.g. in voice notes app
-#ifdef QTOPIA_BLUETOOTH
-    // Can play media through bluetooth. Can record through bluetooth as well.
-    m_data->m_states.push_back(new BluetoothAudioState(false, this));
-    m_data->m_states.push_back(new BluetoothAudioState(true, this));
-#endif
+    gta04a3 = !(QFile::exists("/sys/class/gpio/gpio186/value"));
 
-    // Set default alsa state
-    restoreDefaultState();
+    /* Priority ordering for phone calls: Headset (if available),
+       Bluetooth (if available), Earpiece, Speaker. */
+    m_data->m_states.
+      push_back(new HeadsetAudioState("Phone", 1, this));
+#ifdef QTOPIA_BLUETOOTH
+    m_data->m_states.
+      push_back(new BluetoothAudioState(true, 2, this));
+#endif
+    m_data->m_states.
+      push_back(new StateFileAudioState("Phone", "Earpiece", 3, this));
+    m_data->m_states.
+      push_back(new StateFileAudioState("Phone", "Speaker", 4, this));
+
+    /* Priority ordering for media: Headset (if available),
+       Bluetooth (if available), Speaker, Earpiece. */
+    m_data->m_states.
+      push_back(new HeadsetAudioState("Media", 1, this));
+#ifdef QTOPIA_BLUETOOTH
+    m_data->m_states.
+      push_back(new BluetoothAudioState(false, 2, this));
+#endif
+    m_data->m_states.
+      push_back(new StateFileAudioState("Media", "Speaker", 3, this));
+    m_data->m_states.
+      push_back(new StateFileAudioState("Media", "Earpiece", 4, this));
+
+    /* Priority ordering for ringtone is the same as for media, but
+       BluetoothAudioState doesn't yet support the Ringtone domain. */
+    m_data->m_states.
+      push_back(new HeadsetAudioState("Ringtone", 1, this));
+    m_data->m_states.
+      push_back(new StateFileAudioState("Ringtone", "Speaker", 3, this));
+    m_data->m_states.
+      push_back(new StateFileAudioState("Ringtone", "Earpiece", 4, this));
+
+    /* We shouldn't have to do anything here to set up the initial
+       state.  Code elsewhere should know that we initially want the
+       Media domain and choose the best available audio state for
+       that. */
 }
 
 NeoAudioPlugin::~NeoAudioPlugin()

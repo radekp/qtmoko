@@ -37,12 +37,14 @@ public:
         this->m_helper = helper;
         setParent(helper);
         m_tag = gst_bus_add_watch_full(bus, 0, busCallback, this, NULL);
+	m_intervalTimer->start();
     }
 
     void removeWatch(BusHelper* helper)
     {
         Q_UNUSED(helper);
         g_source_remove(m_tag);
+	m_intervalTimer->stop();
     }
 
     static BusHelperPrivate* instance()
@@ -50,7 +52,26 @@ public:
         return new BusHelperPrivate;
     }
 
+private slots:
+    void interval()
+    {
+        emit m_helper->message(Message());
+    }
+
 private:
+    BusHelperPrivate()
+    {
+        m_intervalTimer = new QTimer(this);
+        m_intervalTimer->setInterval(250);
+
+        connect(m_intervalTimer, SIGNAL(timeout()), SLOT(interval()));
+    }
+
+    ~BusHelperPrivate()
+    {
+        delete m_intervalTimer;
+    }
+
     void processMessage(GstBus* bus, GstMessage* message)
     {
         Q_UNUSED(bus);
@@ -65,6 +86,7 @@ private:
 
     guint       m_tag;
     BusHelper*  m_helper;
+    QTimer*     m_intervalTimer;
 };
 
 #else

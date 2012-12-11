@@ -1976,6 +1976,7 @@ PlayerWidget::PlayerWidget( PlayerControl* control, QWidget* parent )
       , m_visualization( 0 )
 #endif
       , m_tvScreen(0)
+      , rotHelper(this, false)
 {
     static const int HOLD_THRESHOLD = 500;
     static const int STRETCH_MAX = 1;
@@ -2175,6 +2176,9 @@ PlayerWidget::PlayerWidget( PlayerControl* control, QWidget* parent )
     maskUpdateTimer->setSingleShot( false );
     connect( maskUpdateTimer,  SIGNAL(timeout()),  this,  SLOT(updateFullScreenControlsMask()) );
     maskUpdateTimer->start(1000);
+    
+    connect(&rotHelper, SIGNAL(rotated(bool)), this, SLOT(toggleFullScreenVideo(bool)));
+    rotHelper.start();
 }
 
 PlayerWidget::~PlayerWidget()
@@ -2183,6 +2187,7 @@ PlayerWidget::~PlayerWidget()
     if( m_videowidget ) {
         delete m_videowidget;
     }
+    rotHelper.restore();
 }
 
 void PlayerWidget::setPlaylist( const QMediaPlaylist &playlist )

@@ -1,0 +1,32 @@
+# Kernel parameter script for Beagle Hybrid / Panda Hybrid / GTA04
+#
+# Author: H. Nikolaus Schaller and Radek Polak
+# Copyright Golden Delicious Computers 2010-2012
+# licensed under GPL 2.0
+#
+# This script will be run by boot.scr if the kernel is detected
+# on SD card. It will be searched in a FAT partition and /boot
+# in an ext partition
+#
+# The partition number where the kernel was found is stored
+# in the variable ${PARTITON}.
+#
+# Add/modify bootargs as needed, but please resist to do other
+# fancy stuff here. And, you should not run a saveenv here as
+# this may disturb booting from NAND!
+#
+
+echo running bootargs.scr
+
+if test "${PARTITIONTYPE}" = "FAT"
+then
+# kernel comes from fat partition, let gta04-init to mount rootfs
+setenv realroot ""
+else
+# boot from ext partition, tell gta04-init by realroot where the rootfs is
+setenv realroot "realroot=/dev/mmcblk0p${PARTITION}"
+fi
+
+setenv bootargs "console=ttyO2,115200n8 vram=12M omapfb.vram=0:8M,1:4M omapfb.rotate_type=0 omapfb.mode=dvi:${dvimode} omapdss.def_disp=${defaultdisplay} twl4030_charger.allow_usb=1 musb_hdrc.preserve_vbus=1 log_buf_len=8M ignore_loglevel ${realroot}"
+
+echo bootargs.scr done...

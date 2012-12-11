@@ -3,6 +3,7 @@ CONFIG+=qtopia
 TARGET=mediaplayer
 
 QTOPIA*=media
+MODULES*=accelerometer
 CONFIG+=quicklaunch singleexec
 enable_pictureflow:MODULES*=pictureflow
 
@@ -21,6 +22,7 @@ pkg [
 ]
 
 DEFINES+=NO_VISUALIZATION
+DEFINES+=QTOPIA
 #DEFINES+=NO_THUMBNAIL
 
 HEADERS=\
@@ -29,6 +31,7 @@ HEADERS=\
     statewidget.h\
     elidedlabel.h\
     playerwidget.h\
+    playerfullscreenwidget.h\
     mediabrowser.h\
     visualization.h\
     browser.h\
@@ -38,6 +41,7 @@ HEADERS=\
     requesthandler.h\
     servicerequest.h\
     keyfilter.h\
+    rotate.h\
     playmediaservice.h
 
 SOURCES=\
@@ -47,6 +51,7 @@ SOURCES=\
     statewidget.cpp\
     elidedlabel.cpp\
     playerwidget.cpp\
+    playerfullscreenwidget.cpp\
     mediabrowser.cpp\
     visualization.cpp\
     browser.cpp\
@@ -55,6 +60,7 @@ SOURCES=\
     menuview.cpp\
     requesthandler.cpp\
     keyfilter.cpp\
+    rotate.cpp\
     playmediaservice.cpp
 
 !contains(QTOPIAMEDIA_ENGINES,helix) {

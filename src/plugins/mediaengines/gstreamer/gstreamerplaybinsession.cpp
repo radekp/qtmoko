@@ -382,6 +382,7 @@ void PlaybinSession::busMessage(Message const& msg)
             break;
 
         case GST_MESSAGE_EOS:
+	    setGstState(GST_STATE_NULL);
             setQtState(QtopiaMedia::Stopped);
             break;
 

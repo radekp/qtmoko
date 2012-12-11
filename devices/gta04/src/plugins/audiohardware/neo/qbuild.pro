@@ -13,6 +13,13 @@ SOURCES	        =  neoaudioplugin.cpp
 
 conf [
     hint=image
-    files=*.state
-    path=/etc/alsa
+    files=a4/*.state
+    path=/etc/alsa/a4
 ]
+
+confa3 [
+    hint=image
+    files=a3/*.state
+    path=/etc/alsa/a3
+]
+INSTALLS+=confa3

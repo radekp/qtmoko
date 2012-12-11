@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment[]=Frozen Bubble
+Exec=frozen-bubble.sh
+Icon=frozen-bubble
+Type=Application
+Name[]=Frozen Bubble
+

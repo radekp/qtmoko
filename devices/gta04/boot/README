@@ -1,6 +1,12 @@
-This is modified boot.scr from goldelico's download page. I have removed all
-stuff and left just the graphics bootmenu so that it's always shown. You can
-edit boot.scr.in and create boot.scr with this command:
+This is modified bootargs.scr from goldelico's download page.
 
-mkimage -A arm -O linux -a 0 -e 0 -T script -C none -n "GTA04 Boot Script" -d 
-boot.scr.in boot.scr
+QtMoko uses gta04-init [1] for initramfs booting and works realroot= instead of
+root= boot arg. So i have modified the script to add also realroot along with
+root args.
+
+To regenerate bootargs.scr use this command:
+
+mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n 'Boot Script' -d bootargs.txt bootargs.scr
+
+
+[1] https://github.com/radekp/gta04-init
