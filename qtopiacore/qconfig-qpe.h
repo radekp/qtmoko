@@ -147,9 +147,9 @@
 #ifndef QT_NO_CONTEXTMENU
 #  define QT_NO_CONTEXTMENU
 #endif
-#ifndef QT_NO_SPLITTER
-#  define QT_NO_SPLITTER
-#endif
+//#ifndef QT_NO_SPLITTER        // splitter is used in minitube
+//#  define QT_NO_SPLITTER
+//#endif
 #ifndef QT_NO_SIZEGRIP
 #  define QT_NO_SIZEGRIP
 #endif
@@ -159,12 +159,12 @@
 #ifndef QT_NO_SYNTAXHIGHLIGHTER
 #  define QT_NO_SYNTAXHIGHLIGHTER
 #endif
-#ifndef QT_NO_STATUSBAR
-#  define QT_NO_STATUSBAR
-#endif
-#ifndef QT_NO_STATUSTIP
-#  define QT_NO_STATUSTIP
-#endif
+//#ifndef QT_NO_STATUSBAR
+//#  define QT_NO_STATUSBAR
+//#endif
+//#ifndef QT_NO_STATUSTIP
+//#  define QT_NO_STATUSTIP
+//#endif
 #ifndef QT_NO_TOOLBOX
 #  define QT_NO_TOOLBOX
 #endif
