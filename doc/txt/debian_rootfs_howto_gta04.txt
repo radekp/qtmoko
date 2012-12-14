@@ -401,7 +401,7 @@ Step 9.4.1 - config pulseaudio
 
 * Use speex-fixed-3 for resampling (http://lists.goldelico.com/pipermail/gta04-owner/2012-November/003549.html)
 
-nano /etc/pulse/daemon.conf
+nano /media/card/etc/pulse/daemon.conf
 
 * Change the line with speex-float-3 to:
 
@@ -413,8 +413,9 @@ Step 9.5 - import QtMoko debian repository public keys
 
 * We use secure apt and we need keys for QtMoko repositories:
 
-chroot /media/card
+cd /media/card
 wget https://github.com/radekp/qtmoko/raw/master/dist/qtmoko-pubring.gpg
+chroot /media/card
 apt-key add /qtmoko-pubring.gpg 
 rm qtmoko-pubring.gpg
 exit

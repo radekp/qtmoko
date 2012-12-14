@@ -398,12 +398,12 @@ Step 9.2 - import QtMoko debian repository public keys
 
 * We use secure apt and we need keys for QtMoko repositories:
 
-chroot /media/card
+cd /media/card
 wget https://github.com/radekp/qtmoko/raw/master/dist/qtmoko-pubring.gpg
+chroot /media/card
 apt-key add /qtmoko-pubring.gpg 
 rm qtmoko-pubring.gpg
 exit
-
 
 Step 9.5 - remove bash history
 ==============================

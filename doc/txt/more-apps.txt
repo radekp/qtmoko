@@ -1,0 +1,20 @@
+Installing more apps to QtMoko release tarball
+==============================================
+
+* You can continue here after creating rootfs tarball (the rootfs is in
+  /media/card) and install more qtmoko apps.
+
+* Copy all .deb from http://qtmoko.sourceforge.net/apps to /media/card/packages
+
+chroot /media/card
+cd /packages
+dpkg -i *.deb
+  
+chroot /media/card
+apt-get update
+apt-get -f install
+apt-get install gnuchess
+
+rm /var/cache/apt/archives/*.deb
+
+exit

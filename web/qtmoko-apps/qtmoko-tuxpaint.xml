@@ -1,0 +1,12 @@
+<package
+      name="qtmoko-tuxpaint"
+      version="51-1"
+      arch="all"
+      title="Tuxpaint"
+      summary="Tuxpaint - painting for children"
+      category="games"
+      >
+      <details> 
+ </details>
+</package>
+  

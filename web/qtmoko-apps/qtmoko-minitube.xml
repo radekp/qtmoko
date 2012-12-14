@@ -1,0 +1,10 @@
+<package
+      name="qtmoko-minitube"
+      version="51-1"
+      title="Minitube"
+      summary="Youtube client"
+      category="communication"
+      >
+          <tag>video</tag>
+</package>
+  

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment[]=Tuxpaint
+Exec=tuxpaint.sh
+Icon=tuxpaint
+Type=Application
+Name[]=Tuxpaint
+

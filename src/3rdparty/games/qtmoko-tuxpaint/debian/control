@@ -1,0 +1,15 @@
+Source: qtmoko-tuxpaint
+Section: games
+Priority: optional
+Maintainer: Radek Polak <psonek2@seznam.cz>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.4
+Homepage: http://www.qtmoko.org
+Vcs-Git: git://github.com/radekp/qtmoko.git
+Vcs-Browser: https://github.com/radekp/qtmoko
+
+Package: qtmoko-tuxpaint
+Architecture: all
+Depends: libsdl-qtmoko, tuxpaint
+Description: Tuxpaint for QtMoko
+

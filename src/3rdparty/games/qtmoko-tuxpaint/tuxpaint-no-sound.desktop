@@ -1,0 +1,6 @@
+[Desktop Entry]
+Comment[]=Tuxpaint (no sound)
+Exec=tuxpaint-no-sound.sh
+Icon=tuxpaint
+Type=Application
+Name[]=Tuxpaint (no sound)
