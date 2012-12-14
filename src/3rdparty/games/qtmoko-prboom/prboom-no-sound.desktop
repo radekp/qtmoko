@@ -1,0 +1,6 @@
+[Desktop Entry]
+Comment[]=Doom game (no sound)
+Exec=prboom-no-sound.sh
+Icon=prboom
+Type=Application
+Name[]=PrBoom (no sound)

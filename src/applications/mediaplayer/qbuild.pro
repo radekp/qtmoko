@@ -41,7 +41,6 @@ HEADERS=\
     requesthandler.h\
     servicerequest.h\
     keyfilter.h\
-    rotate.h\
     playmediaservice.h
 
 SOURCES=\
@@ -60,7 +59,6 @@ SOURCES=\
     menuview.cpp\
     requesthandler.cpp\
     keyfilter.cpp\
-    rotate.cpp\
     playmediaservice.cpp
 
 !contains(QTOPIAMEDIA_ENGINES,helix) {

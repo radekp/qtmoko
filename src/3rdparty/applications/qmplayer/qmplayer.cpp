@@ -1423,7 +1423,7 @@ bool QMplayer::installMplayer()
     QFile f("/home/root/.mplayer/config");
     f.open(QFile::WriteOnly);
     f.write
-        ("vo=fbdev2\nao=alsa\n[default]\nafm=ffmpeg\nvfm=ffmpeg\nvf=expand=640:480,rotate=1\nsws=0\nframedrop=1");
+        ("vo=fbdev2\nao=alsa\n[default]\nafm=ffmpeg\nvfm=ffmpeg\nvf=scale=640:480,rotate=1\nsws=0\nframedrop=1");
     f.close();
 #else
     QMessageBox::critical(this, tr("qmplayer"), tr("You must install mplayer"));

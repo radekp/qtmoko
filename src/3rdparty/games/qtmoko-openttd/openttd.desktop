@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment[]=Transport tycoon game
+Exec=openttd.sh
+Icon=openttd
+Type=Application
+Name[]=OpenTTD
+

@@ -1,5 +1,5 @@
-#ifndef __ROTATE_H
-#define __ROTATE_H
+#ifndef __ROTATE_HELPER_H
+#define __ROTATE_HELPER_H
 
 #include <QObject>
 
@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <string.h>
 #include <linux/input.h>
+#include <qtopiaglobal.h>
 
 #include <QTimer>
 
@@ -17,7 +18,7 @@
  * in the direction indicated by the orientation
  */
 
-class RotateHelper : public QObject
+class QTOPIA_EXPORT RotateHelper : public QObject
 {
     Q_OBJECT
 

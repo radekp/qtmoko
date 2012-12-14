@@ -1,0 +1,31 @@
+<package
+      name="qtmoko-prboom"
+      version="51-1"
+      arch="all"
+      title="Prboom"
+      summary="Doom engine with shareware wad data"
+      category="games"
+      >
+      <details>
+
+   <h3>Game controls: TODO, please modify prboom.js and send it to me to psonek2 at seznam.cz</h3>
+   <pre>
+       
+       +---------------------------------------+
+       | Fullscreen       UP                   |
+       | toggle                                |
+       |                                       |
+       |                                       |
+       | LEFT            ENTER           RIGHT |
+       |                                       |
+       |                                       |
+       |                                       |
+       |                 DOWN                  |
+       +---------------------------------------+
+       
+   </pre>
+ 
+ 
+ </details>
+</package>
+  

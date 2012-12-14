@@ -1,0 +1,31 @@
+<package
+      name="qtmoko-dosbox"
+      version="51-1"
+      arch="all"
+      title="Dosbox"
+      summary="PC emulator"
+      category="games"
+      >
+      <details>
+
+   <h3>Game controls: you can toggle keyboard from context menu or use these key bindings:</h3>
+   <pre>
+       
+       +---------------------------------------+
+       | Fullscreen       UP                   |
+       | toggle                                |
+       |                                       |
+       |                                       |
+       | LEFT            ENTER           RIGHT |
+       |                                       |
+       |                                       |
+       |                                       |
+       |                 DOWN                  |
+       +---------------------------------------+
+       
+   </pre>
+ 
+ 
+ </details>
+</package>
+  

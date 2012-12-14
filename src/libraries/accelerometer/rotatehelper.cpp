@@ -1,4 +1,4 @@
-#include "rotate.h"
+#include "rotatehelper.h"
 
 #include <QtopiaServiceRequest>
 #include <QValueSpaceItem>

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment[]=Pingus
+Exec=pingus.sh
+Icon=pingus
+Type=Application
+Name[]=Pingus
+

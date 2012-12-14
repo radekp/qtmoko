@@ -1,0 +1,6 @@
+[Desktop Entry]
+Comment[]=Pingus (no sound)
+Exec=pingus-no-sound.sh
+Icon=pingus
+Type=Application
+Name[]=Pingus (no sound)

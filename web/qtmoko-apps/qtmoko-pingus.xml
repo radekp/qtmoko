@@ -1,0 +1,12 @@
+<package
+      name="qtmoko-pingus"
+      version="51-1"
+      arch="all"
+      title="Pingus"
+      summary="Lemmings clone"
+      category="games"
+      >
+      <details> 
+ </details>
+</package>
+  

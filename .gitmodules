@@ -118,3 +118,6 @@
 [submodule "src/3rdparty/applications/yberbrowser"]
 	path = src/3rdparty/applications/yberbrowser
 	url = git://github.com/radekp/yberbrowser.git
+[submodule "src/3rdparty/applications/minitube"]
+	path = src/3rdparty/applications/minitube
+	url = git://github.com/radekp/minitube.git

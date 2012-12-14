@@ -1,0 +1,12 @@
+<package
+      name="qtmoko-openttd"
+      version="51-1"
+      arch="all"
+      title="OpenTTD"
+      summary="Transport tycoon game clone"
+      category="games"
+      >
+      <details> 
+ </details>
+</package>
+  

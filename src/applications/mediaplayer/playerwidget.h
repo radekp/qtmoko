@@ -22,7 +22,7 @@
 
 #include "playercontrol.h"
 #include "statewidget.h"
-#include "rotate.h"
+#include <rotatehelper.h>
 
 #include <media.h>
 #include <qmediacontent.h>

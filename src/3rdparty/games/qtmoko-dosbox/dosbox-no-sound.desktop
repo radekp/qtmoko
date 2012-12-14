@@ -1,0 +1,6 @@
+[Desktop Entry]
+Comment[]=Dosbox PC emulator (no sound)
+Exec=dosbox-no-sound.sh
+Icon=dosbox
+Type=Application
+Name[]=Dosbox (no sound)

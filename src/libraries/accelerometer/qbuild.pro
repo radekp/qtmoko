@@ -14,7 +14,9 @@ pkg [
 ]
 
 HEADERS=\
-    accelerometers.h
+    accelerometers.h\
+    rotatehelper.h
 
 SOURCES=\
-    accelerometers.cpp
+    accelerometers.cpp\
+    rotatehelper.cpp

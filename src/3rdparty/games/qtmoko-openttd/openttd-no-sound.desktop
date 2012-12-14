@@ -1,0 +1,6 @@
+[Desktop Entry]
+Comment[]=Open transport tycoon
+Exec=openttd.sh
+Icon=openttd
+Type=Application
+Name[]=OpenTTD (no sound)
