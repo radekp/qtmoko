@@ -2,8 +2,26 @@ qtmoko (51-1) unstable; urgency=low
 
   * upgrade to qt 4.8.3
   * support for html5 video in browsers
+  * enable typing in the To field, when sending an email (Neil Jerram)
+  * kill pulse.sh and pulseaudio when stopping QtMoko (Neil Jerram)
+  * prevent pulseaudio from exiting every 20 seconds (Neil Jerram)
+  * avoid "QString::arg: Argument missing" logs (Neil Jerram)
+  * position is now showing in media player (Neil Jerram)
+  * fixed qwslock log warnings (Neil Jerram)
+  * cleaned up gta04 audio service (Neil Jerram)
+  * have libQtScript and libQtDeclarative installed by qbuild (Gilles Filippini)
+  * media player uses accelerometers for rotation
+  * fixed wifi ap to not move around during rescan
+  * bq27000_battery is now module so that you can rmmod it and use dumb battery
+  * dmesg is included in /modem_reenumerate.log
+  * qtmoko apt repo keys are installed by default
+  * DISPLAY is no longer set in qpe.env to not confuse pulseaudio (Neil Jerram)
+  * phonon is now built and can be used by applications
+  * phonon has fix for swapped colors
+  * QSplitter class is compiled for better compat with existing apps
+  * rotate helper is now part of accelerometer library
 
- -- Radek Polak <psonek2@seznam.cz>  Sat, 25 Nov 2012 10:01:00 +0100
+ -- Radek Polak <psonek2@seznam.cz>  Fri, 21 Dec 2012 22:59:00 +0100
 
 qtmoko (50-1) unstable; urgency=low
 
