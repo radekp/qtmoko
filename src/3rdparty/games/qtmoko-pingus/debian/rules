@@ -13,9 +13,9 @@ binary: build
 	mkdir -p debian/tmp/opt/qtmoko/pics
 
 	cp pingus.sh debian/tmp/opt/qtmoko/bin
-	cp pingus-no-sound.sh debian/tmp/opt/qtmoko/bin
+	#cp pingus-no-sound.sh debian/tmp/opt/qtmoko/bin
 	cp pingus.desktop debian/tmp/opt/qtmoko/apps/Games
-	cp pingus-no-sound.desktop debian/tmp/opt/qtmoko/apps/Games
+	#cp pingus-no-sound.desktop debian/tmp/opt/qtmoko/apps/Games
 	cp pingus.png debian/tmp/opt/qtmoko/pics/pingus.png
 
 	install -d debian/tmp/DEBIAN

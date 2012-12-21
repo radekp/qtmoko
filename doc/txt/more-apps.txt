@@ -13,8 +13,49 @@ dpkg -i *.deb
 chroot /media/card
 apt-get update
 apt-get -f install
-apt-get install gnuchess
+apt-get install gnuchess man gstreamer0.10-plugins-ugly gstreamer0.10-plugins-good gstreamer0.10-plugins-bad pavucontrol
 
 rm /var/cache/apt/archives/*.deb
 
 exit
+
+
+* Refresh application and games desktop files so that icons are in menus:
+
+cat > /etc/init.d/qtmokorefreshdesktop << __END__
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:             qtmokorefreshdesktop
+# Required-Start:       $remote_fs $syslog
+# Required-Stop:        $remote_fs $syslog
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Refresh qtmoko desktop files after first boot
+### END INIT INFO
+
+while [ 1 = 1 ]
+do
+    sleep 3
+    if [ -f /home/root/Applications/Qtopia/qtopia_db.sqlite ]
+    then
+        sleep 10
+        . /opt/qtmoko/qpe.env
+        qcop QPE/DocAPI 'scanPath(QString,int)' /opt/qtmoko/apps/Games 1
+        qcop QPE/DocAPI 'scanPath(QString,int)' /opt/qtmoko/apps/Applications 1
+        sleep 60
+        qcop QPE/DocAPI 'scanPath(QString,int)' /opt/qtmoko/apps/Games 1
+        qcop QPE/DocAPI 'scanPath(QString,int)' /opt/qtmoko/apps/Applications 1
+        update-rc.d -f qtmokorefreshdesktop remove
+        rm -f /etc/init.d/qtmokorefreshdesktop
+        exit 0
+    fi
+done
+
+__END__
+
+chmod +x /etc/init.d/qtmokorefreshdesktop
+update-rc.d qtmokorefreshdesktop defaults
+
+* remove /etc/pointercal so that calibration triggers after first boot:
+
+rm /etc/pointercal
