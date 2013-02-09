@@ -468,6 +468,7 @@ public:
     static const quint64 &ReadElsewhere;
     static const quint64 &UnloadedData;
     static const quint64 &New;
+    static const quint64 &All;
 
     enum ContentType {
         UnknownContent   = 0,

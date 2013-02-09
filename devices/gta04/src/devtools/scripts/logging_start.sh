@@ -1,7 +1,12 @@
 #!/bin/sh
 mount -t tmpfs none /var/log
-/etc/init.d/sysklogd start
-/etc/init.d/klogd start
+if [ -f /etc/init.d/sysklogd ];
+then
+	/etc/init.d/sysklogd start
+	/etc/init.d/klogd start
+else
+	/etc/init.d/rsyslog start
+fi
 
 echo ""
 echo "+---------------------------------------+"

@@ -367,6 +367,12 @@ void PhoneLauncher::multitaskPressed()
 */
 void PhoneLauncher::showRunningTasks()
 {
+    // HACK: force backlight on - it now sometimes fails on GTA04 after
+    // suspend.
+    QtopiaServiceRequest e("QtopiaPowerManager", "setBacklight(int)");
+    e << -3;                // Force on
+    e.send();
+    
     // XXX Should:
     // XXX  - Go above StaysOnTop windows (eg. menu popups, QCalendarWidget popups)
 

@@ -30,7 +30,7 @@ Step 1
 
 * We will be installing new image to /media/card:
 
-cdebootstrap --flavour=minimal --include=ifupdown,net-tools,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,rsyslog,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,rfkill,ntpdate,libspeex1,libspeexdsp1,lsof,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-fluendo-mp3,gstreamer0.10-pulseaudio,pulseaudio,pulseaudio-utils,libasound2-plugins,liblcms1,libmng1,libtiff4,libpulse-mainloop-glib0,libvorbisfile3,libicu48,gpsd,gpsd-clients wheezy /media/card/ http://cdn.debian.net/debian/
+cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,rfkill,ntpdate,libspeex1,libspeexdsp1,lsof,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-pulseaudio,pulseaudio,pulseaudio-utils,libasound2-plugins,liblcms1,libmng1,libpulse-mainloop-glib0,libvorbisfile3,gpsd,gpsd-clients squeeze /media/card/ http://cdn.debian.net/debian/
 
 Step 2
 ======
@@ -43,7 +43,6 @@ mkdir /media/card/mnt/p2
 mkdir /media/card/mnt/p3
 mkdir /media/card/mnt/p5
 mkdir /media/card/mnt/p6
-mkdir /media/card/mnt/p7
 mkdir /media/card/media/card
 mkdir /media/card/media/p1
 echo "neo" > /media/card/etc/hostname
@@ -82,12 +81,12 @@ __END_CHROOT__
 Step 3 - add more package repositories
 ========================================
 
-echo "deb http://cdn.debian.net/debian wheezy contrib" >> /media/card/etc/apt/sources.list
-echo "deb http://cdn.debian.net/debian wheezy non-free" >> /media/card/etc/apt/sources.list
-echo "deb http://security.debian.org/ wheezy/updates main contrib non-free" >> /media/card/etc/apt/sources.list
-echo "deb http://qtmoko.sourceforge.net/debian/gta04/armhf /" >> /media/card/etc/apt/sources.list
+echo "deb http://cdn.debian.net/debian squeeze contrib" >> /media/card/etc/apt/sources.list
+echo "deb http://cdn.debian.net/debian squeeze non-free" >> /media/card/etc/apt/sources.list
+echo "deb http://security.debian.org/ squeeze/updates main contrib non-free" >> /media/card/etc/apt/sources.list
+echo "deb http://qtmoko.sourceforge.net/debian/gta04/armel /" >> /media/card/etc/apt/sources.list
 echo "deb http://qtmoko.sourceforge.net/apps/all /" >> /media/card/etc/apt/sources.list
-echo "deb http://qtmoko.sourceforge.net/apps/armhf /" >> /media/card/etc/apt/sources.list
+echo "deb http://qtmoko.sourceforge.net/apps/armel /" >> /media/card/etc/apt/sources.list
 
 Step 4
 ======
@@ -200,7 +199,8 @@ Step 4.7 - disable logging by defaults
   in settings->logging or via devtools menu or with logging_enable.sh script.
 
 chroot /media/card
-update-rc.d -f rsyslog remove
+update-rc.d -f klogd remove
+update-rc.d -f sysklogd remove
 exit
 
 Step 5
@@ -227,6 +227,7 @@ rm -rf .udev
 
 rm /media/card/etc/network/run
 mkdir /media/card/etc/network/run
+
 
 Step 7.5 - dash
 ===============
@@ -259,7 +260,7 @@ exit
 Step 8 - install QtMoko
 =======================
 
-* I use qemu armhf host for building qtmoko package. It should be as simple as
+* I use qemu armel host for building qtmoko package. It should be as simple as
 
 git checkout v52
 dpkg-buildpackage
@@ -281,10 +282,10 @@ git submodule update --init
 * Install it
 
 chroot /media/card/
-wget http://qtmoko.sourceforge.net/debian/gta04/armhf/qtmoko-gta04_52-1_armhf.deb
-dpkg -i qtmoko-gta04_52-1_armhf.deb
+wget http://qtmoko.sourceforge.net/debian/gta04/armel/qtmoko-gta04_52-1_armel.deb
+dpkg -i qtmoko-gta04_52-1_armel.deb
 update-rc.d qtmoko-gta04 defaults
-rm qtmoko-gta04_52-1_armhf.deb
+rm qtmoko-gta04_52-1_armel.deb
 exit
 killall qpe.sh                  # recent versions start qtmoko after install, so kill it
 killall pulse.sh                # kill pulseaudio - in qemu it just eats cpu
@@ -303,26 +304,14 @@ dpkg -i qtmoko-theme-mokofaen_3-1_all.deb
 rm qtmoko-theme-mokofaen_3-1_all.deb
 exit
 
-Step 8.1 - mokofaen theme
-=========================
-
-* For debian images we use mokofaen theme:
-
-chroot /media/card/
-wget http://qtmoko.sourceforge.net/apps/qtmoko-theme-mokofaen_2-1_all.deb
-dpkg -i qtmoko-theme-mokofaen_2-1_all.deb
-rm qtmoko-theme-mokofaen_2-1_all.deb
-exit
-
-
 Step 8.2 - some more alarm and ringtones
 ========================================
 
 mkdir -p /media/card/home/root/Documents
 cd /media/card/home/root/Documents
-wget https://raw.github.com/radekp/qtmoko/master/src/applications/clock/sounds/Alarm_Beep_01.ogg
-wget https://raw.github.com/radekp/qtmoko/master/src/applications/clock/sounds/Alarm_Beep_02.ogg
-wget https://raw.github.com/radekp/qtmoko/master/src/applications/clock/sounds/Alarm_Beep_03.ogg
+wget https://github.com/radekp/qtmoko/raw/master/src/applications/clock/sounds/Alarm_Beep_01.ogg
+wget https://github.com/radekp/qtmoko/raw/master/src/applications/clock/sounds/Alarm_Beep_02.ogg
+wget https://github.com/radekp/qtmoko/raw/master/src/applications/clock/sounds/Alarm_Beep_03.ogg
 
 
 Step 9 - Linux kernel
@@ -347,15 +336,15 @@ dpkg-buildpackage
 * Install kernel image:
 
 chroot /media/card
-wget http://qtmoko.sourceforge.net/debian/gta04/armhf/linux-image-3.7-qtmoko-gta04_52-1_armhf.deb
-dpkg -i linux-image-3.7-qtmoko-gta04_52-1_armhf.deb
-rm linux-image-3.7-qtmoko-gta04_52-1_armhf.deb
+wget http://qtmoko.sourceforge.net/debian/gta04/armel/linux-image-3.7-qtmoko-gta04_52-1_armel.deb
+dpkg -i linux-image-3.7-qtmoko-gta04_52-1_armel.deb
+rm linux-image-3.7-qtmoko-gta04_52-1_armel.deb
 exit
 
 * Install bootargs.scr so for correct kernel cmdline arguments:
 
 cd /media/card/boot
-wget https://raw.github.com/radekp/qtmoko/master/devices/gta04/boot/bootargs.scr
+wget https://github.com/radekp/qtmoko/raw/master/devices/gta04/boot/bootargs.scr
 
 
 Step 9.1 - Linux kernel cross compiling - not using anymore for releases
@@ -378,6 +367,17 @@ Step 9.2 - Setup bluetooth uarts
 echo "-s 3000000 /dev/ttyO0 any 3000000" > /media/card/etc/bluetooth/uart
 
 
+Step 9.3 - Install libts from lindi
+===================================
+
+* It is needed for more recent kernels
+
+chroot /media/card
+wget http://lindi.iki.fi/lindi/tslib/libts-0.0-0_1.0-8lindi1_armel.deb
+dpkg -i libts-0.0-0_1.0-8lindi1_armel.deb
+rm libts-0.0-0_1.0-8lindi1_armel.deb
+exit
+
 Step 9.4 - Set pulseaudio as default source/sink for gstreamer
 ==============================================================
 
@@ -391,11 +391,12 @@ Step 9.4.1 - config pulseaudio
 ==============================
 
 * Use speex-fixed-3 for resampling (http://lists.goldelico.com/pipermail/gta04-owner/2012-November/003549.html)
-* Disable udev autodetection, because it's for some reason broken on GTA04:
 
-cd /media/card/etc/pulse
-wget -O daemon.conf https://raw.github.com/radekp/qtmoko/master/devices/gta04/etc/pulse/daemon.conf
-wget -O default.pa https://raw.github.com/radekp/qtmoko/master/devices/gta04/etc/pulse/default.pa
+nano /media/card/etc/pulse/daemon.conf
+
+* Change the line with speex-float-3 to:
+
+resample-method = speex-fixed-3
 
 
 Step 9.5 - import QtMoko debian repository public keys
@@ -404,7 +405,7 @@ Step 9.5 - import QtMoko debian repository public keys
 * We use secure apt and we need keys for QtMoko repositories:
 
 cd /media/card
-wget https://raw.github.com/radekp/qtmoko/master/dist/qtmoko-pubring.gpg
+wget https://github.com/radekp/qtmoko/raw/master/dist/qtmoko-pubring.gpg
 chroot /media/card
 apt-key add /qtmoko-pubring.gpg 
 rm qtmoko-pubring.gpg
@@ -433,7 +434,7 @@ Step 9.7 - boot logo
 * gta04-init displays this logo on boot:
 
 cd /media/card/boot
-wget -O logo.bmp https://raw.github.com/radekp/qtmoko/master/pics/gta04-init/sd.bmp
+wget -O logo.bmp https://github.com/radekp/qtmoko/raw/master/pics/gta04-init/sd.bmp
 
 Step 9.8 - directory for multiboot
 ==================================
@@ -475,7 +476,7 @@ Step 10 - release tarball
 =========================
 
 cd /media/card
-tar -czvf ../qtmoko-debian-gta04-v52-armhf.tar.gz .
+tar -czvf ../qtmoko-debian-gta04-v52-armel.tar.gz .
 
 Step 11 - make ubifs image
 ==========================
@@ -484,7 +485,7 @@ Step 11 - make ubifs image
 
 cd /media/card/boot/
 rm -f logo.bmp
-wget -O logo.bmp https://raw.github.com/radekp/qtmoko/master/pics/gta04-init/nand.bmp
+wget -O logo.bmp https://github.com/radekp/qtmoko/raw/master/pics/gta04-init/nand.bmp
 
 * Remove doc and stuff that is not needed and makes NAND image slower:
 

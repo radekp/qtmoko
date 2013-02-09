@@ -3,7 +3,7 @@ prefix=/root/qte/build
 Name: Qtsvg
 Description: Qtsvg Library
 Version: 4.8.3
-Libs: -L/root/qte/build/qtopiacore/target/lib -lQtSvg
-Cflags: -DQT_SHARED -I/root/qte/build/qtopiacore/target/include -I/root/qte/build/qtopiacore/target/include/QtSvg
+Libs: -L/root/qte/build/sdk/qtopiacore/target/lib -lQtSvg
+Cflags: -DQT_SHARED -I/root/qte/build/sdk/qtopiacore/target/include -I/root/qte/build/sdk/qtopiacore/target/include/QtSvg
 Requires: QtCore QtGui
 

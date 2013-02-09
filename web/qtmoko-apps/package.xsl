@@ -14,6 +14,15 @@
 
 <xsl:element name="a">
 <xsl:attribute name="href">
+<xsl:choose>
+  <xsl:when test="@arch">
+    <xsl:apply-templates select="@arch"/>
+    <xsl:text>/</xsl:text>
+  </xsl:when>
+  <xsl:otherwise>
+    <xsl:text>armel/</xsl:text>
+  </xsl:otherwise>
+</xsl:choose>
 <xsl:apply-templates select="@name"/>
 <xsl:text>_</xsl:text>
 <xsl:apply-templates select="@version"/>
@@ -43,6 +52,15 @@
 
 <xsl:element name="a">
 <xsl:attribute name="href">
+<xsl:choose>
+  <xsl:when test="@arch">
+    <xsl:apply-templates select="@arch"/>
+    <xsl:text>/</xsl:text>
+  </xsl:when>
+  <xsl:otherwise>
+    <xsl:text>armel/</xsl:text>
+  </xsl:otherwise>
+</xsl:choose>
 <xsl:apply-templates select="@name"/>
 <xsl:text>_</xsl:text>
 <xsl:apply-templates select="@version"/>

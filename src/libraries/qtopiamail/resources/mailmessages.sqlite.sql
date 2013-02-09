@@ -7,7 +7,7 @@ CREATE TABLE mailmessages (
     recipients VARCHAR,
     subject VARCHAR,
     stamp TIMESTAMP,
-    status INTEGER,
+    status UNSIGNED BIG INT,
     parentaccountid INTEGER,
     frommailbox VARCHAR,
     mailfile VARCHAR,

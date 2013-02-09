@@ -4738,6 +4738,7 @@ static quint64 removedFlag = 0;
 static quint64 readElsewhereFlag = 0;
 static quint64 unloadedDataFlag = 0;
 static quint64 newFlag = 0;
+static quint64 allFlags = 0;
 
 /*  QMailMessageMetaData */
 class QMailMessageMetaDataPrivate : public QPrivateImplementationBase
@@ -4833,6 +4834,19 @@ void QMailMessageMetaDataPrivate::initializeFlags()
         readElsewhereFlag = registerFlag("ReadElsewhere");
         unloadedDataFlag = registerFlag("UnloadedData");
         newFlag = registerFlag("New");
+
+	allFlags = (incomingFlag |
+		    outgoingFlag |
+		    sentFlag |
+		    repliedFlag |
+		    repliedAllFlag |
+		    forwardedFlag |
+		    downloadedFlag |
+		    readFlag |
+		    removedFlag |
+		    readElsewhereFlag |
+		    unloadedDataFlag |
+		    newFlag);
     }
 }
 
@@ -5180,6 +5194,7 @@ const quint64 &QMailMessageMetaData::Removed = removedFlag;
 const quint64 &QMailMessageMetaData::ReadElsewhere = readElsewhereFlag;
 const quint64 &QMailMessageMetaData::UnloadedData = unloadedDataFlag;
 const quint64 &QMailMessageMetaData::New = newFlag;
+const quint64 &QMailMessageMetaData::All = allFlags;
 
 /*!
     Constructs an empty message meta data object.

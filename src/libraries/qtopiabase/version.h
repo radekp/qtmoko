@@ -20,8 +20,8 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define QTMOKO_VERSION 51
-#define QTMOKO_VERSION_STR "51"
+#define QTMOKO_VERSION 52
+#define QTMOKO_VERSION_STR "52"
 
 // Legacy define. Present since 1.x.
 #define QPE_VERSION "4.4.3"

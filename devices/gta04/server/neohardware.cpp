@@ -100,9 +100,9 @@ ac(QPowerSource::Wall, "PrimaryAC", this)
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateStatus()));
     timer.start(30 * 1000);
-    
+
     QTimer::singleShot(1, this, SLOT(updateStatus()));
-    
+
     adaptor = new QtopiaIpcAdaptor("QPE/NeoHardware");
     audioMgr = new QtopiaIpcAdaptor("QPE/AudioStateManager", this);
 
@@ -114,37 +114,75 @@ NeoHardware::~NeoHardware()
 {
 }
 
+// Parse uevent string and return given attribute value. Example uevent file:
+// POWER_SUPPLY_NAME=bq27000-battery
+// POWER_SUPPLY_STATUS=Full
+// POWER_SUPPLY_PRESENT=1
+// POWER_SUPPLY_VOLTAGE_NOW=65535000
+// POWER_SUPPLY_CURRENT_NOW=-11697997
+// POWER_SUPPLY_CAPACITY_LEVEL=Full
+// POWER_SUPPLY_TEMP=161106
+// POWER_SUPPLY_TECHNOLOGY=Li-ion
+// POWER_SUPPLY_CHARGE_NOW=11697997
+// POWER_SUPPLY_CHARGE_FULL_DESIGN=11652480
+// POWER_SUPPLY_CYCLE_COUNT=65535
+//
+// Btw this is uevent file for case of uncalibrated battery.
+//
+// The argument name must contain even the '=' char
+static QByteArray getAttr(const char *name, QByteArray & uevent)
+{
+    int index = uevent.indexOf(name);
+    if (index < 0)
+        return QByteArray();
+
+    index += strlen(name);
+    int end = uevent.indexOf('\n', index + 1);
+    return uevent.mid(index, end - index);
+}
+
+static int getIntAttr(const char *name, QByteArray & uevent)
+{
+    QByteArray str = getAttr(name, uevent);
+    if (str.isEmpty())
+        return -1;
+    return str.toInt();
+}
+
 void NeoHardware::updateStatus()
 {
-    QByteArray twlVbus = qReadFile("/sys/bus/platform/devices/twl4030_usb/vbus");
-    if (twlVbus.contains("on")) {
+    QByteArray twlVbus =
+        qReadFile("/sys/bus/platform/devices/twl4030_usb/vbus");
+    if (twlVbus.contains("on"))
         ac.setAvailability(QPowerSource::Available);
-    } else {
+    else
         ac.setAvailability(QPowerSource::NotAvailable);
+
+    QByteArray uevent =
+        qReadFile("/sys/class/power_supply/bq27000-battery/uevent");
+
+    bool charging = uevent.contains("POWER_SUPPLY_STATUS=Charging");
+    battery.setCharging(charging);
+
+    int timeToEmpty = getIntAttr("POWER_SUPPLY_TIME_TO_EMPTY_NOW=", uevent);
+    if (timeToEmpty >= 0)
+        battery.setTimeRemaining(timeToEmpty / 60);
+
+    int capacity = getIntAttr("POWER_SUPPLY_CAPACITY=", uevent);
+    if (capacity < 0) {
+        // Handle uncalibrated battery - it does not have POWER_SUPPLY_CAPACITY
+        // and we compute capacity from charge_now and charge_full_design.
+        // http://lists.goldelico.com/pipermail/gta04-owner/2013-February/003903.html
+        int chargeNow = getIntAttr("POWER_SUPPLY_CHARGE_NOW=", uevent);
+        int chargeFullDesign =
+            getIntAttr("POWER_SUPPLY_CHARGE_FULL_DESIGN=", uevent);
+        capacity = (chargeNow * 100) / chargeFullDesign;
     }
 
-    QString chargingStr =
-        qReadFile("/sys/class/power_supply/bq27000-battery/status");
-    QString capacityStr =
-        qReadFile("/sys/class/power_supply/bq27000-battery/capacity");
-    int capacity = capacityStr.toInt();
-
-    battery.setCharging(chargingStr.contains("Charging"));
-
-    if (capacity > 0) {
+    if (capacity > 0)
         battery.setCharge(capacity);
-    }
 
-    if (chargingStr.contains("Discharging")) {
-        QString time =
-            qReadFile
-            ("/sys/class/power_supply/bq27000-battery/time_to_empty_now");
-        battery.setTimeRemaining(time.toInt() / 60);
-    }
-    
-    QString currentNowStr =
-        qReadFile("/sys/class/power_supply/bq27000-battery/current_now");
-    int currentNow = currentNowStr.toInt() / 1000;
+    int currentNow = getIntAttr("POWER_SUPPLY_CURRENT_NOW=", uevent) / 1000;
     batteryVso.setAttribute("current_now", QString::number(currentNow));
 }
 
@@ -166,13 +204,13 @@ void NeoHardware::uevent()
 void NeoHardware::shutdownRequested()
 {
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
-    QtopiaServerApplication::instance()->
-        shutdown(QtopiaServerApplication::ShutdownSystem);
+    QtopiaServerApplication::instance()->shutdown(QtopiaServerApplication::
+                                                  ShutdownSystem);
 }
 
 void NeoHardware::headphonesInserted(bool b)
 {
-    qLog(Hardware)<< __PRETTY_FUNCTION__ << b;
+    qLog(Hardware) << __PRETTY_FUNCTION__ << b;
     vsoPortableHandsfree.setAttribute("Present", b);
     vsoPortableHandsfree.sync();
     if (b) {

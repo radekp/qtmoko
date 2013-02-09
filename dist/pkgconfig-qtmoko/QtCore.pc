@@ -3,5 +3,5 @@ prefix=/root/qte/build
 Name: Qtcore
 Description: Qtcore Library
 Version: 4.8.3
-Libs: -L/root/qte/build/qtopiacore/target/lib -lQtCore
-Cflags: -DQT_SHARED -I/root/qte/build/qtopiacore/target/include -I/root/qte/build/qtopiacore/target/include/QtCore
+Libs: -L/root/qte/build/sdk/qtopiacore/target/lib -lQtCore
+Cflags: -fno-rtti -DQT_SHARED -I/root/qte/build/sdk/qtopiacore/target/include -I/root/qte/build/sdk/qtopiacore/target/include/QtCore

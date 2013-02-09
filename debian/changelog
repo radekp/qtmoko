@@ -1,3 +1,18 @@
+qtmoko (52-1) unstable; urgency=low
+
+  * media alsa state now saves 5mA
+  * media alsa state is now louder
+  * fixed "Draft message" instead of sender in SMS (Neil Jerram & Radek Polak)
+  * fixed status to be uint64 in mail app db
+  * fixed invisible text parts in qterminal
+  * better config in mplayer
+  * qui utility to show QtMoko message boxes from shell
+  * support for armhf arch
+  * better pulseaudio config
+  * hack to restore brightness when POWER button is pressed
+
+ -- Radek Polak <psonek2@seznam.cz>  Fri, 28 Dec 2012 21:26:00 +0100
+
 qtmoko (51-1) unstable; urgency=low
 
   * upgrade to qt 4.8.3

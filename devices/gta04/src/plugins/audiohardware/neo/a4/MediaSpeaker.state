@@ -30,8 +30,8 @@ state.gta04 {
 		comment.dbmax 0
 		iface MIXER
 		name 'DAC2 Digital Fine Playback Volume'
-		value.0 51
-		value.1 51
+		value.0 63
+		value.1 63
 	}
 	control.4 {
 		comment.access 'read write'
@@ -230,7 +230,7 @@ state.gta04 {
 		comment.item.1 'Voice to twl4030'
 		iface MIXER
 		name 'Voice route'
-		value 'Voice to twl4030'
+		value 'Voice to SoC'
 	}
 	control.22 {
 		comment.access 'read write'

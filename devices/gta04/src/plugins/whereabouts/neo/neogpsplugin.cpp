@@ -31,7 +31,20 @@
 #include <qtopialog.h>
 
 /*
- This plugin only works for Goldelico's GTA04
+  This plugin uses "gpspipe -r" to get NMEA sentences out of GPSD,
+  then feeds those to QNmeaWhereabouts.  It should work on any
+  distribution where GPSD is running and successfully accessing the
+  GPS device.
+
+  The benefit of using GPSD, instead of reading the GPS device
+  directly, is that multiple clients can access GPS information at the
+  same time.  For example, GPS can be simultaneously used by a local
+  application such as NeronGPS, and exported over Bluetooth to another
+  device.
+
+  An alternative GPSD-based solution would be to use QGpsdWhereabouts
+  instead of QNmeaWhereabouts, but that would require updating
+  QGpsdWhereabouts for GPSD's new JSON-based protocol.
 */
 NeoGpsPlugin::NeoGpsPlugin(QObject * parent)
 :  QWhereaboutsPlugin(parent)
@@ -56,12 +69,12 @@ QWhereabouts *NeoGpsPlugin::create(const QString &)
     qLog(Hardware) << __PRETTY_FUNCTION__;
 
     reader = new QProcess(this);
-    reader->start("cat", QStringList() << "/dev/ttyO1", QIODevice::ReadWrite);
+    reader->start("gpspipe", QStringList() << "-r", QIODevice::ReadWrite);
 
     if (!reader->waitForStarted()) {
-        qWarning() << "couldnt start cat /dev/ttyO1: " + reader->errorString();
+        qWarning() << "Couldn't start gpspipe -r: " + reader->errorString();
         QMessageBox::warning(0, tr("GPS"),
-                             tr("Cannot open GPS device at /dev/ttyO1"),
+                             tr("Couldn't start gpspipe -r"),
                              QMessageBox::Ok, QMessageBox::Ok);
         delete reader;
         reader = 0;

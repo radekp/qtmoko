@@ -1,6 +1,11 @@
 #!/bin/sh
-update-rc.d klogd defaults
-update-rc.d sysklogd defaults
+if [ -f /etc/init.d/sysklogd ];
+then
+	update-rc.d klogd defaults
+	update-rc.d sysklogd defaults
+else
+        update-rc.d rsyslog defaults
+fi
 
 echo ""
 echo "+---------------------------------------+"

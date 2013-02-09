@@ -1663,9 +1663,12 @@ QMailStore::AttemptResult QMailStore::attemptUpdateMessagesStatus(const QMailMes
         {
             QString sql = "UPDATE mailmessages SET status = status %1 ? WHERE";
             QSqlQuery query(d->simpleQuery(sql.arg(set ? "|" : "&"),
-                                        QVariantList() << (set ? status : ~status),
-                                        modifiedMessageKey,
-                                        "updateMessagesMetaData status query"));
+					   QVariantList() <<
+					   (set
+					    ? status
+					    : (QMailMessageMetaData::All & ~status)),
+					   modifiedMessageKey,
+					   "updateMessagesMetaData status query"));
             if (query.lastError().type() != QSqlError::NoError)
                 return DatabaseFailure;
         }

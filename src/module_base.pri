@@ -17,6 +17,7 @@ PROJECTS*=\
     tools/dbmigrate \
     tools/dbmigrateservice \
     tools/qcop \
+    tools/qui \
     tools/qdawggen \
     plugins/qtopiacore/iconengines/qtopiaiconengine \
     plugins/qtopiacore/iconengines/qtopiasvgiconengine \
