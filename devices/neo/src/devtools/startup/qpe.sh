@@ -8,9 +8,6 @@ if [ ! -d /dev/pts ]; then
     modprobe joydev
 fi
 
-# Start pulse audio
-pulse.sh &
-
 rm -f /dev/input/mice
 echo '1' > /proc/sys/kernel/printk
 echo 1 > /sys/devices/platform/gta02-pm-bt.0/power_on

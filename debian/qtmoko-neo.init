@@ -47,8 +47,6 @@ do_stop()
 {
     rm -f /tmp/restart-qtopia
     killall -q qpe atd quicklauncher mediaserver mediaplayer sipagent telepathyagent
-    killall -q pulse.sh
-    killall -q pulseaudio
     return 0
 }
 
