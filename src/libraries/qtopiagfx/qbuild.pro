@@ -5,6 +5,7 @@ VERSION=4.0.0
 
 CONFIG+=qt embedded hide_symbols singleexec
 DEPENDS*=/src/3rdparty/libraries/easing::persisted
+LIBS += -ldl
 
 pkg [
     name=qtopiagfx

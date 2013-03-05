@@ -4,6 +4,7 @@ TARGET=packagemanager
 CONFIG+=qtopia singleexec quicklaunch
 enable_sxe:QTOPIA*=security
 MODULES*=tar md5
+LIBS += -lz
 
 STRING_LANGUAGE=en_US
 AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES

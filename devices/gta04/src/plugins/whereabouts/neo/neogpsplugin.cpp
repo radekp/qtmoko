@@ -59,6 +59,7 @@ NeoGpsPlugin::~NeoGpsPlugin()
         reader->terminate();
         if(!reader->waitForFinished(1000))
             reader->kill();
+        delete(reader);
     }
     
     system("/opt/qtmoko/bin/gps-poweroff.sh");

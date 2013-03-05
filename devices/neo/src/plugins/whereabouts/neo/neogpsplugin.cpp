@@ -66,12 +66,12 @@ QWhereabouts *NeoGpsPlugin::create(const QString &source)
     }
 
     reader = new QProcess(this);
-    reader->start("cat", QStringList() << "/dev/ttySAC1", QIODevice::ReadWrite);
+    reader->start("gpspipe", QStringList() << "-r", QIODevice::ReadWrite);
 
     if (!reader->waitForStarted()) {
-        qWarning() << "couldnt start cat /dev/ttySAC1: " + reader->errorString();
+        qWarning() << "couldnt start gpspipe -r: " + reader->errorString();
         QMessageBox::warning(0, tr("GPS"),
-                             tr("Cannot open GPS device at /dev/ttySAC1"),
+                             tr("Cannot start gpspipe -r"),
                              QMessageBox::Ok, QMessageBox::Ok);
         delete reader;
         reader = 0;

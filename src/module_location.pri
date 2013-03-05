@@ -1,4 +1,5 @@
 #This file contains projects that make up the Location module.
 
 PROJECTS*=\
-    libraries/qtopiawhereabouts 
+    libraries/qtopiawhereabouts \
+    applications/qgpsholder

@@ -1,3 +1,17 @@
+qtmoko (54-1) unstable; urgency=low
+
+  * gta02 - increase modem gsm net reg timeout so it registers ok
+
+ -- Radek Polak <psonek2@seznam.cz>  Mon, 04 Mar 2013 09:02:00 +0100
+
+qtmoko (53-1) unstable; urgency=low
+
+  * fix DISPLAY in QX and Xfbdev incocation (Neil Jerram)
+  * use GPSD for providing GPS data (Neil Jerram)
+  * qgpsholder program for holding gps open
+
+ -- Radek Polak <psonek2@seznam.cz>  Tue, 12 Feb 2013 19:09:00 +0100
+
 qtmoko (52-1) unstable; urgency=low
 
   * media alsa state now saves 5mA

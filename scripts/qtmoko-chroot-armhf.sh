@@ -1,4 +1,4 @@
-# Script for debian squeeze chroot with all dependencies for QtMoko
+# Script for debian wheezy/armhf chroot with all dependencies for QtMoko
 # For the first time it installs the chroot later it just enters it
 
 # set -o verbose
@@ -34,7 +34,7 @@ then
     fi
 
     echo "Installing chroot packages"
-    until cdebootstrap --flavour=minimal --include=build-essential,git,openssh-client,ccache,locales,procps,psmisc,libxext-dev,libasound2-dev,libdbus-1-dev,libssl-dev,libts-dev,libbluetooth-dev,libxtst-dev,libpng12-dev,libjpeg8-dev,libv4l-dev,libspeexdsp-dev,libglib2.0-dev,libsqlite3-dev,quilt,libgstreamer0.10-dev,libgstreamer-plugins-base0.10-dev,libpulse-dev squeeze ../qtmoko-chroot http://cdn.debian.net/debian/; do
+    until cdebootstrap --flavour=minimal --include=build-essential,git,openssh-client,ccache,locales,procps,psmisc,libxext-dev,libasound2-dev,libdbus-1-dev,libssl-dev,libts-dev,libbluetooth-dev,libxtst-dev,libpng12-dev,libjpeg8-dev,libv4l-dev,libspeexdsp-dev,libglib2.0-dev,libsqlite3-dev,quilt,libgstreamer0.10-dev,libgstreamer-plugins-base0.10-dev,libpulse-dev,wget,curl wheezy ../qtmoko-chroot http://cdn.debian.net/debian/; do
 	:
     done
 fi
@@ -66,22 +66,31 @@ then
     mount -o bind /var/run/ ../qtmoko-chroot/var/run
 fi
 
-if [ ! -e ../qtmoko-chroot/usr/bin/arm-linux-gnueabi-gcc ]
+if [ ! -e ../qtmoko-chroot/usr/bin/arm-linux-gnueabihf-gcc-4.7 ]
 then
     cat > ../qtmoko-chroot/finish_chroot_install.sh <<__END__
-#!/bin/bash    
+#!/bin/bash
 echo "Installing emdebian toolchain"
 apt-get update
 apt-get install emdebian-archive-keyring
-echo "deb http://cdn.debian.net/debian squeeze main contrib non-free" > /etc/apt/sources.list
-echo "deb http://www.emdebian.org/debian squeeze main" >> /etc/apt/sources.list
-echo "deb http://backports.debian.org/debian-backports squeeze-backports main" >> /etc/apt/sources.list
+echo "deb http://cdn.debian.net/debian wheezy main contrib non-free" > /etc/apt/sources.list
+echo "deb http://www.emdebian.org/debian unstable main" >> /etc/apt/sources.list
 apt-get update
-apt-get install g++-4.4-arm-linux-gnueabi
+apt-get install g++-4.7-arm-linux-gnueabihf
 
 echo "Installing xapt and ARM qtmoko dependencies"
 apt-get install xapt
-xapt -a armel -m libxext-dev libasound2-dev libdbus-1-dev libssl-dev libts-dev libbluetooth-dev libxtst-dev libpng12-dev libjpeg8-dev libv4l-dev libspeexdsp-dev libglib2.0-dev libsqlite3-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libvorbis-dev libpulse-dev
+xapt -a armhf -m libxext-dev libasound2-dev libdbus-1-dev libssl-dev libts-dev libbluetooth-dev libxtst-dev libpng12-dev libjpeg8-dev libv4l-dev libspeexdsp-dev libglib2.0-dev libsqlite3-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libvorbis-dev libpulse-dev libssl-dev
+pushd /usr/arm-linux-gnueabihf/lib/
+ln -s ld-linux-armhf.so.3 ld-linux.so.3
+popd
+
+# For some reason libpulsecommon is not fetched by xapt, so do it manually
+cd /tmp
+curl -O http://ftp.de.debian.org/debian/pool/main/p/pulseaudio/libpulse0_2.0-6_armhf.deb
+dpkg -x libpulse0_2.0-6_armhf.deb .
+cp usr/lib/arm-linux-gnueabihf/pulseaudio/libpulsecommon-2.0.so /usr/arm-linux-gnueabihf/lib/
+
 
 echo "export PATH=/usr/lib/ccache:\$PATH" >> /root/.bashrc
 echo "PS1='qtmoko-chroot:\w\\\$ '" >> /root/.bashrc

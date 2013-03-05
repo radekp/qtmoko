@@ -3,7 +3,7 @@ prefix=/root/qte/build
 Name: Qtgui
 Description: Qtgui Library
 Version: 4.8.3
-Libs: -L/root/qte/build/sdk/qtopiacore/target/lib -L/root/qte/build/sdk/lib -lQtGui -lqtopia -lqtopiagfx -lqtopiabase
-Cflags: -fno-rtti -DQT_SHARED -I/root/qte/build/sdk/qtopiacore/target/include -I/root/qte/build/sdk/qtopiacore/target/include/QtGui -I/root/qte/build/sdk/include/qtopia -I/root/qte/build/sdk/include/qtopiabase
+Libs: -L/root/qte/build/sdk/qtopiacore/target/lib -L/root/qte/build/sdk/lib -lQtGui -lqtopia -lqtopiagfx -lqtopiabase -lqtopiawhereabouts
+Cflags: -fno-rtti -DQT_SHARED -I/root/qte/build/sdk/qtopiacore/target/include -I/root/qte/build/sdk/qtopiacore/target/include/QtGui -I/root/qte/build/sdk/include/qtopia -I/root/qte/build/sdk/include/qtopiabase -I/root/qte/build/sdk/include/qtopiawhereabouts
 Requires: QtCore
 

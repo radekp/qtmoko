@@ -175,7 +175,9 @@ void LoggingView::init()
         return;
     }
     
-    if (QFile("/var/run/syslogd.pid").exists() || QMessageBox::question
+    if (QFile("/var/run/rsyslogd.pid").exists() ||
+        QFile("/var/run/syslogd.pid").exists() ||
+        QMessageBox::question
         (this, tr("Log"), tr("Syslogd seems to be stopped, enable it?"),
          QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
     {

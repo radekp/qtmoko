@@ -601,7 +601,7 @@ NeoModemService::NeoModemService
     chat( "AT+CREG=2" );
     chat( "AT+CGREG=2" );
 
-    QTimer::singleShot(200, this, SLOT(sendRego()));
+    QTimer::singleShot(40000, this, SLOT(sendRego()));
 }
 
 NeoModemService::~NeoModemService()
