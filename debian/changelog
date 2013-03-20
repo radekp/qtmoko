@@ -1,4 +1,10 @@
-qtmoko (54-1) unstable; urgency=low
+qtmoko (55-1) unstable; urgency=low
+
+  * gta02 - switch back to cruxus media engine
+
+ -- Radek Polak <psonek2@seznam.cz>  Mon, 18 Mar 2013 19:55:00 +0100
+
+ qtmoko (54-1) unstable; urgency=low
 
   * gta02 - increase modem gsm net reg timeout so it registers ok
 

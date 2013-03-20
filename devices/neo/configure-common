@@ -11,8 +11,8 @@
 
 # Features that are controlled via modules.
 
-#-add-mediaengine cruxus
--add-mediaengine gstreamer
+-add-mediaengine cruxus
+#-add-mediaengine gstreamer
 -add-module bluetooth
 -add-module cell
 -add-module connectivity

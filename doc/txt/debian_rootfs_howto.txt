@@ -295,6 +295,7 @@ nano /media/card/etc/default/gpsd
 
 START_DAEMON="true"
 DEVICES="/dev/ttySAC1"
+GPSD_OPTIONS="-b"
 
 Step 7.5 - dash
 ===============

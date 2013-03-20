@@ -34,7 +34,7 @@ then
     fi
 
     echo "Installing chroot packages"
-    until cdebootstrap --flavour=minimal --include=build-essential,git,openssh-client,ccache,locales,procps,psmisc,libxext-dev,libasound2-dev,libdbus-1-dev,libssl-dev,libts-dev,libbluetooth-dev,libxtst-dev,libpng12-dev,libjpeg8-dev,libv4l-dev,libspeexdsp-dev,libglib2.0-dev,libsqlite3-dev,quilt,libgstreamer0.10-dev,libgstreamer-plugins-base0.10-dev,libpulse-dev squeeze ../qtmoko-chroot http://cdn.debian.net/debian/; do
+    until cdebootstrap --flavour=minimal --include=build-essential,git,openssh-client,ccache,locales,procps,psmisc,libxext-dev,libasound2-dev,libdbus-1-dev,libssl-dev,libts-dev,libbluetooth-dev,libxtst-dev,libpng12-dev,libjpeg8-dev,libv4l-dev,libspeexdsp-dev,libglib2.0-dev,libsqlite3-dev,quilt,libgstreamer0.10-dev,libgstreamer-plugins-base0.10-dev,libpulse-dev,libgps-dev squeeze ../qtmoko-chroot http://cdn.debian.net/debian/; do
 	:
     done
 fi
@@ -81,7 +81,7 @@ apt-get install g++-4.4-arm-linux-gnueabi
 
 echo "Installing xapt and ARM qtmoko dependencies"
 apt-get install xapt
-xapt -a armel -m libxext-dev libasound2-dev libdbus-1-dev libssl-dev libts-dev libbluetooth-dev libxtst-dev libpng12-dev libjpeg8-dev libv4l-dev libspeexdsp-dev libglib2.0-dev libsqlite3-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libvorbis-dev libpulse-dev
+xapt -a armel -m libxext-dev libasound2-dev libdbus-1-dev libssl-dev libts-dev libbluetooth-dev libxtst-dev libpng12-dev libjpeg8-dev libv4l-dev libspeexdsp-dev libglib2.0-dev libsqlite3-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libvorbis-dev libpulse-dev libgps-dev
 
 echo "export PATH=/usr/lib/ccache:\$PATH" >> /root/.bashrc
 echo "PS1='qtmoko-chroot:\w\\\$ '" >> /root/.bashrc

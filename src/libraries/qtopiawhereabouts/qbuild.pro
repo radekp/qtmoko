@@ -4,6 +4,7 @@ MODULE_NAME=qtopiawhereabouts
 VERSION=4.0.0
 
 CONFIG+=qtopia hide_symbols singleexec
+LIBS += -lgps
 
 STRING_LANGUAGE=en_US
 AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES

@@ -34,13 +34,9 @@
 #include "qwhereabouts.h"
 #include "qwhereaboutsupdate.h"
 
-#include <QAbstractSocket>
+#include <gps.h>
 #include <QHostAddress>
-#include <QQueue>
-#include <QMetaType>
 
-class QByteArray;
-class QTcpSocket;
 class QBasicTimer;
 class QTimerEvent;
 
@@ -49,15 +45,10 @@ class QGpsdWhereabouts : public QWhereabouts
     Q_OBJECT
 
 public:
-    enum ActionWhenConnected {
-        PeriodicUpdates,
-        SingleUpdate
-    };
-
     explicit QGpsdWhereabouts(QObject *parent = 0,
                              const QHostAddress &addr = QHostAddress::LocalHost,
                              quint16 port = 2947);
-    ~QGpsdWhereabouts();
+    virtual ~QGpsdWhereabouts();
 
 public slots:
     virtual void startUpdates();
@@ -67,25 +58,23 @@ public slots:
 protected:
     void timerEvent(QTimerEvent *event);
 
-private slots:
-    void socketError(QAbstractSocket::SocketError error);
-    void socketStateChanged(QAbstractSocket::SocketState state);
-    void socketReadyRead();
-
 private:
-    void initialize();
-    void parseDeviceStatus(const QByteArray &status);
-    void parseFix(const QByteArray &fix);
-
-    QHostAddress m_addr;
+    QHostAddress m_address;
     quint16 m_port;
-    QTcpSocket *m_sock;
+    bool active;
+    bool emit_frequent; /* shall we emit frequent updates */
+    bool emit_oneshot;  /* shall we emit next update only */
+    int  elapsed_time;  /* calculate time since last emit */
+    struct gps_data_t gpsdata;
+    struct gps_data_t *gps_data;
+
     QBasicTimer *m_queryTimer;
-    QQueue<ActionWhenConnected> m_actionsWhenConnected;
+
+    void parseFix(struct gps_data_t * fix);
+    bool activateGps();
+    void deactivateGps();
 
     Q_DISABLE_COPY(QGpsdWhereabouts)
 };
-
-Q_DECLARE_METATYPE(QGpsdWhereabouts::ActionWhenConnected)
 
 #endif

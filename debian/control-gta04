@@ -3,7 +3,7 @@ Package: qtmoko-gta04
 Provides: qtmoko
 Conflicts: qtmoko
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libdbus-1-3, bluez-alsa, ttf-dejavu, psmisc, alsa-utils, ntpdate, gpsd, gpsd-clients
+Depends: ${shlibs:Depends}, ${misc:Depends}, libdbus-1-3, bluez-alsa, ttf-dejavu, psmisc, alsa-utils, ntpdate, gpsd, gpsd-clients, libgps20
 Description: Smartphone environment based on QT Extended - GTA04 flavor
  QtMoko provides a fully integrated phone stack plus smartphone environment
  for Linux based smartphones.

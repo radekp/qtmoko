@@ -228,6 +228,18 @@ rm -rf .udev
 rm /media/card/etc/network/run
 mkdir /media/card/etc/network/run
 
+Step 6.5 - configure gpsd
+=========================
+
+* We use gpsd and it has to be configured for Freerunner:
+
+nano /media/card/etc/default/gpsd
+
+* Make sure you have these values:
+
+START_DAEMON="true"
+DEVICES="/dev/ttyO1"
+GPSD_OPTIONS="-b"
 Step 7.5 - dash
 ===============
 
