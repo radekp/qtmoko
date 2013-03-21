@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include "gpsdwhereabouts_p.h"
+#include "qgpsdwhereabouts.h"
 
 #include <gps.h>
 #include <errno.h>

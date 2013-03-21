@@ -26,10 +26,10 @@ HEADERS=\
     qwhereaboutsupdate.h\
     qwhereaboutsfactory.h\
     qwhereaboutsplugin.h\
-    qnmeawhereabouts.h
+    qnmeawhereabouts.h\
+    qgpsdwhereabouts.h\
 
 PRIVATE_HEADERS=\
-    gpsdwhereabouts_p.h\
     qnmeawhereabouts_p.h
 
 SOURCES=\

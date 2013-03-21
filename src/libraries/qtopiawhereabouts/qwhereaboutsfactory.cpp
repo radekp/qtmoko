@@ -19,7 +19,7 @@
 
 #include "qwhereaboutsfactory.h"
 #include "qwhereaboutsplugin.h"
-#include "gpsdwhereabouts_p.h"
+#include "qgpsdwhereabouts.h"
 
 #include <QPluginManager>
 #include <QSettings>
