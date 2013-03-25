@@ -133,8 +133,8 @@ Step 4.1 - stable device nodes for UMTS
   We will use udev to create stable symlinks for us:
 
 cd /media/card/etc/udev/rules.d
-wget https://raw.github.com/radekp/linux-2.6/v3.7-gta04-qtmoko-v52/GTA04/udev-rules/hso.rules
-wget https://raw.github.com/radekp/linux-2.6/v3.7-gta04-qtmoko-v52/GTA04/udev-rules/input.rules
+wget https://raw.github.com/radekp/linux-2.6/v3.7-gta04-qtmoko-v55/GTA04/udev-rules/hso.rules
+wget https://raw.github.com/radekp/linux-2.6/v3.7-gta04-qtmoko-v55/GTA04/udev-rules/input.rules
 
 Step 4.2 - charging udev rules
 ==============================
@@ -273,7 +273,7 @@ Step 8 - install QtMoko
 
 * I use qemu armhf host for building qtmoko package. It should be as simple as
 
-git checkout v52
+git checkout v55
 dpkg-buildpackage
 
 * Note that you may need to install some dependencies before building:
@@ -293,10 +293,10 @@ git submodule update --init
 * Install it
 
 chroot /media/card/
-wget http://qtmoko.sourceforge.net/debian/gta04/armhf/qtmoko-gta04_52-1_armhf.deb
-dpkg -i qtmoko-gta04_52-1_armhf.deb
+wget http://qtmoko.sourceforge.net/debian/gta04/armhf/qtmoko-gta04_55-1_armhf.deb
+dpkg -i qtmoko-gta04_55-1_armhf.deb
 update-rc.d qtmoko-gta04 defaults
-rm qtmoko-gta04_52-1_armhf.deb
+rm qtmoko-gta04_55-1_armhf.deb
 exit
 killall qpe.sh                  # recent versions start qtmoko after install, so kill it
 killall pulse.sh                # kill pulseaudio - in qemu it just eats cpu
@@ -346,7 +346,7 @@ http://github.com/radekp/linux-2.6/
 
 * Checkout branch for your qtmoko version:
 
-git checkout v3.7-gta04-qtmoko-v52
+git checkout v3.7-gta04-qtmoko-v55
 
 * Create package in buildhost:
 
@@ -359,9 +359,9 @@ dpkg-buildpackage
 * Install kernel image:
 
 chroot /media/card
-wget http://qtmoko.sourceforge.net/debian/gta04/armhf/linux-image-3.7-qtmoko-gta04_52-1_armhf.deb
-dpkg -i linux-image-3.7-qtmoko-gta04_52-1_armhf.deb
-rm linux-image-3.7-qtmoko-gta04_52-1_armhf.deb
+wget http://qtmoko.sourceforge.net/debian/gta04/armhf/linux-image-3.7-qtmoko-gta04_55-1_armhf.deb
+dpkg -i linux-image-3.7-qtmoko-gta04_55-1_armhf.deb
+rm linux-image-3.7-qtmoko-gta04_55-1_armhf.deb
 exit
 
 * Install bootargs.scr so for correct kernel cmdline arguments:
@@ -487,7 +487,7 @@ Step 10 - release tarball
 =========================
 
 cd /media/card
-tar -czvf ../qtmoko-debian-gta04-v52-armhf.tar.gz .
+tar -czvf ../qtmoko-debian-gta04-v55-armhf.tar.gz .
 
 Step 11 - make ubifs image
 ==========================
@@ -541,12 +541,12 @@ __END__
 
 
 mkfs.ubifs -r /media/card -m 2048 -e 129024 -c 4007 -o ubifs.img
-ubinize -o qtmoko-debian-gta04-v52.ubi -m 2048 -p 128KiB -s 512 ubinize.cfg
+ubinize -o qtmoko-debian-gta04-v55.ubi -m 2048 -p 128KiB -s 512 ubinize.cfg
 rm ubifs.img
 
 * To install it on the device you need to boot from SD and:
 
-ubiformat /dev/mtd4 -f /qtmoko-debian-gta04-v52.ubi
+ubiformat /dev/mtd4 -f /qtmoko-debian-gta04-v55.ubi
 
 * To check that it's mountable:
 
@@ -562,8 +562,8 @@ Step 12 - jffs2 - not using anymore
 * Create jffs2 image: 
 
 cd /media
-mkfs.jffs2 -o qtmoko-debian-gta04-nosum-v52.jffs2 -e 0x20000 -n -d/media/card
-sumtool -n -e 0x20000 -p -i qtmoko-debian-gta04-nosum-v52.jffs2 -o qtmoko-debian-gta04-v52.jffs2
+mkfs.jffs2 -o qtmoko-debian-gta04-nosum-v55.jffs2 -e 0x20000 -n -d/media/card
+sumtool -n -e 0x20000 -p -i qtmoko-debian-gta04-nosum-v55.jffs2 -o qtmoko-debian-gta04-v55.jffs2
 
 * Create tarbal for NAND:
 

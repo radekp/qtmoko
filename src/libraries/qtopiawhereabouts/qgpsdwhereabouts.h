@@ -40,7 +40,7 @@
 class QBasicTimer;
 class QTimerEvent;
 
-class QGpsdWhereabouts : public QWhereabouts
+class QTOPIAWHEREABOUTS_EXPORT QGpsdWhereabouts : public QWhereabouts
 {
     Q_OBJECT
 

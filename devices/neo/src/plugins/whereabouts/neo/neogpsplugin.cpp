@@ -19,17 +19,11 @@
 
 #include "neogpsplugin.h"
 
-#include <QFile>
-#include <QSettings>
-#include <QSocketNotifier>
 #include <QDebug>
-
 #include <QWhereabouts>
-#include <QNmeaWhereabouts>
-#include <QMessageBox>
+#include <qgpsdwhereabouts.h>
 #include <qtopialog.h>
 
-#define NMEA_GPS_DEVICE "/dev/ttySAC1"
 /*
  This plugin only works for Neo neo Freerunner
 */
@@ -43,44 +37,14 @@ NeoGpsPlugin::NeoGpsPlugin(QObject *parent)
 
 NeoGpsPlugin::~NeoGpsPlugin()
 {
-    if(reader) {
-        reader->terminate();
-        if(!reader->waitForFinished(1000))
-            reader->kill();
-    }
-    
     system("/opt/qtmoko/bin/gps-poweroff.sh");
 }
 
 QWhereabouts *NeoGpsPlugin::create(const QString &source)
 {
     qLog(Hardware) << __PRETTY_FUNCTION__;
-    QString path = source;
-    if (path.isEmpty()) {
-#ifdef NMEA_GPS_DEVICE
-        path = NMEA_GPS_DEVICE;
-#endif
-        QSettings cfg("Trolltech",  "Whereabouts");
-        cfg.beginGroup("Hardware");
-        path = cfg.value("Device", path).toString();
-    }
 
-    reader = new QProcess(this);
-    reader->start("gpspipe", QStringList() << "-r", QIODevice::ReadWrite);
-
-    if (!reader->waitForStarted()) {
-        qWarning() << "couldnt start gpspipe -r: " + reader->errorString();
-        QMessageBox::warning(0, tr("GPS"),
-                             tr("Cannot start gpspipe -r"),
-                             QMessageBox::Ok, QMessageBox::Ok);
-        delete reader;
-        reader = 0;
-        return 0;
-    }
-
-    QNmeaWhereabouts *whereabouts =
-        new QNmeaWhereabouts(QNmeaWhereabouts::RealTimeMode, this);
-    whereabouts->setSourceDevice(reader);
+    QGpsdWhereabouts *whereabouts = new QGpsdWhereabouts;
 
     return whereabouts;
 }

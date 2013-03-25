@@ -20,18 +20,17 @@
 
 #include "neogpsplugin.h"
 
-#include <QFile>
-#include <QSettings>
 #include <QDebug>
-
-#include <QTimer>
 #include <QWhereabouts>
-#include <QNmeaWhereabouts>
-#include <QMessageBox>
+#include <qgpsdwhereabouts.h>
 #include <qtopialog.h>
 
 /*
- This plugin only works for Goldelico's GTA04
+  The benefit of using GPSD, instead of reading the GPS device
+  directly, is that multiple clients can access GPS information at the
+  same time.  For example, GPS can be simultaneously used by a local
+  application such as NeronGPS, and exported over Bluetooth to another
+  device.
 */
 NeoGpsPlugin::NeoGpsPlugin(QObject * parent)
 :  QWhereaboutsPlugin(parent)
@@ -42,12 +41,6 @@ NeoGpsPlugin::NeoGpsPlugin(QObject * parent)
 
 NeoGpsPlugin::~NeoGpsPlugin()
 {
-    if(reader) {
-        reader->terminate();
-        if(!reader->waitForFinished(1000))
-            reader->kill();
-    }
-    
     system("/opt/qtmoko/bin/gps-poweroff.sh");
 }
 
@@ -55,25 +48,7 @@ QWhereabouts *NeoGpsPlugin::create(const QString &)
 {
     qLog(Hardware) << __PRETTY_FUNCTION__;
 
-    reader = new QProcess(this);
-    reader->start("cat", QStringList() << "/dev/ttyO1", QIODevice::ReadWrite);
-
-    if (!reader->waitForStarted()) {
-        qWarning() << "couldnt start cat /dev/ttyO1: " + reader->errorString();
-        QMessageBox::warning(0, tr("GPS"),
-                             tr("Cannot open GPS device at /dev/ttyO1"),
-                             QMessageBox::Ok, QMessageBox::Ok);
-        delete reader;
-        reader = 0;
-        return 0;
-    }
-
-    QNmeaWhereabouts *whereabouts =
-        new QNmeaWhereabouts(QNmeaWhereabouts::RealTimeMode, this);
-    whereabouts->setSourceDevice(reader);
-
-    if (!reader->waitForReadyRead(3000))
-        system("/opt/qtmoko/bin/gps-toggle.sh");
+    QGpsdWhereabouts *whereabouts = new QGpsdWhereabouts;
 
     return whereabouts;
 }
