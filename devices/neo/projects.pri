@@ -26,7 +26,6 @@ PROJECTS*=\
     3rdparty/applications/gta02-agps/c \
     3rdparty/applications/nerongps \
     3rdparty/applications/arora/src \
-    3rdparty/applications/yberbrowser \
     3rdparty/applications/neocontrol \
     3rdparty/applications/raptor \
     3rdparty/applications/autorotation
