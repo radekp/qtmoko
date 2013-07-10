@@ -90,7 +90,7 @@ bool FicLinuxInputEventHandler::internalOpen(unsigned request, int length, const
     struct input_id deviceId;
 
     // Find a suitable device, might want to add caching
-    QDir dir(QLatin1String("/dev/input/"), QLatin1String("event*"));
+    QDir dir(QLatin1String("/dev/"), QLatin1String("event*"));
     foreach(QFileInfo fileInfo, dir.entryInfoList(QDir::Files|QDir::System)) {
         m_fd = ::open(QFile::encodeName(fileInfo.filePath()), O_RDONLY|O_NDELAY);
         if (m_fd < 0)

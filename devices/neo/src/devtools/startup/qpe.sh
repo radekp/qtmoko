@@ -8,7 +8,7 @@ if [ ! -d /dev/pts ]; then
     modprobe joydev
 fi
 
-rm -f /dev/input/mice
+rm -f /dev/mice
 echo '1' > /proc/sys/kernel/printk
 echo 1 > /sys/devices/platform/gta02-pm-bt.0/power_on
 echo 0 > /sys/devices/virtual/graphics/fbcon/cursor_blink
