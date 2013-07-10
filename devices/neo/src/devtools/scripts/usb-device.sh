@@ -1,3 +1,7 @@
 #!/bin/sh
-echo 0 > /sys/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-gpio.0/reg-fixed-voltage.2/gta02-pm-usbhost.0/power_on
-echo device > /sys/devices/platform/s3c2410-ohci/usb_mode
+if [ -f /sys/class/i2c-adapter/i2c-0/0-0073/neo1973-pm-host.0/hostmode ]; then
+echo 0 > /sys/class/i2c-adapter/i2c-0/0-0073/neo1973-pm-host.0/hostmode
+fi
+if [ -f /sys/devices/platform/s3c-ohci/usb_mode ]; then
+echo device > /sys/devices/platform/s3c-ohci/usb_mode
+fi

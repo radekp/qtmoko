@@ -211,7 +211,7 @@ QxMainWindow::~QxMainWindow()
 #ifdef QTOPIA
 static void gpsPower(const char *powerStr)
 {
-    QFile f("/sys/devices/platform/gta02-pm-gps.0/power_on");
+    QFile f("/sys/bus/platform/devices/neo1973-pm-gps.0/power_on");
     f.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     f.write(powerStr);
     f.close();

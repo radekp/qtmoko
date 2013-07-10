@@ -1367,18 +1367,18 @@ void QMplayer::setRes(int xy)
 {
 #ifdef QT_QWS_NEO
     if (xy == 320240 || xy == 640480) {
-        QFile f("/sys/class/lcd/jbt6k74-lcd/device/resolution");
+        QFile f("/sys/bus/spi/devices/spi2.0/state");
         f.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
         if (xy == 320240) {
             QProcess p(this);
             p.start("fbset", QStringList("qvga"));
             p.waitForFinished(5000);
-            f.write("qvga");
+            f.write("qvga-normal");
         } else if (xy == 640480) {
             QProcess p(this);
             p.start("fbset", QStringList("vga"));
             p.waitForFinished(5000);
-            f.write("vga");
+            f.write("normal");
         }
         f.close();
     }

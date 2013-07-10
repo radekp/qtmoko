@@ -36,7 +36,7 @@
 
 QTOPIABASE_EXPORT int qpe_sysBrightnessSteps()
 {
-    QFile f("/sys/class/backlight/pcf50633-backlight/max_brightness");
+    QFile f("/sys/class/backlight/gta02-bl/max_brightness");
     if(!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "qpe_sysBrightnessSteps: " + f.errorString();
         return 0;
@@ -62,7 +62,7 @@ QTOPIABASE_EXPORT void qpe_setBrightness(int b)
         b = brightessSteps;
     }
 
-    QFile f("/sys/class/backlight/pcf50633-backlight/brightness");
+    QFile f("/sys/class/backlight/gta02-bl/brightness");
     if(!f.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
         qWarning() << "qpe_setBrightness: " + f.errorString();
 	return;
