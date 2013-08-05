@@ -4,8 +4,9 @@ qtmoko (56-1) unstable; urgency=low
   * gta04 - share-gprs.sh fix to use hso0 interface
   * fix bluetooth segfault when there is no adapter (Ivan Matveev)
   * fixes in FBReader
+  * gta02 changes for old kernel 2.6.29
 
- -- Radek Polak <psonek2@seznam.cz>  Mon, 18 Mar 2013 19:55:00 +0100
+ -- Radek Polak <psonek2@seznam.cz>  Fri, 02 Jul 2013 09:27:00 +0100
 
 qtmoko (55-1) unstable; urgency=low
 

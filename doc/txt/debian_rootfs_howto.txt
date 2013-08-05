@@ -336,7 +336,7 @@ Step 8 - install QtMoko
 
 * I use qemu armel host for building qtmoko package. It should be as simple as
 
-git checkout v55
+git checkout v56
 dpkg-buildpackage
 
 * Note that you may need to install some dependencies before building:
@@ -356,10 +356,10 @@ git submodule update --init
 * Install it
 
 chroot /media/card/
-wget http://qtmoko.sourceforge.net/debian/gta02/qtmoko-neo_55-1_armel.deb
-dpkg -i qtmoko-neo_55-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/gta02/qtmoko-neo_56-1_armel.deb
+dpkg -i qtmoko-neo_56-1_armel.deb
 update-rc.d qtmoko-neo defaults
-rm qtmoko-neo_55-1_armel.deb
+rm qtmoko-neo_56-1_armel.deb
 exit
 killall qpe.sh                  # recent versions start qtmoko after install, so kill it
 rm -rf /media/card/home/root/*  # remove all stuff created by qpe
@@ -395,7 +395,7 @@ http://github.com/radekp/linux-2.6/
 
 * Checkout branch for your qtmoko version:
 
-git checkout v2.6.34-gta02-qtmoko-v55
+git checkout v2.6.34-gta02-qtmoko-v56
 
 * Create package in buildhost:
 
@@ -408,9 +408,9 @@ dpkg-buildpackage
 * Install kernel image:
 
 chroot /media/card
-wget http://qtmoko.sourceforge.net/debian/gta02/linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
-dpkg -i linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
-rm linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/gta02/linux-image-2.6.29-qtmoko-gta02_56-1_armel.deb
+dpkg -i linux-image-2.6.29-qtmoko-gta02_56-1_armel.deb
+rm linux-image-2.6.29-qtmoko-gta02_56-1_armel.deb
 exit
 
 * Create boot args and symlink for qi:
@@ -478,7 +478,7 @@ Step 10 - release tarball
 =========================
 
 cd /media/card
-tar -czvf ../qtmoko-debian-gta02-v55.tar.gz .
+tar -czvf ../qtmoko-debian-gta02-v56.tar.gz .
 
 Step 11 - make ubifs images
 ===========================
@@ -529,7 +529,7 @@ vol_flags=autoresize
 __END__
 
 mkfs.ubifs -r /media/card -o qtmoko-debian.ubifs -x zlib -m 2048 -e 126976 -c 2047
-ubinize -o qtmoko-debian-gta02-v55.ubi -m 2048 -p 128KiB -s 2048 -O 2048 ubinize.cfg
+ubinize -o qtmoko-debian-gta02-v56.ubi -m 2048 -p 128KiB -s 2048 -O 2048 ubinize.cfg
 rm qtmoko-debian.ubifs
 
 Step 12 - jffs2 image (not using anymore)
@@ -537,11 +537,19 @@ Step 12 - jffs2 image (not using anymore)
 
 * Same first 2 steps as with ubi (copy&delete /boot)
 
-* Uncomment the /var/cache/apt mount in /media/card/etc/fstab
+* Edit fstab:
+
+nano /media/card/etc/fstab
+
+* Make first line read this:
+
+/dev/mtdblock0 /         jffs2   defaults                           0 0
+
+* and uncomment the /var/cache/apt mount in /media/card/etc/fstab
 
 * Make jffs2 image:
 
-mkfs.jffs2 --pad=0x700000 -o qtmoko-debian.jffs2 -e 0x20000 -n -d/media/card
+mkfs.jffs2 --pad=0x700000 -o qtmoko-debian-gta02-v56.jffs2 -e 0x20000 -n -d/media/card
 
 
 
