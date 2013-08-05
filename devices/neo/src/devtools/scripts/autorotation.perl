@@ -5,7 +5,7 @@ $y = 0;
 $z = 0;
 
 
-$secondsensorfile = "/dev/event3";
+$secondsensorfile = "/dev/input/event3";
 #open file in binary mode
 open FILE, $secondsensorfile;
 binmode FILE;

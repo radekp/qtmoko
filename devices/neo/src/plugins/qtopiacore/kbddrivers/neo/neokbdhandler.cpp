@@ -90,7 +90,7 @@ bool FicLinuxInputEventHandler::internalOpen(unsigned request, int length, const
     struct input_id deviceId;
 
     // Find a suitable device, might want to add caching
-    QDir dir(QLatin1String("/dev/"), QLatin1String("event*"));
+    QDir dir(QLatin1String("/dev/input/"), QLatin1String("event*"));
     foreach(QFileInfo fileInfo, dir.entryInfoList(QDir::Files|QDir::System)) {
         m_fd = ::open(QFile::encodeName(fileInfo.filePath()), O_RDONLY|O_NDELAY);
         if (m_fd < 0)
@@ -145,7 +145,7 @@ NeoKbdHandler::NeoKbdHandler()
     setObjectName( "Neo Keypad Handler" );
 
     auxHandler = new FicLinuxInputEventHandler(this);
-    ok = auxHandler->openByName("gpio-keys") ||
+    ok = auxHandler->openByName("Neo1973 Buttons") ||
          auxHandler->openByPhysicalBus("neo1973kbd/input0");
 
     if(ok) {
@@ -158,8 +158,7 @@ NeoKbdHandler::NeoKbdHandler()
     }
 
     powerHandler = new FicLinuxInputEventHandler(this);
-    ok = powerHandler->openByName("PCF50633 PMU events") ||
-         powerHandler->openByName("FIC Neo1973 PMU events");
+    ok = powerHandler->openByName("PCF50633 PMU events");
 
     if (ok) {
         connect(powerHandler, SIGNAL(inputEvent(struct input_event&)),
