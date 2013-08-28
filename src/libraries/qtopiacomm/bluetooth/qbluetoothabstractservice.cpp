@@ -266,6 +266,9 @@ void QBluetoothAbstractServicePrivate::handleError(const QDBusError &error)
 
 quint32 QBluetoothAbstractServicePrivate::registerRecord(const QString &record)
 {
+    if(!m_ifc)
+       return 0;
+
     QDBusReply<quint32> reply;
     QList<QVariant> args;
     args << record;

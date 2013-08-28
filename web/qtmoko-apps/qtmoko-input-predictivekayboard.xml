@@ -1,0 +1,18 @@
+<package
+      name="qtmoko-input-predictivekeyboard"
+      version="1-1"
+      title="Predictive keyboard"
+      summary="Finger friendly predictive keyboard"
+      category="input"
+      >
+          <tag>keyboard</tag>
+          <details>
+          <br/>
+          <h3>Notes</h3>
+          <ul>
+          <li>You need to restart QtMoko after install</li>
+          <li>Currently makes QtMoko unable to start, need to figure out why..</li>
+          </ul>
+      </details>
+</package>
+  

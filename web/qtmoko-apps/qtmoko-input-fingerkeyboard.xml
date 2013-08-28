@@ -1,0 +1,17 @@
+<package
+      name="qtmoko-input-fingerkeyboard"
+      version="1-1"
+      title="Finger friendly keyboard"
+      summary="Keyboard quite friendly for writing without stylus"
+      category="input"
+      >
+          <tag>keyboard</tag>
+          <details>
+          <br/>
+          <h3>Notes</h3>
+          <ul>
+          <li>You need to restart QtMoko after install</li>
+          </ul>
+      </details>
+</package>
+  

@@ -87,8 +87,8 @@ popd
 
 # For some reason libpulsecommon is not fetched by xapt, so do it manually
 cd /tmp
-curl -O http://ftp.de.debian.org/debian/pool/main/p/pulseaudio/libpulse0_2.0-6_armhf.deb
-dpkg -x libpulse0_2.0-6_armhf.deb .
+curl -O http://ftp.de.debian.org/debian/pool/main/p/pulseaudio/libpulse0_2.0-6.1_armhf.deb
+dpkg -x libpulse0_2.0-6.1_armhf.deb .
 cp usr/lib/arm-linux-gnueabihf/pulseaudio/libpulsecommon-2.0.so /usr/arm-linux-gnueabihf/lib/
 
 

@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+build:
+
+clean:
+	rm -rf debian/tmp
+	rm -f debian/files
+
+binary: build
+	/root/qte/build/bin/qbuild image
+	mkdir -p debian/tmp/opt/qtmoko/plugins/inputmethods
+	cp /root/qte/build/image/plugins/inputmethods/libqdockedkeyboard.so debian/tmp/opt/qtmoko/plugins/inputmethods
+	install -d debian/tmp/DEBIAN
+	dpkg-gencontrol
+	chown -R root:root debian/tmp/opt
+	chmod -R u+w,go=rX debian/tmp/opt
+	dpkg --build debian/tmp ..

@@ -970,7 +970,7 @@ void KeyboardFrame::swapPosition()
 
 void KeyboardFrame::LoadNationalLayout()
 {
-    QString layout(NULL);
+    QString layout;
     if (QFile::exists(Qtopia::qtopiaDir() + layoutFileName))
     {
         layout = Qtopia::qtopiaDir() + layoutFileName;
@@ -1009,7 +1009,7 @@ QString KeyboardFrame::FindLayoutInSandboxes()
              return fullName;
          }
      }
-     return QString(NULL);
+     return QString();
 }
 
 void KeyboardFrame::LoadSet(QString s)
@@ -1066,7 +1066,7 @@ void KeyboardFrame::LoadSet(QString s)
 
 void KeyboardFrame::LoadSkin()
 {
-    QString baseDir(NULL);
+    QString baseDir;
     if (QFile::exists(Qtopia::qtopiaDir() + skinFileName))
     {
         baseDir = Qtopia::qtopiaDir();
@@ -1146,5 +1146,5 @@ QString KeyboardFrame::FindSkinInSandboxes()
              return fullPath;
          }
      }
-     return QString(NULL);
+     return QString();
 }

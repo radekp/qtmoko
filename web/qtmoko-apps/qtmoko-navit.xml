@@ -9,11 +9,9 @@
           <br/>
           <h3>Notes</h3>
           <ul>
-          <li>The package is not finished yet,</li>
-          <li>You might need to manually install standard navit dependencies</li>
-          <li>Or you can do: <pre>apt-get install navit</pre> to install navit for X and get the dependencies</li>
           <li>You can copy your maps to /opt/qtmoko/share/navit/maps</li>
           <li>You can edit /home/root/.navit/navit.xml to configure navit</li>
+	  <li>For native language speech see <a href="http://lists.goldelico.com/pipermail/gta04-owner/2013-March/004225.html">this</a> post</li>
           </ul>
       </details>
 </package>

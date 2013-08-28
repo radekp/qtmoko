@@ -30,7 +30,8 @@ Step 1
 
 * We will be installing new image to /media/card:
 
-cdebootstrap --flavour=minimal --include=ifupdown,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,ppp,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,klogd,psmisc,iptables,dash,ttf-dejavu,timeout,libpng12-0,libjpeg8,libmng1,libtiff4,libvorbisfile3,libxtst6,sqlite3,ntpdate,gstreamer0.10-alsa,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-fluendo-mp3,gpsd,gpsd-clients squeeze /media/card/ http://cdn.debian.net/debian/
+cdebootstrap --flavour=minimal --include=ifupdown,net-tools,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,rsyslog,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,ntpdate,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-fluendo-mp3,liblcms1,libmng1,libtiff4,libvorbisfile3,libicu48,gpsd,gpsd-clients,timeout,ppp,gstreamer0.10-alsa wheezy /media/card/ http://cdn.debian.net/debian/
+
 
 Step 2
 ======
@@ -78,9 +79,9 @@ __END_CHROOT__
 Step 3 - add more package repositories
 ========================================
 
-echo "deb http://cdn.debian.net/debian squeeze contrib" >> /media/card/etc/apt/sources.list
-echo "deb http://cdn.debian.net/debian squeeze non-free" >> /media/card/etc/apt/sources.list
-echo "deb http://security.debian.org/ squeeze/updates main contrib non-free" >> /media/card/etc/apt/sources.list
+echo "deb http://cdn.debian.net/debian wheezy contrib" >> /media/card/etc/apt/sources.list
+echo "deb http://cdn.debian.net/debian wheezy non-free" >> /media/card/etc/apt/sources.list
+echo "deb http://security.debian.org/ wheezy/updates main contrib non-free" >> /media/card/etc/apt/sources.list
 echo "deb http://qtmoko.sourceforge.net/debian/gta02/armel /" >> /media/card/etc/apt/sources.list
 echo "deb http://qtmoko.sourceforge.net/apps/all /" >> /media/card/etc/apt/sources.list
 echo "deb http://qtmoko.sourceforge.net/apps/armel /" >> /media/card/etc/apt/sources.list
@@ -216,8 +217,7 @@ Step 4.7 - disable logging by defaults
   in settings->logging or via devtools menu or with logging_enable.sh script.
 
 chroot /media/card
-update-rc.d -f klogd remove
-update-rc.d -f sysklogd remove
+update-rc.d -f rsyslog remove
 exit
 
 Step 4.8 - fix GPRS stability
@@ -284,6 +284,31 @@ rm libomhacks0_0.16-1_armel.deb
 rm omhacks_0.16-1_armel.deb
 exit
 
+Step 6.2 - modified wpa_supplicant
+==================================
+
+* There is a regression in wpa_supplicant affecting Freerunner. We have to
+  install modified version with this patch reverted:
+
+diff --git a/src/drivers/driver_wext.c b/src/drivers/driver_wext.c
+index 9fa356b..e44aeac 100644
+--- a/src/drivers/driver_wext.c
++++ b/src/drivers/driver_wext.c
+@@ -1007,7 +1007,7 @@  int wpa_driver_wext_scan(void *priv, struct wpa_driver_scan_params *params)
+ 
+        /* Not all drivers generate "scan completed" wireless event, so try to
+         * read results after a timeout. */
+-       timeout = 5;
++       timeout = 10;
+        if (drv->scan_complete_events) {
+                /*
+                 * The driver seems to deliver SIOCGIWSCAN events to notify
+  
+  For more info check:
+    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=679085
+    http://w1.fi/bugz/show_bug.cgi?id=456
+    http://patchwork.ozlabs.org/patch/167925/
+
 Step 6.5 - configure gpsd
 =========================
 
@@ -311,7 +336,7 @@ Step 8 - install QtMoko
 
 * I use qemu armel host for building qtmoko package. It should be as simple as
 
-git checkout v54
+git checkout v55
 dpkg-buildpackage
 
 * Note that you may need to install some dependencies before building:
@@ -331,10 +356,10 @@ git submodule update --init
 * Install it
 
 chroot /media/card/
-wget http://qtmoko.sourceforge.net/debian/gta02/qtmoko-neo_54-1_armel.deb
-dpkg -i qtmoko-neo_54-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/gta02/qtmoko-neo_55-1_armel.deb
+dpkg -i qtmoko-neo_55-1_armel.deb
 update-rc.d qtmoko-neo defaults
-rm qtmoko-neo_54-1_armel.deb
+rm qtmoko-neo_55-1_armel.deb
 exit
 killall qpe.sh                  # recent versions start qtmoko after install, so kill it
 rm -rf /media/card/home/root/*  # remove all stuff created by qpe
@@ -370,7 +395,7 @@ http://github.com/radekp/linux-2.6/
 
 * Checkout branch for your qtmoko version:
 
-git checkout v2.6.34-gta02-qtmoko-v54
+git checkout v2.6.34-gta02-qtmoko-v55
 
 * Create package in buildhost:
 
@@ -383,9 +408,9 @@ dpkg-buildpackage
 * Install kernel image:
 
 chroot /media/card
-wget http://qtmoko.sourceforge.net/debian/gta02/linux-image-2.6.34-qtmoko-gta02_54-1_armel.deb
-dpkg -i linux-image-2.6.34-qtmoko-gta02_54-1_armel.deb
-rm linux-image-2.6.34-qtmoko-gta02_54-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/gta02/linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
+dpkg -i linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
+rm linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
 exit
 
 * Create boot args and symlink for qi:
@@ -453,7 +478,7 @@ Step 10 - release tarball
 =========================
 
 cd /media/card
-tar -czvf ../qtmoko-debian-gta02-v54.tar.gz .
+tar -czvf ../qtmoko-debian-gta02-v55.tar.gz .
 
 Step 11 - make ubifs images
 ===========================
@@ -486,7 +511,7 @@ mv 3 DejaVuSansMono.ttf
 
 * Edit the mount for root in /media/card/etc/fstab so that it reads:
 
-rootfs  /                auto    defaults,no_chk_data_crc,bulk_read 0 1
+rootfs  /                auto    defaults,no_chk_data_crc,bulk_read 0 0
 
 * Create config for ubinize and create the resulting image:
 
@@ -504,7 +529,7 @@ vol_flags=autoresize
 __END__
 
 mkfs.ubifs -r /media/card -o qtmoko-debian.ubifs -x zlib -m 2048 -e 126976 -c 2047
-ubinize -o qtmoko-debian-gta02-v54.ubi -m 2048 -p 128KiB -s 2048 -O 2048 ubinize.cfg
+ubinize -o qtmoko-debian-gta02-v55.ubi -m 2048 -p 128KiB -s 2048 -O 2048 ubinize.cfg
 rm qtmoko-debian.ubifs
 
 Step 12 - jffs2 image (not using anymore)

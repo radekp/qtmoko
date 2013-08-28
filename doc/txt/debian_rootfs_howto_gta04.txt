@@ -30,7 +30,7 @@ Step 1
 
 * We will be installing new image to /media/card:
 
-cdebootstrap --flavour=minimal --include=ifupdown,net-tools,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,rsyslog,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,rfkill,ntpdate,libspeex1,libspeexdsp1,lsof,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-fluendo-mp3,gstreamer0.10-pulseaudio,pulseaudio,pulseaudio-utils,libasound2-plugins,liblcms1,libmng1,libtiff4,libpulse-mainloop-glib0,libvorbisfile3,libicu48,gpsd,gpsd-clients wheezy /media/card/ http://cdn.debian.net/debian/
+cdebootstrap --flavour=minimal --include=ifupdown,net-tools,procps,netbase,nano,module-init-tools,wget,openssh-server,screen,mc,libts-0.0-0,libasound2,alsa-utils,udhcpc,wpasupplicant,wireless-tools,iputils-ping,iproute,bluez,bluez-alsa,dosfstools,fbset,rsyslog,psmisc,iptables,dash,ttf-dejavu,libpng12-0,libjpeg8,libxtst6,sqlite3,ntpdate,gstreamer0.10-ffmpeg,gstreamer0.10-plugins-good,gstreamer0.10-fluendo-mp3,liblcms1,libmng1,libtiff4,libvorbisfile3,libicu48,gpsd,gpsd-clients,rfkill,libspeex1,libspeexdsp1,lsof,gstreamer0.10-pulseaudio,pulseaudio,pulseaudio-utils,libasound2-plugins,libpulse-mainloop-glib0 wheezy /media/card/ http://cdn.debian.net/debian/
 
 Step 2
 ======
@@ -375,11 +375,11 @@ Step 9.1 - Linux kernel cross compiling - not using anymore for releases
 
 * If you want to cross compile kernel and make uboot image on PC:
 
-make CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- ARCH=arm gta04_qtmoko_defconfig
-make CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- ARCH=arm uImage
-make CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- ARCH=arm modules
-make CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- ARCH=arm modules_install INSTALL_MOD_PATH=GTA04
-find  GTA04/lib/modules -name *.ko -exec /usr/bin/arm-linux-gnueabi-strip -R .not -R .comment --strip-unneeded {} \;
+make CROSS_COMPILE=/usr/bin/arm-linux-gnueabihf- ARCH=arm gta04_qtmoko_defconfig
+make -j8 CROSS_COMPILE=/usr/bin/arm-linux-gnueabihf- ARCH=arm uImage
+make -j8 CROSS_COMPILE=/usr/bin/arm-linux-gnueabihf- ARCH=arm modules
+make CROSS_COMPILE=/usr/bin/arm-linux-gnueabihf- ARCH=arm modules_install INSTALL_MOD_PATH=GTA04
+find  GTA04/lib/modules -name *.ko -exec /usr/bin/arm-linux-gnueabihf-strip -R .not -R .comment --strip-unneeded {} \;
 
 Step 9.2 - Setup bluetooth uarts
 ================================

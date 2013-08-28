@@ -2,7 +2,7 @@
 IPTABLES='/sbin/iptables'
 
 # Set interface values
-EXTIF='ppp0'
+EXTIF='hso0'
 INTIF='usb0'
 
 # enable ip forwarding in the kernel

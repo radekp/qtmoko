@@ -601,8 +601,15 @@ void ImapClient::searchCompleted()
     QMailAccount account(accountId);
     QStringList readElsewhereUids = account.serverUids(boxId, QMailMessage::ReadElsewhere);
     QStringList unreadElsewhereUids = account.serverUids(boxId, QMailMessage::ReadElsewhere, false);
+
+    // "deleted" here means messages that have been deleted from the
+    // phone (i.e. from the Qtopia database) but may still exist on
+    // the IMAP server.  Code below will delete these from the IMAP
+    // server too.
     QStringList deletedUids = account.deletedMessages(boxId);
 
+    // The following generates a list of all the UIDs that have ever
+    // previously been seen on the phone.
     QStringList storedUids = readElsewhereUids + unreadElsewhereUids + deletedUids;
 
     // New messages reported by the server that we don't yet have
@@ -623,8 +630,20 @@ void ImapClient::searchCompleted()
         // Messages marked read locally that the server reports are unseen
         _readUids = inFirstAndSecond(account.serverUids(boxId, QMailMessage::Read), _unseenUids);
 
-        // Report any messages that are no longer returned by the server
-        foreach (const QString &uid, inFirstButNotSecond(storedUids, reportedUids))
+        // If there are messages that exist on the phone but have
+        // since been deleted from the IMAP server, add the
+        // QMailMessage::Removed flag to those messages.  Note that we
+        // don't automatically delete those messages from the phone.
+	//
+	// Optimize this a bit by skipping phone messages that already
+	// have the QMailMessage::Removed flag.  Otherwise, in a
+	// scenario where a lot of messages are deleted from the IMAP
+	// server - but still exist on the phone - all of those
+	// messages are reprocessed every time we sync with the IMAP
+	// server, and that can take significant time and CPU.
+        foreach (const QString &uid,
+		 inFirstButNotSecond(inFirstButNotSecond(storedUids, reportedUids),
+				     account.serverUids(boxId, QMailMessage::Removed)))
             emit nonexistentMessage(uid, Client::Removed);
 
         // Update any messages that are reported read-elsewhere, that we didn't previously know about

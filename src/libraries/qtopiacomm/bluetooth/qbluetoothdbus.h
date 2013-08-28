@@ -91,7 +91,7 @@ template <class T>
 {
     if(!isValid()) {
         qWarning() << "Dbus interface " << path() << " is not valid";
-        return true;
+        return false;
     }
 
     QString methodStr(path() + "->" + method + "(");

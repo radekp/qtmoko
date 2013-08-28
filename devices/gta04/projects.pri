@@ -2,7 +2,6 @@ THEMES=finxi
 PROJECTS-=\
     games/qasteroids \
     games/parashoot \
-    applications/camera \
     settings/serverwidgets \
     server/phone/ui/components/simapp \
     ../examples/whereabouts/mappingdemo \

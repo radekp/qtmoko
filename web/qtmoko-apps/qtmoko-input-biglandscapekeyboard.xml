@@ -1,0 +1,18 @@
+<package
+      name="qtmoko-input-biglandscapekeyboard"
+      version="1-1"
+      title="Big landscape keyboard"
+      summary="Big landscape keyboard"
+      category="input"
+      >
+          <tag>keyboard</tag>
+          <details>
+          <br/>
+          <h3>Notes</h3>
+          <ul>
+          <li>You need to restart QtMoko after install</li>
+          <li>It's quite useless now - needs fixing</li>
+          </ul>
+      </details>
+</package>
+  

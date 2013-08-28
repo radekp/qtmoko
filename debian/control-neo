@@ -3,7 +3,7 @@ Package: qtmoko-neo
 Provides: qtmoko
 Conflicts: qtmoko
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libdbus-1-3, bluez-alsa, ttf-dejavu, psmisc, alsa-utils, ntpdate, gpsd, gpsd-clients, libgps19
+Depends: ${shlibs:Depends}, ${misc:Depends}, libdbus-1-3, bluez-alsa, ttf-dejavu, psmisc, alsa-utils, ntpdate, gpsd, gpsd-clients, libgps20
 Description: Smartphone environment based on QT Extended - Neo FreeRunner flavor
  QtMoko provides a fully integrated phone stack plus smartphone environment
  for Linux based smartphones.
