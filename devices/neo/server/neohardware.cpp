@@ -35,6 +35,7 @@
 
 #include <qbootsourceaccessory.h>
 #include <qtopiaipcenvelope.h>
+#include <qtopianamespace.h>
 
 #include <qtopiaserverapplication.h>
 
@@ -133,15 +134,16 @@ char *value;
   if (bytesAvail < readCount)
       readCount = bytesAvail;
   ueventSocket->read(&buffer[0],readCount);
-  if(strcmp(buffer,"change@/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-mbc.0/power_supply/usb")==0)
+
+  if(strcmp(buffer,"change@/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-mbc/power_supply/usb")==0)
   {
     qLog(PowerManagement)<<"usb change event";
     cableConnected(getCableStatus());
-  }else if(strcmp(buffer,"change@/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-mbc.0/power_supply/ac")==0)
+  }else if(strcmp(buffer,"change@/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-mbc/power_supply/ac")==0)
   {
     qLog(PowerManagement)<<"ac change event";
     cableConnected(getCableStatus());
-  }else if(strcmp(buffer,"change@/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-mbc.0/power_supply/adapter")==0)
+  }else if(strcmp(buffer,"change@/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-mbc/power_supply/adapter")==0)
   {
     value=findAttribute(buffer,readCount,"POWER_SUPPLY_ONLINE=");
     qLog(PowerManagement)<<"power_supply change event; online="<<value;
@@ -155,9 +157,7 @@ char *value;
     qDebug()<<"headset change event, switch_state="<<value;
   }
   
-    QString currentNowStr =
-        qReadFile("/sys/class/power_supply/battery/current_now");
-    int currentNow = currentNowStr.toInt() / 1000;
+    int currentNow = qReadSysfsInt("/sys/class/power_supply/battery/current_now") / 1000;
     batteryVso.setAttribute("current_now", QString::number(currentNow));
 }
 
@@ -210,44 +210,19 @@ void NeoHardware::shutdownRequested()
 {
     qLog(PowerManagement)<< __PRETTY_FUNCTION__;
 
-    QFile powerFile("/sys/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-gpio.0/reg-fixed-voltage.1/gta02-pm-gsm.0/power_on");
-    QFile btPower("/sys/devices/platform/gta02-pm-bt.0/power_on");
-
-    if( !powerFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        qWarning()<<"File not opened";
-    } else {
-        QTextStream out(&powerFile);
-        out << "0";
-        powerFile.close();
-    }
-
-        if( !btPower.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        qWarning()<<"File not opened";
-    } else {
-        QTextStream out(&btPower);
-        out <<  "0";
-        powerFile.close();
-    }
-
+    qWriteFile("/sys/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-gpio/reg-fixed-voltage.1/gta02-pm-gsm.0/power_on", "0");
+    qWriteFile("/sys/devices/platform/gta02-pm-bt.0/power_on", "0");
 
     QtopiaServerApplication::instance()->shutdown(QtopiaServerApplication::ShutdownSystem);
 }
 
 bool NeoHardware::getCableStatus()
 {
-    // These code from NeoBattery::isCharging()
-    // Seems better than the origin method
-    qLog(PowerManagement) << __PRETTY_FUNCTION__;
-    QString charge;
-    QFile chargeState("/sys/class/power_supply/battery/status");
-    chargeState.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(&chargeState);
-    in >> charge;
-    qLog(PowerManagement) << __PRETTY_FUNCTION__ << charge;
+    char buf[64];
+    qReadSysfsStr("/sys/class/power_supply/battery/status", buf);
     // Charging  Discharging  Not charging
     // ac        battery      ac/full
-    chargeState.close();
-    return (charge != ("Discharging"));
+    return strcmp(buf, "Discharging") != 0;
 }
 
 #endif // QT_QWS_NEO

@@ -36,16 +36,7 @@
 
 QTOPIABASE_EXPORT int qpe_sysBrightnessSteps()
 {
-    QFile f("/sys/class/backlight/pcf50633-backlight/max_brightness");
-    if(!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "qpe_sysBrightnessSteps: " + f.errorString();
-        return 0;
-    }
-    QTextStream in(&f);
-    QString str;
-    in >> str;
-    f.close();
-    return str.toInt();
+    return qReadSysfsInt("/sys/class/backlight/pcf50633-backlight/max_brightness");
 }
 
 QTOPIABASE_EXPORT void qpe_setBrightness(int b)
@@ -61,14 +52,8 @@ QTOPIABASE_EXPORT void qpe_setBrightness(int b)
         //bright
         b = brightessSteps;
     }
-
-    QFile f("/sys/class/backlight/pcf50633-backlight/brightness");
-    if(!f.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        qWarning() << "qpe_setBrightness: " + f.errorString();
-	return;
-    }
-    QTextStream out(&f);
-    out << QString::number(b);
-    f.close();
+    
+    QByteArray str = QByteArray::number(b);
+    qWriteFile("/sys/class/backlight/pcf50633-backlight/brightness", str.constData());
 }
 

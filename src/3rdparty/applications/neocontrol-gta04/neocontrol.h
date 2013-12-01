@@ -41,6 +41,9 @@ public:
     NeoControl(QWidget *parent = 0, Qt::WFlags f = 0);
     ~NeoControl();
 
+protected:
+    void paintEvent(QPaintEvent *);
+
 private:
     enum Screen
     {
@@ -49,26 +52,28 @@ private:
         ScreenMixer,
         ScreenModem,
         ScreenSysfs,
-        ScreenDisplay,
+        ScreenCharge,
     };
 
     Screen screen;
-    bool updatingModem;
+    bool updatingScreen;
     snd_mixer_t *mixerFd;
     QVBoxLayout *layout;
     QHBoxLayout *buttonLayout;
     QLabel *label;
     QLineEdit *lineEdit;
-    QPushButton *bQvga;
     QPushButton *bBack;
     QPushButton *bNext;
     QPushButton *bSave;
-    QCheckBox *chkMux;
     QCheckBox *chkFso;
+    QCheckBox *chkCharge;
     QLabel *label4;
     QLabel *label5;
     MixerSlider *slider4;
     MixerSlider *slider5;
+    QFont normalFont;
+    QFont smallFont;
+    QString chargeLog;
 
     void showScreen(NeoControl::Screen scr);
     int openAlsaMixer();
@@ -77,7 +82,6 @@ private:
     void setQpeEnv(bool);
 
 private slots:
-    void qvgaClicked();
     void backClicked();
     void nextClicked();
     void saveClicked();
@@ -85,8 +89,9 @@ private slots:
     void updateMixer();
     void updateModem();
     void updateSysfs();
-    void muxStateChanged(int);
+    void updateCharge();
     void fsoStateChanged(int);
+    void chargeStateChanged(int);
     void fsoChange();
 };
 

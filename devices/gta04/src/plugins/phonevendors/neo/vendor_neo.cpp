@@ -158,10 +158,21 @@ NeoModemService::NeoModemService
     primaryAtChat()->registerNotificationType
         ("_OSIGQ:", this, SLOT(sigq(QString)));
 
+    // Determine AT_OPSYS value - by default disable UMTS, use only GSM 0,2
+    // this can help reduce modem reenumerations.
+    // Some references:
+    // see [1] at the end of this source file
+    // http://lists.goldelico.com/pipermail/gta04-owner/2013-August/004891.html
+    // http://lists.goldelico.com/pipermail/gta04-owner/2013-September/004939.html
+    QSettings cfg("Trolltech", "Modem");
+    cfg.beginGroup("OPSYS");
+    QString opsys = cfg.value("Value", "AT_OPSYS=0,2").toString();
+    qLog(Modem) << "OPSYS value:" << opsys;
+
     chat("AT+CSCS=\"GSM\"");    // GSM encoding
     chat("AT_OSQI=1");          // unsolicited reporting of antenna signal strength, e.g. "_OSIGQ: 3,0"
     chat("AT_OPCMENABLE=1");    // enable the PCM interface for voice calls
-    chat("AT_OPSYS=0,2");       // disable UMTS, use only GSM
+    chat(opsys);
 
     // Modem input device - reports keys when modem generates interrupt (e.g.
     // on incoming call or sms).
@@ -372,3 +383,24 @@ void NeoVibrateAccessory::setVibrateNow(const bool value, int timeoutMs, int str
 
     QVibrateAccessoryProvider::setVibrateNow(value);
 }
+
+/* [1]
+ 
+first number (mode):
+0:  GSM only (2G only which IMHO includes GPRS and EDGE)
+1:  WDMA only (3G only)
+2:  GSM first (i.e. 2G over 3G)
+3:  WCDMA first (i.e. 3G over 2G)
+4:  no change
+5:  auto
+
+second number (service domain):
+0:  circuit switched only (i.e. no GPRS/EDGE)
+1:  packet switched only
+2:  circuit and/or packed switched
+3:  no preference
+4:  no change
+5:  demand PS attach
+6:  demand PS detach
+ 
+*/

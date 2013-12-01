@@ -1646,16 +1646,34 @@ int Qtopia::writeFd(int fd, const char *buf, int n, int okRes, int errRes)
     for (;;) {
         int count = write(fd, buf, n);
         if (count <= 0) {
-            if(errno == EAGAIN) {
-                usleep(1000);
+            if(errno == EAGAIN)
                 continue;
-            }
             return errRes;
         }
         buf += count;
         n -= count;
         if (n <= 0)
             return okRes;
+    }
+}
+
+/*!
+  Reads n bytes to \a buf from file descriptor \a fd. On success returns
+  number of bytes read, on error return \a errRes. You can check errno in this case.
+  */
+int Qtopia::readFd(int fd, char *buf, int bufLen, int errRes)
+{
+    int n = 0;
+    for (;;) {
+        int count = read(fd, buf + n, bufLen - n);
+        if (count == -1) {
+            if(errno == EAGAIN)
+                continue;
+            return errRes;
+        }
+        n += count;
+        if (n == bufLen || count == 0)
+            return n;
     }
 }
 
@@ -1693,6 +1711,56 @@ QByteArray Qtopia::readFile(const char *path)
     QByteArray content = f.readAll();
     f.close();
     return content;
+}
+
+/*!
+  Reads contents of file specified by \a path. Returns number of bytes read or \a errRes.
+  */
+int Qtopia::readFile(const char *path, char *buf, int bufLen, bool warnOnError, int errRes)
+{
+    int fd = open(path, O_RDONLY);
+    int n;
+    if (fd >= 0 && (n = readFd(fd, buf, bufLen))) {
+        close(fd);
+        return n;
+    }
+    if(warnOnError)
+        qWarning() << "readFile failed " << path << ":" << strerror(errno);
+
+    if(fd >= 0)
+        close(fd);
+
+    return errRes;
+}
+
+/*!
+  Reads string from file. Similar to readFile except that it terminates string
+  in \a buf with 0 and removes trailing newline.
+ */
+int Qtopia::readSysfsStr(const char *path, char *buf, int bufLen, bool warnOnError, int errRes)
+{
+    int n = readFile(path, buf, bufLen - 1, warnOnError, errRes);
+    if(n <= 0) {
+        buf[0] = 0;
+        return errRes;
+    }
+    if(buf[n] == '\n')      // remove new line char
+        buf[n] = 0;
+    else
+        buf[n+1] = 0;       // terminate string
+    return n;
+}
+
+/*!
+  Reads ASCII represented integer from file.
+ */
+int Qtopia::readSysfsInt(const char *path, bool warnOnError, int errRes)
+{
+    char buf[16];
+    int n = readSysfsStr(path, buf, sizeof(buf), warnOnError, errRes);
+    if(n <= 0)
+        return errRes;
+    return atoi(buf);
 }
 
 #endif //QTOPIA_HOST

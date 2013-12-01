@@ -820,32 +820,12 @@ void NeoVibrateAccessory::setVibrateOnRing( const bool value )
 void NeoVibrateAccessory::setVibrateNow( const bool value, int timeoutMs, int strength )
 {
     qLog(Modem)<<"setVibrateNow "<<value;
-    QString vibFile("/sys/class/leds/gta02::vibrator");
     if ( value ) { //turn on
-        QFile trigger( vibFile + "/trigger");
-        trigger.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
-        QTextStream out(&trigger);
-        out<<"timer";
-        trigger.close();
-
-        QFile delayOn( vibFile + "/delay_on");
-        delayOn.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
-        QTextStream out1(&delayOn);
-        out1<<"500";
-        delayOn.close();
-
-        QFile delayOff(vibFile + "/delay_off");
-        delayOff.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
-        QTextStream out2(&delayOff);
-        out2<<"1000";
-        delayOff.close();
-
+        qWriteFile("/sys/class/leds/gta02::vibrator/trigger", "timer");
+        qWriteFile("/sys/class/leds/gta02::vibrator/delay_on", "500");
+        qWriteFile("/sys/class/leds/gta02::vibrator/delay_off", "1000");
     } else { //turn off
-        QFile trigger( vibFile + "/trigger");
-        trigger.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
-        QTextStream out(&trigger);
-        out<<"none";
-        trigger.close();
+        qWriteFile("/sys/class/leds/gta02::vibrator/trigger", "none");
     }
 
     QVibrateAccessoryProvider::setVibrateNow( value );

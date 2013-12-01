@@ -96,8 +96,20 @@ Step 4
 
 echo g_ether > /media/card/etc/modules
 echo ppp_generic >> /media/card/etc/modules
+echo lis302dl >> /media/card/etc/modules
 echo joydev >> /media/card/etc/modules
-echo bq27000_battery >> /media/card/etc/modules
+echo bq27x00_battery >> /media/card/etc/modules
+echo ohci_hcd >> /media/card/etc/modules
+echo snd-soc-neo1973-wm8753 >> /media/card/etc/modules
+echo ar6000 >> /media/card/etc/modules
+echo btusb >> /media/card/etc/modules
+echo bluetooth >> /media/card/etc/modules
+echo snd-soc-neo1973-wm8753 >> /media/card/etc/modules
+echo snd-soc-wm8753 >> /media/card/etc/modules
+echo snd-soc-dfbmcs320 >> /media/card/etc/modules
+echo snd-soc-neo1973-wm8753 >> /media/card/etc/modules
+echo snd_soc_s3c24xx >> /media/card/etc/modules
+
 
 * Edit /media/card/etc/ppp/options and replace "auth" with "noauth"
 
@@ -395,7 +407,7 @@ http://github.com/radekp/linux-2.6/
 
 * Checkout branch for your qtmoko version:
 
-git checkout v2.6.34-gta02-qtmoko-v55
+git checkout v2.6.39-gta02-qtmoko-v58
 
 * Create package in buildhost:
 
@@ -408,9 +420,9 @@ dpkg-buildpackage
 * Install kernel image:
 
 chroot /media/card
-wget http://qtmoko.sourceforge.net/debian/gta02/linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
-dpkg -i linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
-rm linux-image-2.6.34-qtmoko-gta02_55-1_armel.deb
+wget http://qtmoko.sourceforge.net/debian/gta02/linux-image-2.6.39-qtmoko-gta02_55-1_armel.deb
+dpkg -i linux-image-2.6.39-qtmoko-gta02_55-1_armel.deb
+rm linux-image-2.6.39-qtmoko-gta02_55-1_armel.deb
 exit
 
 * Create boot args and symlink for qi:

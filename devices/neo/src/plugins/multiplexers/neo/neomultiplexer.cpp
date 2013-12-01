@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <qtopialog.h>
+#include <qtopianamespace.h>
 #include <QValueSpaceItem>
 
 #include <qgsm0710multiplexer.h>
@@ -61,17 +62,9 @@ bool NeoMultiplexerPlugin::detect( QSerialIODevice *device )
     qLog(Hardware) << __PRETTY_FUNCTION__;
 
     // Power on modem via sysfs
-    QFile f("/sys/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-gpio.0/reg-fixed-voltage.1/gta02-pm-gsm.0/power_on");
-    if(f.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        f.write("0");
-        f.close();
-    }
-    if(f.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        f.write("1");
-        f.close();
-    } else {
-        qWarning() << "Modem power on failed "<< f.errorString();
-    }
+    #define POWER_ON_FILE "/sys/devices/platform/s3c2440-i2c/i2c-0/0-0073/pcf50633-gpio/reg-fixed-voltage.1/gta02-pm-gsm.0/power_on"
+    qWriteFile(POWER_ON_FILE, "0");
+    qWriteFile(POWER_ON_FILE, "1");
     
     // The FIC needs a special line discipline set on the device.
     QSerialPort *port = qobject_cast<QSerialPort *>( device );

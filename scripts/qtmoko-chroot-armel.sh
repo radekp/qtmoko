@@ -4,11 +4,11 @@
 # set -o verbose
 
 # We will use ext4 image for chroot
-if [ ! -e ../qtmoko-chroot.img ]
+if [ ! -e ../qtmoko-chroot-armel.img ]
 then
     echo "Creating chroot-build ext4 image"
-    dd if=/dev/zero of=../qtmoko-chroot.img bs=1024 count=3145728
-    mkfs.ext4 ../qtmoko-chroot.img
+    dd if=/dev/zero of=../qtmoko-chroot-armel.img bs=1024 count=3145728
+    mkfs.ext4 ../qtmoko-chroot-armel.img
 fi
 
 # Directory for chroot mount
@@ -21,7 +21,7 @@ fi
 if [ ! -d ../qtmoko-chroot/bin ]
 then
     echo "Mounting image"
-    mount -o loop ../qtmoko-chroot.img ../qtmoko-chroot
+    mount -o loop ../qtmoko-chroot-armel.img ../qtmoko-chroot
 fi    
 
 # Install squeeze rootfs if not installed yet

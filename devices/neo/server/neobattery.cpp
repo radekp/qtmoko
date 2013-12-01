@@ -138,15 +138,9 @@ void NeoBattery::updateDumbStatus()
 int NeoBattery::getDumbCapacity()
 {
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
-    int voltage = 0;
-    QString inStr;
-    QFile battvolt("/sys/class/power_supply/battery/voltage_now");
-    battvolt.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(&battvolt);
-    in >> inStr;
-    voltage = inStr.toInt();
-    battvolt.close();
-    qLog(PowerManagement)<<"voltage"<< inStr;
+    
+    int voltage = qReadSysfsInt("/sys/class/power_supply/battery/voltage_now");
+    qLog(PowerManagement)<<"voltage"<< voltage;
 
     // lets use 3400 as empty, for all intensive purposes,
     // 2 minutes left of battery life till neo shuts off might
@@ -190,23 +184,15 @@ void NeoBattery::updateStatus()
   \internal */
 bool NeoBattery::isCharging()
 {
-
+    char buf[64];
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
-    QString charge;
-    QFile chargeState("/sys/class/power_supply/battery/status");
-    chargeState.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(&chargeState);
-    in >> charge;
-    qLog(PowerManagement) << __PRETTY_FUNCTION__ << charge;
-// Charging  Discharging  Not charging
-// ac        battery      ac/full
-    chargeState.close();
+    
+    qReadSysfsStr("/sys/class/power_supply/battery/status", buf);
+    qLog(PowerManagement) << __PRETTY_FUNCTION__ << buf;
+    // Charging  Discharging  Not charging
+    // ac        battery      ac/full
 	// JM: Fixed this as it can return Not charging too
-    if (charge == ("Charging")) {
-        return true;
-    }
-
-    return false;
+    return (strcmp(buf, "Charging") == 0);
 }
 
 /*!
@@ -237,14 +223,7 @@ int NeoBattery::getCapacity()
 
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
 
-    int capacity = 0;
-    QFile capacityState("/sys/class/power_supply/battery/capacity");
-    capacityState.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(&capacityState);
-    in >> capacity;
-
-    capacityState.close();
-    qLog(PowerManagement) << capacity;
+    int capacity = qReadSysfsInt("/sys/class/power_supply/battery/capacity");
 
 // JM: Removed this test as it will permanently switch to dumb battery which will always return 100%
 // might be gta02 with dumb battery
@@ -264,16 +243,7 @@ int NeoBattery::getTimeToFull()
         return 0;
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
 
-    int time = 0;
-    QFile timeState("/sys/class/power_supply/battery/time_to_full_now");
-
-    timeState.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(&timeState);
-    in >> time;
-
-    timeState.close();
-    qLog(PowerManagement) << time/60;
-
+    int time = qReadSysfsInt("/sys/class/power_supply/battery/time_to_full_now");
     return time/60;
 
 }
@@ -286,16 +256,7 @@ int NeoBattery::getTimeRemaining()
         return 0;
     qLog(PowerManagement) << __PRETTY_FUNCTION__;
 
-    int time = 0;
-    QFile timeState("/sys/class/power_supply/battery/time_to_empty_now");
-
-    timeState.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(&timeState);
-    in >> time;
-
-    timeState.close();
-    qLog(PowerManagement) << time/60;
-
+    int time = Qtopia::readSysfsInt("/sys/class/power_supply/battery/time_to_empty_now", false, 0);
     return time/60;
 }
 
