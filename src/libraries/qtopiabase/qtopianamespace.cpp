@@ -1744,10 +1744,10 @@ int Qtopia::readSysfsStr(const char *path, char *buf, int bufLen, bool warnOnErr
         buf[0] = 0;
         return errRes;
     }
-    if(buf[n] == '\n')      // remove new line char
-        buf[n] = 0;
+    if(buf[n-1] == '\n')      // remove new line char
+        buf[n-1] = 0;
     else
-        buf[n+1] = 0;       // terminate string
+        buf[n] = 0;       // terminate string
     return n;
 }
 

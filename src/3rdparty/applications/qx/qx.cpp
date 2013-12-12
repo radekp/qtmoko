@@ -389,7 +389,7 @@ bool QX::checkX()
 
 #ifdef QT_QWS_NEO    
     QProcess::execute("raptor", QStringList() << "-u" << "-i" << "xfonts-base" << "xterm" << "x11-xserver-utils");
-    QProcess::execute("raptor", QStringList() << "-i" << "http://qtmoko.sourceforge.net/download/Xglamo.deb");
+    QProcess::execute("raptor", QStringList() << "-i" << "http://qtmoko.sourceforge.net/debian/gta02/armel/Xglamo.deb");
 #else
     QProcess::execute("raptor", QStringList() << "-u" << "-i" << "xfonts-base" << "xterm" << "x11-xserver-utils" << "xserver-xfbdev");
 #endif

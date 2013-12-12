@@ -137,7 +137,7 @@ void QGpsdWhereabouts::timerEvent(QTimerEvent *event)
         errorprintf("timerEvent: read error");
     }
     else {
-        debugprintf("Got set: %x", (unsigned int)gps_data.set);
+        debugprintf("Got set: %x", (unsigned int)gpsdata.set);
         parseFix(gps_data);
     }
 }

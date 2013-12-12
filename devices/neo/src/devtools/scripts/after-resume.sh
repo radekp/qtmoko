@@ -3,3 +3,6 @@
 
 #/opt/qtmoko/bin/gps-event.sh resume
 #/opt/qtmoko/bin/btfix.sh
+
+# make sure that vibrator is not vibrating which sometimes happens
+echo 0 > /sys/class/leds/gta02::vibrator/brightness

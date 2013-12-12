@@ -16,6 +16,7 @@ stty -F /dev/tty1 -echo
 rm -rf /var/run/ppp
 mkdir /var/run/ppp
 mkdir -p /var/cache/apt/archives/partial
+rfkill unblock wifi
 
 touch /tmp/restart-qtopia
 while [ -e /tmp/restart-qtopia ]; do

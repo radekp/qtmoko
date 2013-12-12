@@ -126,6 +126,7 @@ private slots:
     void rejectModalDialog();
     void initializeMouseControlDialog();
     void endCall();
+    void showEndCall();
 
 private:
     int activeCallCount() const { return activeCount; }

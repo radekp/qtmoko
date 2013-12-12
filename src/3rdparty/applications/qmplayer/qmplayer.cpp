@@ -889,7 +889,7 @@ bool QMplayer::startMencoder(QString srcFile, QString dstFile)
     args.append("vcodec=mpeg4:vhq:vbitrate=300:acodec=ac3");
     args.append("-vf");
 #ifdef QT_QWS_NEO
-    args.append("scale=320:240,eq2=1.2:0.5:-0.25,rotate=2");
+    args.append("scale=320:240,eq2=1.2:0.5:-0.25,rotate=2 -vf eq2=1:1:0:1:1.19:1.19:1.44");
 #else
     args.append("scale=640:480,eq2=1.2:0.5:-0.25,rotate=2");
 #endif
@@ -1295,7 +1295,12 @@ PLAY:
     connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
             SLOT(processFinished(int, QProcess::ExitStatus)));
     //process->setProcessChannelMode(QProcess::ForwardedChannels);
-    process->start("mplayer", args, QIODevice::ReadWrite);
+
+    QString mplayerBin = "mplayer";
+    if(QFile::exists("/usr/bin/mplayer-glamo"))
+        mplayerBin = "/usr/bin/mplayer-glamo";
+
+    process->start(mplayerBin, args, QIODevice::ReadWrite);
 
     if (process->waitForStarted(5000)) {
         setpriority(PRIO_PROCESS, process->pid(), -5);
@@ -1325,7 +1330,12 @@ PLAY:
 
 void QMplayer::encode(QString filename)
 {
-    QString dstFile = getEncFilename(filename, ".encoded.mp4");
+#ifdef QT_QWS_NEO
+    QString dstFile = filename + ".gta02.mp4";
+#else
+    QString dstFile = filename + ".encoded.mp4";
+#endif
+
     if (startMencoder(filename, dstFile)) {
 #ifdef QTOPIA
         QtopiaApplication::setPowerConstraint(QtopiaApplication::
@@ -1401,13 +1411,8 @@ bool QMplayer::installMplayer()
         f.write("vo=glamo\n\n[default]\nafm=ffmpeg\nvfm=ffmpeg\n");
         f.close();
 
-        return download("http://72.249.85.183/radekp/qmplayer/download/mplayer",
-                        "/usr/bin/mplayer", "mplayer", false) &&
-            QFile::setPermissions("/usr/bin/mplayer", QFile::ReadOwner |
-                                  QFile::WriteOwner | QFile::ExeOwner |
-                                  QFile::ReadUser | QFile::ExeUser |
-                                  QFile::ReadGroup | QFile::ExeGroup |
-                                  QFile::ReadOther | QFile::ExeOther);
+        QProcess::execute("raptor", QStringList() << "-i" << "http://qtmoko.sourceforge.net/debian/gta02/armel/mplayer-glamo.deb");
+        return QFile::exists("/usr/bin/mplayer-glamo");
     } else {
         QProcess::execute("raptor", QStringList() << "-u" << "-i" << "mplayer");
 
