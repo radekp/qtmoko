@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <QDesktopWidget>
 #include <QTimer>
-
+#include <qtopianamespace.h>
 
 #include "systemsuspend.h"
 
@@ -77,9 +77,7 @@ bool NeoSuspend::canSuspend() const
 
 static int readChargeNow()
 {
-    QString chargeNowStr =
-        qReadFile("/sys/class/power_supply/battery/charge_now");
-    return chargeNowStr.toInt();
+    return qReadSysfsInt("/sys/class/power_supply/battery/charge_now");
 }
 
 bool NeoSuspend::suspend()
@@ -105,9 +103,7 @@ bool NeoSuspend::wake()
     batteryVso.setAttribute("avg_current_in_suspend", QString::number(avgCurrent));
 
     // Actual current_now
-    QString currentNowStr =
-        qReadFile("/sys/class/power_supply/battery/current_now");
-    int currentNow = currentNowStr.toInt() / 1000;
+    int currentNow = qReadSysfsInt("/sys/class/power_supply/battery/current_now") / 1000;
     batteryVso.setAttribute("current_now_in_suspend", QString::number(currentNow));
     
 #ifdef Q_WS_QWS
@@ -135,6 +131,5 @@ bool NeoSuspend::wake()
     /* No waitForFinished after start, because we want the command to complete
        in the background */
     resumeScript.start("after-resume.sh");
-
     return true;
 }

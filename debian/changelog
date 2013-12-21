@@ -1,3 +1,25 @@
+qtmoko (58-1) unstable; urgency=low
+
+  * gta02 kernel upgrade to 2.6.39
+  * gta04 kernel upgrade to latest Neil's 3.7
+  * hack to stop vibrating after resume
+  * show end call button after 2s to avoid unwanted press
+  * improved colors in qmplayer encoding
+  * better name of encoded movie in qmplayer
+  * using emdebian for some packages
+  * using glamo-mplayer as package
+  * suspend in locked screen is now after 3s
+
+ -- Radek Polak <psonek2@seznam.cz>  Sun, 01 Dec 2013 21:16:00 +0100
+
+qtmoko (57-1) unstable; urgency=low
+
+  * clever charging for gta04
+  * charging log
+  * better sysfs for gta04 in neocontrol
+
+ -- Radek Polak <psonek2@seznam.cz>  Sat, 14 Sep 2013 11:20:00 +0100
+
 qtmoko (56-1) unstable; urgency=low
 
   * optimise removed messages on IMAP server (Neil Jerram)

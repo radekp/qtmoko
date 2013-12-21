@@ -69,11 +69,18 @@ namespace Qtopia
 
     QTOPIABASE_EXPORT int writeFd(int fd, const char *buf, int n, int okRes = 1, int errRes = 0);
     QTOPIABASE_EXPORT int writeFile(const char * path, const char * buf, int n, bool warnOnError = true, int okRes = 1, int errRes = 0);
+    
     QTOPIABASE_EXPORT QByteArray readFile(const char *path);
+    QTOPIABASE_EXPORT int readFd(int fd, char *buf, int bufLen, int errRes = 0);
+    QTOPIABASE_EXPORT int readFile(const char *path, char *buf, int bufLen, bool warnOnError, int errRes);
+    QTOPIABASE_EXPORT int readSysfsStr(const char *path, char *buf, int bufLen, bool warnOnError = true, int errRes = 0);
+    QTOPIABASE_EXPORT int readSysfsInt(const char *path, bool warnOnError = true, int errRes = 0);
 
     // Convenient macros (shorter name), writeFile for writing string constant
-    #define qWriteFile(path, buf) Qtopia::writeFile(path, buf, sizeof(buf) - 1);
-    #define qReadFile(path) Qtopia::readFile(path);
+    #define qWriteFile(path, buf) Qtopia::writeFile(path, buf, sizeof(buf) - 1)
+    #define qReadFile(path) Qtopia::readFile(path)
+    #define qReadSysfsStr(path, buf) Qtopia::readSysfsStr(path, buf, sizeof(buf))
+    #define qReadSysfsInt(path) Qtopia::readSysfsInt(path)
     
     QTOPIABASE_EXPORT bool mousePreferred();
     QTOPIABASE_EXPORT bool hasKey(int key);

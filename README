@@ -17,7 +17,7 @@ git submodule update
 
   * Create and enter debian chroot:
 
-sudo scripts/qtmoko-chroot.sh
+sudo scripts/qtmoko-chroot-armhf.sh
 
   * Build it:
 
@@ -153,7 +153,7 @@ PC build
 
    * Create and enter debian chroot:
 
-sudo scripts/qtmoko-chroot.sh
+sudo scripts/qtmoko-chroot-armhf.sh
 mkdir -p /root/qte/build-pc
 cd /root/qte/build-pc
 

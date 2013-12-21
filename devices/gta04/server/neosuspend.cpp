@@ -85,9 +85,7 @@ bool NeoSuspend::canSuspend() const
 
 static int readChargeNow()
 {
-    QString chargeNowStr =
-        qReadFile("/sys/class/power_supply/bq27000-battery/charge_now");
-    return chargeNowStr.toInt();
+    return qReadSysfsInt("/sys/class/power_supply/bq27000-battery/charge_now");
 }
 
 bool NeoSuspend::suspend()
@@ -126,9 +124,7 @@ bool NeoSuspend::wake()
                             QString::number(avgCurrent));
 
     // Read and update current_now. It should contain the current in suspend
-    QString currentNowStr =
-        qReadFile("/sys/class/power_supply/bq27000-battery/current_now");
-    int currentNow = currentNowStr.toInt() / 1000;
+    int currentNow = qReadSysfsInt("/sys/class/power_supply/bq27000-battery/current_now") / 1000;
     batteryVso.setAttribute("current_now_in_suspend",
                             QString::number(currentNow));
 

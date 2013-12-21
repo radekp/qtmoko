@@ -1643,6 +1643,14 @@ void ThemedCallScreenView::endCall()
 }
 
 /*!
+ *   \internal
+ */
+void ThemedCallScreenView::showEndCall()
+{
+    setItemActive("endcall", true);
+}
+
+/*!
   \internal
   */
 void ThemedCallScreenView::hideEvent( QHideEvent * )
@@ -1833,7 +1841,7 @@ void ThemedCallScreenView::muteRingSelected()
 void ThemedCallScreenView::callConnected(const QPhoneCall &)
 {
     setItemActive("answer", false);
-    setItemActive("endcall", true);
+    QTimer::singleShot(2000, this, SLOT(showEndCall())); // setItemActive("endcall", true);
     setItemActive("resume", false);
     setItemActive("sendbusy", false);
     setItemActive("hold", true);
